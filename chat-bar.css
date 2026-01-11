@@ -46,14 +46,17 @@
   --font-size-base: 16px;
 }
 
-/* Reset & Base */
-*, *::before, *::after {
+/* Reset - scoped to chat component only */
+.chat-container *,
+.chat-container *::before,
+.chat-container *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-body {
+/* Standalone preview styles (only applies to chat-bar.html directly) */
+body.chat-bar-standalone {
   font-family: var(--font-family);
   background: linear-gradient(135deg, #2a2a28 0%, #1a1a18 100%);
   min-height: 100vh;

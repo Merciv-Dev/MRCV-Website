@@ -76,13 +76,19 @@
                 container.innerHTML = chatContainer.outerHTML;
             }
 
+            // Set base URL for background images
+            window.BACKGROUND_BASE_URL = BASE_URL;
+
             // 7. Load components in sequence
             const components = [
+                '/components/icon-library.js',
                 '/components/tag.js',
                 '/components/source-library.js',
                 '/components/source-tag.js',
                 '/components/text-card-output.js',
-                '/components/visualization-card.js'
+                '/components/visualization-card.js',
+                '/components/background-manager.js',
+                '/components/status-bar.js'
             ];
 
             function loadScripts(scripts, callback) {

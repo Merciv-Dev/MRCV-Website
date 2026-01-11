@@ -1,6 +1,7 @@
 /**
  * Chat Bar Auto-Demo Workflows
  * Automated sequences that showcase features when user is idle
+ * Now with background image transitions
  */
 
 (function() {
@@ -25,66 +26,133 @@
   // Configuration
   // ============================================
   
-  const IDLE_TIMEOUT = 3000; // Wait 3 seconds before starting demo
-  const TYPING_SPEED = 80; // ms per character
-  const PAUSE_BETWEEN_ACTIONS = 1500; // ms between workflow steps
-  const PAUSE_BETWEEN_WORKFLOWS = 2000; // ms between complete workflows
+      const IDLE_TIMEOUT = 2000; // Wait 2 seconds before starting demo
+      const TYPING_SPEED = 30; // ms per character (fast typing)
+      const PAUSE_BETWEEN_ACTIONS = 400; // ms between workflow steps
+      const PAUSE_BETWEEN_WORKFLOWS = 800; // ms between complete workflows
 
   let idleTimer = null;
   let isRunningWorkflow = false;
   let currentWorkflowIndex = 0;
 
+      // ============================================
+      // Background Images for Workflows
+      // ============================================
+
+      const backgroundImages = [
+          'imgs/Runners.jpg',
+          'imgs/ChildCare1.jpg',
+          'imgs/Weather2.jpeg'
+      ];
+
   // ============================================
   // Workflow Definitions
+      // Each workflow can have an associated background
   // ============================================
 
   const workflows = [
     {
-          name: 'Tag Demo',
+          name: 'Running Trends',
+          category: 'Athletic Footwear Trends',
+          background: 'imgs/Runners.jpg',
           steps: [
+              { action: 'setBackground' },
+              { action: 'setCategory' },
               { action: 'clear' },
-              { action: 'type', text: 'Help me understand the trends for ' },
-              { action: 'insertTag', icon: 'steps', label: 'Summer Footwear' },
-              { action: 'type', text: ' this season' },
-              { action: 'pause', duration: 3000 },
-              { action: 'clear' },
+              { action: 'setStatus', text: 'Typing...' },
+              { action: 'type', text: 'What are the latest trends in ' },
+              { action: 'insertTag', icon: 'footwear', label: 'Running Shoes' },
+              { action: 'type', text: ' for Q2 2026?' },
+              { action: 'pause', duration: 400 },
+              { action: 'setStatus', text: 'Searching...' },
+              { action: 'send' },
+              { action: 'pause', duration: 1500 },
+              { action: 'setStatus', text: 'Analyzing...' },
+              { action: 'pause', duration: 1500 },
+              { action: 'setStatus', text: 'Generating...' },
+              { action: 'pause', duration: 1500 },
+              { action: 'clearStatus' },
+              { action: 'hideOutput' },
+              { action: 'pause', duration: 300 },
           ]
       },
       {
-      name: 'Feature Tour',
+          name: 'Childcare Analysis',
+          category: 'Childcare Product Sales',
+          background: 'imgs/ChildCare1.jpg',
       steps: [
+          { action: 'setBackground' },
+          { action: 'setCategory' },
         { action: 'clear' },
-          { action: 'type', text: 'Create a campaign for ' },
-          { action: 'insertTag', icon: 'folder', label: "Spring/Summer '26" },
-          { action: 'pause', duration: 1500 },
+          { action: 'setStatus', text: 'Typing...' },
+          { action: 'type', text: 'Analyze consumer sentiment for ' },
+          { action: 'insertTag', icon: 'category', label: 'Baby Products' },
+          { action: 'pause', duration: 300 },
+          { action: 'setStatus', text: 'Thinking...' },
         { action: 'openPopup', popupId: 'thinking-popup', triggerSelector: '[data-popup="thinking-popup"]' },
-        { action: 'pause', duration: 2000 },
+          { action: 'pause', duration: 800 },
         { action: 'closeAllPopups' },
-        { action: 'pause', duration: 500 },
-        { action: 'openPopup', popupId: 'context-popup', triggerSelector: '[data-popup="context-popup"]' },
-        { action: 'pause', duration: 2000 },
-        { action: 'closeAllPopups' },
+          { action: 'pause', duration: 200 },
+          { action: 'setStatus', text: 'Searching...' },
+          { action: 'send' },
+          { action: 'pause', duration: 1500 },
+          { action: 'setStatus', text: 'Analyzing...' },
+          { action: 'pause', duration: 1500 },
+          { action: 'setStatus', text: 'Generating...' },
+          { action: 'pause', duration: 1500 },
+          { action: 'clearStatus' },
+          { action: 'hideOutput' },
+          { action: 'pause', duration: 300 },
       ]
     },
     {
-      name: 'Slash Command Demo',
+        name: 'Weather Impact',
+        category: 'Weather & Retail Impact',
+        background: 'imgs/Weather2.jpeg',
       steps: [
+          { action: 'setBackground' },
+          { action: 'setCategory' },
         { action: 'clear' },
-        { action: 'type', text: 'Show me the latest trends for /' },
-        { action: 'pause', duration: 2000 },
-        { action: 'clear' },
+          { action: 'setStatus', text: 'Typing...' },
+          { action: 'type', text: 'How does weather affect sales of ' },
+          { action: 'insertTag', icon: 'apparel', label: 'Outdoor Apparel' },
+          { action: 'type', text: '?' },
+          { action: 'pause', duration: 300 },
+          { action: 'setStatus', text: 'Adding context...' },
+          { action: 'openPopup', popupId: 'context-popup', triggerSelector: '[data-popup="context-popup"]' },
+          { action: 'pause', duration: 800 },
+          { action: 'closeAllPopups' },
+          { action: 'pause', duration: 200 },
+          { action: 'setStatus', text: 'Searching...' },
+          { action: 'send' },
+          { action: 'pause', duration: 1500 },
+          { action: 'setStatus', text: 'Processing...' },
+          { action: 'pause', duration: 1500 },
+          { action: 'setStatus', text: 'Generating...' },
+          { action: 'pause', duration: 1500 },
+          { action: 'clearStatus' },
+          { action: 'hideOutput' },
+          { action: 'pause', duration: 300 },
       ]
     },
     {
-      name: 'Quick Actions',
+        name: 'Quick Actions Demo',
+        category: 'Campaign Planning',
+        background: 'imgs/Runners.jpg',
       steps: [
+          { action: 'setBackground' },
+          { action: 'setCategory' },
         { action: 'clear' },
+          { action: 'setStatus', text: 'Browsing...' },
         { action: 'openPopup', popupId: 'add-menu', triggerSelector: '[data-popup="add-menu"]' },
-        { action: 'pause', duration: 2000 },
+          { action: 'pause', duration: 800 },
         { action: 'closeAllPopups' },
-        { action: 'pause', duration: 500 },
-        { action: 'type', text: 'Write compelling product copy' },
-        { action: 'pause', duration: 1500 },
+          { action: 'pause', duration: 200 },
+          { action: 'setStatus', text: 'Typing...' },
+          { action: 'type', text: 'Create a market report for ' },
+          { action: 'insertTag', icon: 'project', label: "Spring/Summer '26" },
+          { action: 'pause', duration: 600 },
+          { action: 'clearStatus' },
         { action: 'clear' },
       ]
     }
@@ -98,7 +166,8 @@
     clear: function() {
       const inputArea = document.querySelector('.chat-input-area');
       if (inputArea) {
-          inputArea.innerHTML = ''; // Use innerHTML to fully clear
+          inputArea.innerHTML = '';
+          inputArea.setAttribute('data-empty', 'true');
       }
       return Promise.resolve();
     },
@@ -107,6 +176,9 @@
       return new Promise((resolve) => {
         const inputArea = document.querySelector('.chat-input-area');
         if (!inputArea) return resolve();
+
+          // Remove empty attribute when typing starts
+          inputArea.removeAttribute('data-empty');
 
         let index = 0;
         const typeChar = () => {
@@ -152,6 +224,9 @@
               const inputArea = document.querySelector('.chat-input-area');
               if (!inputArea || !window.Tag) return resolve();
 
+              // Remove empty attribute
+              inputArea.removeAttribute('data-empty');
+
               const tagElement = window.Tag.inline(icon, label);
               inputArea.appendChild(tagElement);
               resolve();
@@ -183,6 +258,60 @@
               if (window.TextCardOutput) {
                   window.TextCardOutput.hide();
               }
+              if (window.VisualizationCard) {
+                  window.VisualizationCard.hide();
+              }
+              resolve();
+          });
+      },
+
+      // New action for background changes
+      setBackground: function (imageUrl) {
+          return new Promise((resolve) => {
+              if (window.BackgroundManager) {
+                  if (imageUrl) {
+                      window.BackgroundManager.setBackground(imageUrl);
+                  }
+                  // If no URL provided, the workflow's background will be used
+              }
+              // Small delay to let the transition start
+              setTimeout(resolve, 200);
+          });
+      },
+
+      nextBackground: function () {
+          return new Promise((resolve) => {
+              if (window.BackgroundManager) {
+                  window.BackgroundManager.next();
+              }
+              setTimeout(resolve, 200);
+          });
+      },
+
+      // Status bar actions
+      setCategory: function (text) {
+          return new Promise((resolve) => {
+              if (window.StatusBar) {
+                  window.StatusBar.setCategory(text);
+              }
+              setTimeout(resolve, 100);
+          });
+      },
+
+      setStatus: function (text) {
+          return new Promise((resolve) => {
+              if (window.StatusBar) {
+                  window.StatusBar.setAction(text);
+              }
+              resolve();
+          });
+      },
+
+      clearStatus: function () {
+          return new Promise((resolve) => {
+              if (window.StatusBar) {
+                  window.StatusBar.clearAction();
+              }
               resolve();
           });
     }
@@ -205,12 +334,22 @@
               await actionFn(step.icon, step.label);
           } else if (step.action === 'openPopup') {
               await actionFn(step.popupId, step.triggerSelector);
+          } else if (step.action === 'setBackground') {
+              // Use workflow's background if step doesn't specify one
+              await actionFn(step.imageUrl || workflow.background);
+          } else if (step.action === 'setCategory') {
+              // Use workflow's category if step doesn't specify one
+              await actionFn(step.text || workflow.category);
+          } else if (step.action === 'setStatus') {
+              await actionFn(step.text);
           } else {
-              await actionFn(step.text || step.duration);
+              await actionFn(step.text || step.duration || step.lines);
           }
       }
 
-      if (step.action !== 'pause') {
+        // Skip pause for instant actions
+        const skipPauseActions = ['pause', 'setBackground', 'setCategory', 'setStatus', 'clearStatus'];
+        if (!skipPauseActions.includes(step.action)) {
         await actions.pause(PAUSE_BETWEEN_ACTIONS);
       }
     }
@@ -218,6 +357,20 @@
 
   async function runAllWorkflows() {
     isRunningWorkflow = true;
+
+      // Initialize background manager with our images
+      if (window.BackgroundManager) {
+          window.BackgroundManager.init({
+              images: backgroundImages,
+              transitionDuration: 600,
+              overlayOpacity: 0.35
+          });
+      }
+
+      // Initialize status bar
+      if (window.StatusBar) {
+          window.StatusBar.init();
+      }
 
     while (isRunningWorkflow && currentWorkflowIndex < workflows.length) {
       await runWorkflow(workflows[currentWorkflowIndex]);
@@ -242,6 +395,7 @@
       isRunningWorkflow = false;
       currentWorkflowIndex = 0;
       actions.closeAllPopups();
+        actions.hideOutput();
     }
   }
 
@@ -273,7 +427,15 @@
   // Start idle detection
   resetIdleTimer();
 
-  console.log('🎭 Auto-demo workflows initialized');
+      // Expose functions for external control
+      window.Workflows = {
+          start: runAllWorkflows,
+          stop: stopWorkflow,
+          reset: resetIdleTimer,
+          setBackground: actions.setBackground,
+          nextBackground: actions.nextBackground
+      };
+
+      console.log('🎭 Auto-demo workflows initialized with background support');
   } // End of startWorkflowEngine
 })();
-

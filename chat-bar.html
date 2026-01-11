@@ -18,9 +18,12 @@
   <!-- Custom CSS (remaining styles) -->
   <link rel="stylesheet" href="chat-bar.css">
 </head>
-<body style="font-family: 'DM Sans', sans-serif; background: linear-gradient(135deg, #2a2a28 0%, #1a1a18 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px; margin: 0;">
-  <!-- Wrapper for Tailwind scoping (matches Webflow embed structure) -->
-  <div id="chat-bar" class="w-full max-w-[520px]">
+<body style="font-family: 'DM Sans', sans-serif; margin: 0; padding: 0;">
+  <!-- Hero Animation Container (matches Webflow "hero-anim" structure) -->
+  <div id="hero-anim" style="position: relative; width: 100%; height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; background: linear-gradient(135deg, #2a2a28 0%, #1a1a18 100%);">
+    
+    <!-- Chat Bar Container -->
+    <div id="chat-bar" class="w-full max-w-[520px]" style="position: relative; z-index: 10; padding: 40px;">
   <div class="chat-container w-full relative">
     
     <!-- Chat Bar Component - Glass Morphism Container -->
@@ -168,24 +171,38 @@
     </div>
     
     <!-- Slash Command Popup -->
-    <div class="slash-command-popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-[280px] max-w-[calc(100vw-40px)] -translate-y-2 bg-neutral-98 rounded-2xl border border-neutral-90 shadow-lg p-2 flex flex-col gap-1" id="slash-command-popup" aria-hidden="true">
-      <div class="slash-command-item flex items-center px-2 py-2 rounded-lg cursor-pointer transition-all hover:bg-neutral-95" data-command="spring-summer-26" data-tag-icon="folder" data-tag-label="Spring/Summer '26">
-        <span class="tag-lg">
-          <span class="material-symbols-outlined">folder</span>
-          <span>Spring/Summer '26</span>
-        </span>
+    <div class="slash-command-popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-44 max-w-[calc(100vw-40px)] -translate-y-2 bg-neutral-98 rounded-2xl border border-neutral-10/5 shadow-lg backdrop-blur-md p-2 flex flex-col gap-0.5" id="slash-command-popup" aria-hidden="true">
+      <div class="slash-command-item self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-command="spring-summer-26" data-tag-icon="project" data-tag-label="Spring/Summer '26">
+        <div class="flex justify-start items-center gap-1.5">
+          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
+            <span class="material-symbols-outlined text-[18px]">folder_special</span>
+          </span>
+          <span class="text-neutral-40 text-sm font-normal leading-4">Project</span>
+        </div>
       </div>
-      <div class="slash-command-item flex items-center px-2 py-2 rounded-lg cursor-pointer transition-all hover:bg-neutral-95" data-command="summer-footwear" data-tag-icon="shoe" data-tag-label="Summer Footwear">
-        <span class="tag-lg">
-          <span class="material-symbols-outlined">steps</span>
-          <span>Summer Footwear</span>
-        </span>
+      <div class="slash-command-item self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-command="report" data-tag-icon="document" data-tag-label="Report">
+        <div class="flex justify-start items-center gap-1.5">
+          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
+            <span class="material-symbols-outlined text-[18px]">description</span>
+          </span>
+          <span class="text-neutral-40 text-sm font-normal leading-4">Report</span>
+        </div>
       </div>
-      <div class="slash-command-item flex items-center px-2 py-2 rounded-lg cursor-pointer transition-all hover:bg-neutral-95" data-command="spring-summer-25" data-tag-icon="description" data-tag-label="Spring/Summer '25">
-        <span class="tag-lg">
-          <span class="material-symbols-outlined">description</span>
-          <span>Spring/Summer '25</span>
-        </span>
+      <div class="slash-command-item self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-command="product" data-tag-icon="product" data-tag-label="Product">
+        <div class="flex justify-start items-center gap-1.5">
+          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
+            <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+          </span>
+          <span class="text-neutral-40 text-sm font-normal leading-4">Product</span>
+        </div>
+      </div>
+      <div class="slash-command-item self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-command="file" data-tag-icon="file" data-tag-label="File">
+        <div class="flex justify-start items-center gap-1.5">
+          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
+            <span class="material-symbols-outlined text-[18px]">draft</span>
+          </span>
+          <span class="text-neutral-40 text-sm font-normal leading-4">File</span>
+        </div>
       </div>
     </div>
     
@@ -195,12 +212,17 @@
   </div>
   </div> <!-- End of #chat-bar wrapper -->
   
+  </div> <!-- End of #hero-anim wrapper -->
+  
   <!-- Components -->
+  <script src="components/icon-library.js"></script>
   <script src="components/tag.js"></script>
   <script src="components/source-library.js"></script>
   <script src="components/source-tag.js"></script>
   <script src="components/text-card-output.js"></script>
   <script src="components/visualization-card.js"></script>
+  <script src="components/background-manager.js"></script>
+  <script src="components/status-bar.js"></script>
   
   <!-- Main Scripts -->
   <script src="chat-bar.js"></script>

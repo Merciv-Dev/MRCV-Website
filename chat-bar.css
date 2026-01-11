@@ -129,15 +129,18 @@
   transform: translateY(0);
 }
 
-/* Slash command item active state (green highlight) */
+/* Slash command item active state (neutral highlight) */
 .slash-command-item.active {
-  background: rgba(141, 220, 184, 0.25);
-  color: #1a3f2e;
-  box-shadow: inset 0 0 3.2px 0 rgba(242, 242, 237, 0.25);
+  background: #F2F2ED; /* neutral-95 */
+  box-shadow: inset 0 0 3px 0 rgba(242, 242, 237, 0.25);
+}
+
+.slash-command-item.active span {
+  color: #0D0D0C; /* neutral-10 for active text */
 }
 
 .slash-command-item.active .material-symbols-outlined {
-  color: #1a3f2e;
+  color: #0D0D0C; /* neutral-10 for active icon */
 }
 
 /* Toggle option active state (radio button) */

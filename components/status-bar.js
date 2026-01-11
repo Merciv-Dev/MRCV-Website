@@ -36,7 +36,7 @@ const StatusBar = (function() {
     // Create status bar container
     container = document.createElement('div');
     container.id = 'status-bar';
-    container.className = 'fixed bottom-0 left-0 right-0 z-20 px-8 py-6 flex justify-between items-center pointer-events-none';
+      container.className = 'absolute bottom-0 left-0 right-0 z-20 px-8 py-6 flex justify-between items-center pointer-events-none';
     
     container.innerHTML = `
       <!-- Left: Category Ticker -->

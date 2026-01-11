@@ -1,0 +1,851 @@
+<!-- ============================================
+     WEBFLOW CHAT BAR - COMPLETE PACKAGE
+     ============================================
+     
+     HOW TO USE IN WEBFLOW:
+     
+     1. COPY THE <style> BLOCK → Paste in Site Settings > Custom Code > Head Code
+     2. COPY THE HTML BLOCK → Paste into an Embed element on your page
+     3. COPY THE <script> BLOCK → Paste in Site Settings > Custom Code > Footer Code
+     
+     For a fixed header/footer position, wrap the Embed element in a div with:
+     - Position: Fixed
+     - Bottom: 20px (or your preferred spacing)
+     - Left: 50%
+     - Transform: translateX(-50%)
+     - Z-index: 999
+     
+     ============================================ -->
+
+
+<!-- ============================================
+     STEP 1: HEAD CODE (Site Settings > Custom Code > Head)
+     Copy everything between START and END
+     ============================================ -->
+
+<!-- START HEAD CODE -->
+<style>
+/* Chat Bar Component - Webflow */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
+/* CSS Variables */
+:root {
+  --chat-neutral-05: #0D0D0D;
+  --chat-neutral-10: #0D0D0C;
+  --chat-neutral-40: #666560;
+  --chat-neutral-90: #E5E5DF;
+  --chat-neutral-95: #F2F2ED;
+  --chat-neutral-99: #FAF9F5;
+  --chat-orange-50: #ED4421;
+  --chat-font: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --chat-shadow-card: 
+    0px 6px 6px -3px rgba(0, 0, 0, 0.05),
+    0px 3px 3px -1.5px rgba(0, 0, 0, 0.05),
+    0px 1px 1px -0.5px rgba(0, 0, 0, 0.05),
+    0px 0px 1px 0px rgba(0, 0, 0, 0.05);
+}
+
+/* Chat Container - Fixed Position Wrapper */
+.chat-bar-wrapper {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  width: 100%;
+  max-width: 520px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Main Chat Bar */
+.chat-bar {
+  background: rgba(242, 242, 237, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 0.5px solid rgba(250, 249, 245, 0.25);
+  border-radius: 33px;
+  padding: 12px;
+  box-sizing: border-box;
+}
+
+.chat-bar-inner {
+  background: var(--chat-neutral-99);
+  border: 0.5px solid rgba(13, 13, 12, 0.05);
+  border-radius: 24px;
+  padding: 8px;
+  box-shadow: var(--chat-shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Text Input */
+.chat-input-area {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  font-family: var(--chat-font);
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--chat-neutral-10);
+  min-height: 60px;
+  max-height: 200px;
+  overflow-y: auto;
+  outline: none;
+  border: none;
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.chat-input-area:empty::before {
+  content: attr(data-placeholder);
+  color: var(--chat-neutral-40);
+  pointer-events: none;
+}
+
+.chat-input-area:focus {
+  background: rgba(229, 229, 223, 0.2);
+}
+
+/* Actions Row */
+.chat-actions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.chat-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Buttons */
+.chat-bar button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--chat-font);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.chat-bar button:focus-visible {
+  outline: 2px solid var(--chat-orange-50);
+  outline-offset: 2px;
+}
+
+/* Add Button (Left) */
+.btn-add-main {
+  width: 33px;
+  height: 33px;
+  background: var(--chat-neutral-90);
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-add-main:hover {
+  transform: rotate(90deg);
+}
+
+.btn-add-main svg {
+  width: 21px;
+  height: 21px;
+}
+
+/* Pill Buttons */
+.btn-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 11px 6px 6px;
+  background: transparent;
+  border: 1px solid var(--chat-neutral-90) !important;
+  border-radius: 16px;
+  backdrop-filter: blur(19px);
+  -webkit-backdrop-filter: blur(19px);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-pill::after {
+  content: '';
+  position: relative;
+  inset: 0;
+  box-shadow: inset 0px 0px 3px 0px rgba(242, 242, 237, 0.25);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.btn-pill svg {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+}
+
+.btn-pill span {
+  font-size: 14px;
+  color: var(--chat-neutral-40);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.btn-pill:hover {
+  background: rgba(229, 229, 223, 0.5);
+  border-color: var(--chat-neutral-40) !important;
+}
+
+.btn-pill:hover span {
+  color: var(--chat-neutral-10);
+}
+
+/* Icon Buttons */
+.btn-icon {
+  width: 33px;
+  height: 33px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.btn-attach {
+  background: var(--chat-neutral-95);
+  border-radius: 100px;
+}
+
+.btn-attach:hover {
+  background: var(--chat-neutral-90);
+}
+
+.btn-send {
+  background: var(--chat-orange-50);
+}
+
+.btn-send:hover {
+  background: #d93a1a;
+  transform: translateY(-1px);
+}
+
+/* Popup Overlay */
+.chat-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 13, 12, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 9998;
+}
+
+.chat-popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Popup */
+.chat-popup {
+  position: fixed;
+  bottom: 140px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  width: calc(100% - 40px);
+  max-width: 400px;
+}
+
+.chat-popup.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.chat-popup-content {
+  background: var(--chat-neutral-99);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 8px 24px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.chat-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--chat-neutral-90);
+}
+
+.chat-popup-header span {
+  font-family: var(--chat-font);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--chat-neutral-10);
+}
+
+.chat-popup-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 100px;
+  background: var(--chat-neutral-95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: var(--chat-neutral-40);
+  line-height: 1;
+}
+
+.chat-popup-close:hover {
+  background: var(--chat-neutral-90);
+  color: var(--chat-neutral-10);
+}
+
+.chat-popup-body {
+  padding: 16px;
+}
+
+.chat-popup-description {
+  font-family: var(--chat-font);
+  font-size: 14px;
+  color: var(--chat-neutral-40);
+  margin: 0 0 16px 0;
+}
+
+/* Popup Actions */
+.chat-popup-action {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--chat-neutral-10);
+  font-family: var(--chat-font);
+  font-size: 16px;
+  text-align: left;
+}
+
+.chat-popup-action:hover {
+  background: var(--chat-neutral-95);
+}
+
+.chat-popup-action svg {
+  width: 20px;
+  height: 20px;
+  color: var(--chat-neutral-40);
+  flex-shrink: 0;
+}
+
+.chat-popup-action:hover svg {
+  color: var(--chat-orange-50);
+}
+
+/* Toggle Options */
+.chat-toggle-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chat-toggle-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--chat-neutral-40);
+  font-family: var(--chat-font);
+  font-size: 16px;
+  text-align: left;
+  border: 1px solid transparent !important;
+}
+
+.chat-toggle-option:hover {
+  background: var(--chat-neutral-95);
+}
+
+.chat-toggle-option.active {
+  background: var(--chat-neutral-95);
+  border-color: var(--chat-orange-50) !important;
+  color: var(--chat-neutral-10);
+}
+
+.chat-toggle-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--chat-neutral-90);
+  flex-shrink: 0;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.chat-toggle-option.active .chat-toggle-dot {
+  border-color: var(--chat-orange-50);
+}
+
+.chat-toggle-option.active .chat-toggle-dot::after {
+  content: '';
+  position: relative;
+  top: 2px;
+  left: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--chat-orange-50);
+}
+
+/* Context Tags */
+.chat-context-tags {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.chat-context-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--chat-neutral-95);
+  color: var(--chat-neutral-10);
+  font-family: var(--chat-font);
+  font-size: 14px;
+  text-align: left;
+  border: 1px solid transparent !important;
+}
+
+.chat-context-tag:hover {
+  border-color: var(--chat-orange-50) !important;
+  background: rgba(237, 68, 33, 0.05);
+}
+
+.chat-tag-icon {
+  font-size: 18px;
+}
+
+/* Drop Zone */
+.chat-drop-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px;
+  border: 2px dashed var(--chat-neutral-90);
+  border-radius: 16px;
+  background: var(--chat-neutral-95);
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.chat-drop-zone:hover {
+  border-color: var(--chat-orange-50);
+  background: rgba(237, 68, 33, 0.05);
+}
+
+.chat-drop-zone svg {
+  opacity: 0.5;
+}
+
+.chat-drop-zone p {
+  font-family: var(--chat-font);
+  font-size: 16px;
+  color: var(--chat-neutral-10);
+  font-weight: 500;
+  margin: 0;
+}
+
+.chat-drop-zone > span {
+  font-family: var(--chat-font);
+  font-size: 14px;
+  color: var(--chat-neutral-40);
+}
+
+.btn-browse {
+  margin-top: 8px;
+  padding: 8px 16px;
+  background: var(--chat-neutral-99);
+  border: 1px solid var(--chat-neutral-90) !important;
+  border-radius: 16px;
+  font-family: var(--chat-font);
+  font-size: 14px;
+  color: var(--chat-neutral-10);
+}
+
+.btn-browse:hover {
+  border-color: var(--chat-orange-50) !important;
+  color: var(--chat-orange-50);
+}
+
+/* Responsive */
+@media (max-width: 520px) {
+  .btn-pill span {
+    display: none;
+  }
+  .btn-pill {
+    padding: 6px;
+  }
+  .chat-context-tags {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+<!-- END HEAD CODE -->
+
+
+<!-- ============================================
+     STEP 2: EMBED ELEMENT HTML
+     Copy everything between START and END into a Webflow Embed element
+     ============================================ -->
+
+<!-- START EMBED HTML -->
+<div class="chat-bar-wrapper">
+  <div class="chat-bar">
+    <div class="chat-bar-inner">
+      
+      <!-- Text Input -->
+      <div class="chat-input-area" contenteditable="true" data-placeholder="Ask anything...">Explain the rise of running in 2025 and how we can take advantage of it in our campaign for /S</div>
+      
+      <!-- Actions Row -->
+      <div class="chat-actions">
+        
+        <!-- Add Button -->
+        <button class="btn-add-main" data-chat-popup="add-menu">
+          <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.66504 14.855V11.19H6V9.52002H9.66504V5.85498H11.335V9.52002H15V11.19H11.335V14.855H9.66504Z" fill="#0D0D0C"/>
+          </svg>
+        </button>
+        
+        <!-- Right Actions -->
+        <div class="chat-actions-right">
+          
+          <!-- Thinking -->
+          <button class="btn-pill" data-chat-popup="thinking-popup">
+            <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10.5 17.355C9.91875 17.355 9.38194 17.2169 8.88958 16.9406C8.39722 16.6644 8 16.2846 7.69792 15.8011C7.16979 15.6285 6.72222 15.3219 6.35521 14.8814C5.9882 14.4408 5.76736 13.9355 5.69271 13.3654H5.25C4.58542 13.3654 4.02083 13.1322 3.55625 12.6658C3.09167 12.1995 2.85937 11.6334 2.85937 10.9675C2.85937 10.3016 3.09167 9.73548 3.55625 9.26916C4.02083 8.80285 4.58542 8.56969 5.25 8.56969H5.47396C5.4375 8.42752 5.40972 8.28536 5.39062 8.14319C5.37153 8.00103 5.36198 7.85451 5.36198 7.70365C5.36198 6.71215 5.70382 5.86632 6.3875 5.16615C7.07118 4.46597 7.91441 4.11588 8.91719 4.11588C9.24496 4.11588 9.56059 4.16069 9.86406 4.25031C10.1675 4.33994 10.4536 4.47342 10.7222 4.65077C11.0087 4.33126 11.3539 4.07954 11.7578 3.89563C12.1618 3.71172 12.5875 3.61976 13.0349 3.61976C13.9557 3.61976 14.7383 3.94362 15.3828 4.59133C16.0273 5.23905 16.3495 6.02372 16.3495 6.94533C16.3495 7.08315 16.3417 7.21661 16.326 7.34573C16.3104 7.47486 16.2878 7.60398 16.2583 7.73311C16.6858 7.91702 17.0375 8.19699 17.3135 8.57304C17.5896 8.94909 17.7396 9.38129 17.7656 9.86965H17.8594C18.4406 9.86965 18.9341 10.0765 19.3401 10.4903C19.7461 10.904 19.9492 11.4028 19.9492 11.9866C19.9492 12.5703 19.7461 13.0691 19.3401 13.4828C18.9341 13.8966 18.4406 14.1035 17.8594 14.1035H14.6172C14.3747 14.1035 14.1712 14.0173 14.0068 13.845C13.8424 13.6727 13.7602 13.4654 13.7602 13.223C13.7602 12.9806 13.8424 12.7732 14.0068 12.601C14.1712 12.4287 14.3747 12.3425 14.6172 12.3425H17.8594C17.9688 12.3425 18.0608 12.3035 18.1354 12.2254C18.2101 12.1474 18.2474 12.0563 18.2474 11.952C18.2474 11.8477 18.2084 11.7609 18.1302 11.6915C18.0521 11.6222 17.9601 11.5875 17.8542 11.5875H16.349V10.7115C16.349 10.4691 16.2623 10.2575 16.0888 10.0765C15.9152 9.89563 15.7031 9.80519 15.4526 9.80519C15.2639 9.80519 15.0925 9.85652 14.9385 9.95917C14.7845 10.0618 14.6736 10.199 14.6057 10.3707L14.1719 11.4222L13.1693 10.8992C12.7812 10.6916 12.4167 10.6873 12.0755 10.8862C11.7344 11.0852 11.5104 11.3738 11.4035 11.752L11.0755 12.9404L9.94792 12.4911C9.60104 12.3617 9.28368 12.3919 8.99583 12.5819C8.70799 12.7719 8.52431 13.0475 8.44479 13.4088L8.32292 13.984C8.23611 14.4116 8.02344 14.7632 7.6849 15.039C7.34635 15.3147 6.95399 15.4525 6.50781 15.4525C6.43316 15.4525 6.35851 15.4482 6.28385 15.4395C6.2092 15.4308 6.13021 15.4178 6.04687 15.4005C6.13368 15.7184 6.30104 15.984 6.54896 16.1974C6.79687 16.4108 7.09479 16.5175 7.44271 16.5175C7.47135 16.5175 7.50955 16.5175 7.55729 16.5175C7.60503 16.5175 7.64583 16.5131 7.67969 16.5045L7.89531 16.4525L8.10312 16.5045C8.32552 16.556 8.53958 16.5775 8.74531 16.5688C8.95104 16.56 9.1441 16.521 9.32448 16.4525L10.5 17.355Z" fill="#666560"/>
+            </svg>
+            <span>Thinking</span>
+          </button>
+          
+          <!-- Add Context -->
+          <button class="btn-pill" data-chat-popup="context-popup">
+            <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.66504 14.855V11.19H6V9.52002H9.66504V5.85498H11.335V9.52002H15V11.19H11.335V14.855H9.66504Z" fill="#666560"/>
+            </svg>
+            <span>Add Context</span>
+          </button>
+          
+          <!-- Attach -->
+          <button class="btn-icon btn-attach" data-chat-popup="attach-popup">
+            <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10.4999 17.7502C9.23264 17.7502 8.14819 17.3074 7.24652 16.4218C6.34485 15.5362 5.89401 14.4634 5.89401 13.2034V6.14551C5.89401 5.22462 6.21512 4.44168 6.85735 3.79668C7.49957 3.15168 8.28207 2.82918 9.20485 2.82918C10.1276 2.82918 10.9101 3.15168 11.5524 3.79668C12.1946 4.44148 12.5157 5.22442 12.5157 6.14531V12.6205C12.5157 13.1932 12.3166 13.6819 11.9185 14.0866C11.5205 14.4914 11.0361 14.6938 10.4651 14.6938C9.89401 14.6938 9.40527 14.4892 8.99888 14.0799C8.59249 13.6706 8.3893 13.1798 8.3893 12.6076V6.14551H9.6393V12.6335C9.6393 12.8658 9.71381 13.0591 9.86283 13.2134C10.0118 13.3677 10.2019 13.4448 10.433 13.4448C10.6767 13.4448 10.8769 13.3677 11.0335 13.2134C11.1902 13.0589 11.2685 12.8656 11.2685 12.6333V6.14531C11.2685 5.56815 11.0657 5.08334 10.66 4.69087C10.2544 4.2984 9.76326 4.10217 9.18666 4.10217C8.61005 4.10217 8.12309 4.30449 7.72578 4.70912C7.32847 5.11375 7.12982 5.60614 7.12982 6.18629V13.2032C7.12982 14.1241 7.45398 14.9071 8.1023 15.5522C8.75063 16.1973 9.54107 16.5198 10.4736 16.5198C11.4062 16.5198 12.2074 16.193 12.8774 15.5393C13.5474 14.8857 13.8824 14.1027 13.8824 13.1903V6.14531H15.1055V13.2161C15.1055 14.4762 14.6569 15.5446 13.7598 16.4216C12.8628 17.2986 11.7724 17.737 10.4888 17.737L10.4999 17.7502Z" fill="#0D0D0C"/>
+            </svg>
+          </button>
+          
+          <!-- Send -->
+          <button class="btn-icon btn-send" data-chat-action="send">
+            <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.66504 17.355V7.25508L5.60254 11.3176L4.41504 10.105L10.5 4.02002L16.585 10.105L15.3975 11.3176L11.335 7.25508V17.355H9.66504Z" fill="white"/>
+            </svg>
+          </button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Popups -->
+  
+  <!-- Add Menu -->
+  <div class="chat-popup" id="add-menu" aria-hidden="true">
+    <div class="chat-popup-content">
+      <div class="chat-popup-header">
+        <span>Quick Actions</span>
+        <button class="chat-popup-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="chat-popup-body">
+        <button class="chat-popup-action">
+          <svg width="20" height="20" viewBox="0 0 21 21" fill="none"><path d="M3.5 17.5V14.5L14 4L17 7L6.5 17.5H3.5ZM5 16H5.875L14 7.875L13.125 7L5 15.125V16Z" fill="currentColor"/></svg>
+          <span>Write copy</span>
+        </button>
+        <button class="chat-popup-action">
+          <svg width="20" height="20" viewBox="0 0 21 21" fill="none"><path d="M4.5 17.5V3.5H12L12.4 5.5H18.5V14.5H11L10.6 12.5H6V17.5H4.5Z" fill="currentColor"/></svg>
+          <span>Create campaign</span>
+        </button>
+        <button class="chat-popup-action">
+          <svg width="20" height="20" viewBox="0 0 21 21" fill="none"><path d="M10.5 19C8.11667 19 6.10417 18.175 4.4625 16.525C2.82083 14.875 2 12.8667 2 10.5C2 8.13333 2.82083 6.125 4.4625 4.475C6.10417 2.825 8.11667 2 10.5 2C12.8833 2 14.8958 2.825 16.5375 4.475C18.1792 6.125 19 8.13333 19 10.5C19 12.8667 18.1792 14.875 16.5375 16.525C14.8958 18.175 12.8833 19 10.5 19Z" fill="currentColor"/></svg>
+          <span>Analyze trends</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Thinking -->
+  <div class="chat-popup" id="thinking-popup" aria-hidden="true">
+    <div class="chat-popup-content">
+      <div class="chat-popup-header">
+        <span>Thinking Mode</span>
+        <button class="chat-popup-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="chat-popup-body">
+        <p class="chat-popup-description">Enable deeper reasoning for complex queries</p>
+        <div class="chat-toggle-options">
+          <button class="chat-toggle-option active">
+            <span class="chat-toggle-dot"></span>
+            Quick response
+          </button>
+          <button class="chat-toggle-option">
+            <span class="chat-toggle-dot"></span>
+            Deep thinking
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Context -->
+  <div class="chat-popup" id="context-popup" aria-hidden="true">
+    <div class="chat-popup-content">
+      <div class="chat-popup-header">
+        <span>Add Context</span>
+        <button class="chat-popup-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="chat-popup-body">
+        <div class="chat-context-tags">
+          <button class="chat-context-tag"><span class="chat-tag-icon">📊</span><span>Market data</span></button>
+          <button class="chat-context-tag"><span class="chat-tag-icon">📄</span><span>Brand guidelines</span></button>
+          <button class="chat-context-tag"><span class="chat-tag-icon">👥</span><span>Audience insights</span></button>
+          <button class="chat-context-tag"><span class="chat-tag-icon">🎯</span><span>Campaign goals</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Attach -->
+  <div class="chat-popup" id="attach-popup" aria-hidden="true">
+    <div class="chat-popup-content">
+      <div class="chat-popup-header">
+        <span>Attach Files</span>
+        <button class="chat-popup-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="chat-popup-body">
+        <div class="chat-drop-zone">
+          <svg width="32" height="32" viewBox="0 0 21 21" fill="none"><path d="M10.5 17.75C9.23264 17.75 8.14819 17.3072 7.24652 16.4216C6.34485 15.536 5.89401 14.4632 5.89401 13.2032V6.14531C5.89401 5.22442 6.21512 4.44148 6.85735 3.79648C7.49957 3.15148 8.28207 2.82898 9.20485 2.82898C10.1276 2.82898 10.9101 3.15148 11.5524 3.79648C12.1946 4.44148 12.5157 5.22442 12.5157 6.14531V12.6203C12.5157 13.193 12.3166 13.6817 11.9185 14.0864C11.5205 14.4912 11.0361 14.6936 10.4651 14.6936C9.89401 14.6936 9.40527 14.489 8.99888 14.0797C8.59249 13.6704 8.3893 13.1796 8.3893 12.6074V6.14531H9.6393V12.6333C9.6393 12.8656 9.71381 13.0589 9.86283 13.2132C10.0118 13.3675 10.2019 13.4446 10.433 13.4446C10.6767 13.4446 10.8769 13.3675 11.0335 13.2132C11.1902 13.0589 11.2685 12.8656 11.2685 12.6333V6.14531C11.2685 5.56815 11.0657 5.08334 10.66 4.69087C10.2544 4.2984 9.76326 4.10217 9.18666 4.10217C8.61005 4.10217 8.12309 4.30449 7.72578 4.70912C7.32847 5.11375 7.12982 5.60614 7.12982 6.18629V13.2032C7.12982 14.1241 7.45398 14.9071 8.1023 15.5522C8.75063 16.1973 9.54107 16.5198 10.4736 16.5198C11.4062 16.5198 12.2074 16.193 12.8774 15.5393C13.5474 14.8857 13.8824 14.1027 13.8824 13.1903V6.14531H15.1055V13.2161C15.1055 14.4762 14.6569 15.5446 13.7598 16.4216C12.8628 17.2986 11.7724 17.737 10.4888 17.737L10.5 17.75Z" fill="#666560"/></svg>
+          <p>Drag & drop files here</p>
+          <span>or</span>
+          <button class="btn-browse">Browse files</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Overlay -->
+  <div class="chat-popup-overlay" id="chat-popup-overlay"></div>
+</div>
+<!-- END EMBED HTML -->
+
+
+<!-- ============================================
+     STEP 3: FOOTER CODE (Site Settings > Custom Code > Footer)
+     Copy everything between START and END
+     ============================================ -->
+
+<!-- START FOOTER CODE -->
+<script>
+(function() {
+  'use strict';
+  
+  // DOM Elements
+  const overlay = document.getElementById('chat-popup-overlay');
+  const popups = document.querySelectorAll('.chat-popup');
+  const triggers = document.querySelectorAll('[data-chat-popup]');
+  const closeButtons = document.querySelectorAll('.chat-popup-close');
+  const toggleOptions = document.querySelectorAll('.chat-toggle-option');
+  const sendButton = document.querySelector('[data-chat-action="send"]');
+  const inputArea = document.querySelector('.chat-input-area');
+  const dropZone = document.querySelector('.chat-drop-zone');
+  
+  // Open popup
+  function openPopup(popupId) {
+    const popup = document.getElementById(popupId);
+    if (!popup) return;
+    closeAllPopups();
+    popup.classList.add('active');
+    popup.setAttribute('aria-hidden', 'false');
+    if (overlay) overlay.classList.add('active');
+  }
+  
+  // Close all popups
+  function closeAllPopups() {
+    popups.forEach(function(popup) {
+      popup.classList.remove('active');
+      popup.setAttribute('aria-hidden', 'true');
+    });
+    if (overlay) overlay.classList.remove('active');
+  }
+  
+  // Event: Trigger clicks
+  triggers.forEach(function(trigger) {
+    trigger.addEventListener('click', function(e) {
+      e.preventDefault();
+      openPopup(this.getAttribute('data-chat-popup'));
+    });
+  });
+  
+  // Event: Close button clicks
+  closeButtons.forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      closeAllPopups();
+    });
+  });
+  
+  // Event: Overlay click
+  if (overlay) {
+    overlay.addEventListener('click', closeAllPopups);
+  }
+  
+  // Event: Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAllPopups();
+  });
+  
+  // Toggle options
+  toggleOptions.forEach(function(option) {
+    option.addEventListener('click', function() {
+      var parent = this.closest('.chat-toggle-options');
+      parent.querySelectorAll('.chat-toggle-option').forEach(function(opt) {
+        opt.classList.remove('active');
+      });
+      this.classList.add('active');
+    });
+  });
+  
+  // Context tags
+  document.querySelectorAll('.chat-context-tag').forEach(function(tag) {
+    tag.addEventListener('click', function() {
+      this.classList.toggle('selected');
+      if (this.classList.contains('selected')) {
+        this.style.borderColor = 'var(--chat-orange-50)';
+        this.style.background = 'rgba(237, 68, 33, 0.1)';
+      } else {
+        this.style.borderColor = 'transparent';
+        this.style.background = 'var(--chat-neutral-95)';
+      }
+    });
+  });
+  
+  // Popup actions
+  document.querySelectorAll('.chat-popup-action').forEach(function(action) {
+    action.addEventListener('click', function() {
+      var text = this.querySelector('span').textContent;
+      if (inputArea) {
+        inputArea.textContent = text + '...';
+        inputArea.focus();
+      }
+      closeAllPopups();
+    });
+  });
+  
+  // Send button
+  if (sendButton) {
+    sendButton.addEventListener('click', function() {
+      var message = inputArea ? inputArea.textContent.trim() : '';
+      if (message) {
+        console.log('Sending:', message);
+        this.style.transform = 'scale(0.9)';
+        var btn = this;
+        setTimeout(function() { btn.style.transform = ''; }, 150);
+        
+        // Show checkmark briefly
+        btn.innerHTML = '<svg width="21" height="21" viewBox="0 0 21 21" fill="none"><path d="M8.5 14.5L4.5 10.5L5.9 9.1L8.5 11.7L15.1 5.1L16.5 6.5L8.5 14.5Z" fill="white"/></svg>';
+        setTimeout(function() {
+          btn.innerHTML = '<svg width="21" height="21" viewBox="0 0 21 21" fill="none"><path d="M9.66504 17.355V7.25508L5.60254 11.3176L4.41504 10.105L10.5 4.02002L16.585 10.105L15.3975 11.3176L11.335 7.25508V17.355H9.66504Z" fill="white"/></svg>';
+        }, 1500);
+      }
+    });
+  }
+  
+  // Enter to send
+  if (inputArea) {
+    inputArea.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        if (sendButton) sendButton.click();
+      }
+    });
+  }
+  
+  // Drop zone
+  if (dropZone) {
+    dropZone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      this.style.borderColor = 'var(--chat-orange-50)';
+      this.style.background = 'rgba(237, 68, 33, 0.05)';
+    });
+    
+    dropZone.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      this.style.borderColor = '';
+      this.style.background = '';
+    });
+    
+    dropZone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      this.style.borderColor = '';
+      this.style.background = '';
+      if (e.dataTransfer.files.length > 0) {
+        var p = this.querySelector('p');
+        if (p) p.textContent = e.dataTransfer.files.length + ' file(s) selected';
+        setTimeout(closeAllPopups, 800);
+      }
+    });
+    
+    var browseBtn = dropZone.querySelector('.btn-browse');
+    if (browseBtn) {
+      browseBtn.addEventListener('click', function() {
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.multiple = true;
+        input.style.display = 'none';
+        input.addEventListener('change', function() {
+          if (this.files.length > 0) {
+            var p = dropZone.querySelector('p');
+            if (p) p.textContent = this.files.length + ' file(s) selected';
+            setTimeout(closeAllPopups, 800);
+          }
+        });
+        document.body.appendChild(input);
+        input.click();
+        document.body.removeChild(input);
+      });
+    }
+  }
+  
+  console.log('Chat Bar initialized');
+})();
+</script>
+<!-- END FOOTER CODE -->
+

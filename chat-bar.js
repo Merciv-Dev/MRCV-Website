@@ -3,7 +3,16 @@
  * Handles popup interactions for the fake chat UI
  */
 
-document.addEventListener('DOMContentLoaded', function() {
+(function initChatBar() {
+  // Handle dynamic loading - if DOMContentLoaded already fired, run immediately
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initChatBarCore);
+    return;
+  }
+  initChatBarCore();
+})();
+
+function initChatBarCore() {
   
   // ============================================
   // DOM Elements
@@ -555,5 +564,6 @@ document.addEventListener('DOMContentLoaded', function() {
   window.openPopup = openPopup;
   window.closeAllPopups = closeAllPopups;
 
-});
+  console.log('🔌 Chat Bar initialized');
+}
 

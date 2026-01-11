@@ -65,8 +65,10 @@ document.addEventListener('DOMContentLoaded', function() {
       popup.style.setProperty('--popup-top', `${top}px`);
     }
 
-    // Open the selected popup
+    // Open the selected popup - toggle both active class AND Tailwind classes
     popup.classList.add('active');
+    popup.classList.remove('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
+    popup.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
     popup.setAttribute('aria-hidden', 'false');
     
     // Focus the close button for accessibility
@@ -82,6 +84,9 @@ document.addEventListener('DOMContentLoaded', function() {
   function closeAllPopups() {
     popups.forEach(popup => {
       popup.classList.remove('active');
+      // Restore Tailwind hidden classes
+      popup.classList.remove('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
+      popup.classList.add('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
       popup.setAttribute('aria-hidden', 'true');
     });
   }
@@ -404,8 +409,10 @@ document.addEventListener('DOMContentLoaded', function() {
     slashCommandPopup.style.top = `${top}px`;
     slashCommandPopup.style.left = `${left}px`;
 
-    // Show popup
+    // Show popup - toggle Tailwind classes too
     slashCommandPopup.classList.add('active');
+    slashCommandPopup.classList.remove('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
+    slashCommandPopup.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
     slashCommandPopup.setAttribute('aria-hidden', 'false');
     slashCommandActive = true;
     selectedCommandIndex = 0;
@@ -421,6 +428,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!slashCommandPopup) return;
 
     slashCommandPopup.classList.remove('active');
+    // Restore Tailwind hidden classes
+    slashCommandPopup.classList.remove('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
+    slashCommandPopup.classList.add('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
     slashCommandPopup.setAttribute('aria-hidden', 'true');
     slashCommandActive = false;
   }

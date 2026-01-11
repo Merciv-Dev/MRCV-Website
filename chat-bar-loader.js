@@ -34,23 +34,15 @@
     // Check for hero-anim wrapper (Webflow setup)
     const heroAnim = document.getElementById('hero-anim');
     if (heroAnim) {
-        // Ensure hero-anim has proper full-viewport styles
+        // Only add positioning for background layers - don't override Webflow's layout
         heroAnim.style.position = 'relative';
-        heroAnim.style.width = '100%';
-        heroAnim.style.height = '100vh';
         heroAnim.style.overflow = 'hidden';
-        heroAnim.style.display = 'flex';
-        heroAnim.style.alignItems = 'center';
-        heroAnim.style.justifyContent = 'center';
-        console.log('Chat Bar: Found #hero-anim wrapper, applying full-viewport styles');
+        console.log('Chat Bar: Found #hero-anim wrapper, adding positioning for backgrounds');
     }
 
-    // Ensure chat-bar container has proper styles
+    // Ensure chat-bar container has proper z-index to sit above backgrounds
     container.style.position = 'relative';
     container.style.zIndex = '10';
-    container.style.width = '100%';
-    container.style.maxWidth = '520px';
-    container.style.padding = '40px';
 
     // 1. Load Tailwind CSS (skip if already loaded in Webflow head)
     if (typeof tailwind === 'undefined') {

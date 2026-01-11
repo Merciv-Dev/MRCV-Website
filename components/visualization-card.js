@@ -268,28 +268,38 @@ const VisualizationCard = (function() {
     }
 
     currentCard = create(options);
+    
+    // Set initial state for smooth height animation
+    currentCard.style.maxHeight = '0';
+    currentCard.style.overflow = 'hidden';
+    
     container.appendChild(currentCard);
 
-    // Animate in
+    // Animate in with height growth
     requestAnimationFrame(() => {
+      currentCard.style.maxHeight = '400px'; // Generous max height
       currentCard.classList.remove('opacity-0', '-translate-y-4');
       currentCard.classList.add('opacity-100', 'translate-y-0');
 
       // Render chart after animation starts
       setTimeout(() => {
         renderChart(currentCard);
-      }, 200);
+      }, 300);
     });
 
     return currentCard;
   }
 
   /**
-   * Hide visualization card
+   * Hide visualization card with smooth height collapse
    */
   function hide() {
     if (!currentCard) return;
 
+    // Animate height collapse for smooth exit
+    currentCard.style.maxHeight = '0';
+    currentCard.style.marginBottom = '0';
+    currentCard.style.padding = '0';
     currentCard.classList.remove('opacity-100', 'translate-y-0');
     currentCard.classList.add('opacity-0', '-translate-y-4');
 

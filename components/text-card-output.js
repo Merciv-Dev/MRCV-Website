@@ -224,20 +224,32 @@ const TextCardOutput = (function() {
   function show(options = {}) {
     init();
 
-    // Remove any existing card
+    // FIRST: Hide any existing visualization card
+    if (window.VisualizationCard) {
+      window.VisualizationCard.hide();
+    }
+
+    // Remove any existing text card
     if (currentCard) {
       currentCard.remove();
     }
 
     // Create new card
     currentCard = create(options);
+    
+    // Set initial state for height animation
+    currentCard.style.maxHeight = '0';
+    currentCard.style.overflow = 'hidden';
+    currentCard.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+    
     container.appendChild(currentCard);
 
     const { sourceDelay = 300, textDelay = 2000 } = options;
 
     // Animation sequence
     requestAnimationFrame(() => {
-      // 1. Show card
+      // 1. Animate height and opacity together for smooth entry
+      currentCard.style.maxHeight = '400px'; // Generous max height
       currentCard.classList.remove('opacity-0', 'translate-y-2');
       currentCard.classList.add('opacity-100', 'translate-y-0');
       
@@ -256,46 +268,53 @@ const TextCardOutput = (function() {
   }
 
   /**
-   * Hide and remove the current card
+   * Hide and remove the current card with smooth height animation
    */
   function hide() {
     if (currentCard) {
+      // Animate height to 0 for smooth exit
+      currentCard.style.maxHeight = '0';
+      currentCard.style.marginTop = '0';
       currentCard.classList.add('opacity-0', 'translate-y-2');
+      
       setTimeout(() => {
         if (currentCard) {
           currentCard.remove();
           currentCard = null;
         }
-      }, 300);
+      }, 500); // Match transition duration
     }
   }
 
-    /**
-     * Slide the card under the chat bar and trigger visualization
-     * @param {Object} vizOptions - Options for the visualization card
-     */
-    function slideUnderAndShowViz(vizOptions = {}) {
-        if (!currentCard) return;
+  /**
+   * Slide the card under the chat bar and trigger visualization
+   * @param {Object} vizOptions - Options for the visualization card
+   */
+  function slideUnderAndShowViz(vizOptions = {}) {
+    if (!currentCard) return;
 
-        // Add slide-under animation
-        currentCard.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        currentCard.style.transform = 'translateY(20px) scale(0.95)';
-        currentCard.style.opacity = '0';
-        currentCard.style.zIndex = '-1';
+    // Smooth slide-under animation with height collapse
+    currentCard.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+    currentCard.style.maxHeight = '0';
+    currentCard.style.marginTop = '0';
+    currentCard.style.marginBottom = '0';
+    currentCard.style.padding = '0';
+    currentCard.style.opacity = '0';
+    currentCard.style.transform = 'translateY(-10px) scale(0.98)';
 
-        // After card slides under, show visualization above
-        setTimeout(() => {
-            if (currentCard) {
-                currentCard.remove();
-                currentCard = null;
-            }
+    // After card collapses, show visualization above
+    setTimeout(() => {
+      if (currentCard) {
+        currentCard.remove();
+        currentCard = null;
+      }
 
-            // Trigger visualization card
-            if (window.VisualizationCard) {
-                window.VisualizationCard.show(vizOptions);
-            }
-        }, 600);
-    }
+      // Trigger visualization card
+      if (window.VisualizationCard) {
+        window.VisualizationCard.show(vizOptions);
+      }
+    }, 600);
+  }
 
   /**
    * Clear all output cards

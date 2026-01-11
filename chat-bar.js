@@ -318,24 +318,33 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (inputArea) {
     // Handle placeholder visibility
-    inputArea.addEventListener('focus', function() {
-      if (this.textContent === '') {
-        this.setAttribute('data-empty', 'true');
+    // Check if input is truly empty (no text, just whitespace or empty tags)
+    function isInputEmpty(el) {
+      const text = el.textContent.trim();
+      // Also check for tags - if only tags exist, not empty
+      const hasTags = el.querySelector('.tag-inline, .tag-lg');
+      return text === '' && !hasTags;
+    }
+
+    // Clean up empty nodes and ensure placeholder shows
+    function handleEmptyState() {
+      if (isInputEmpty(inputArea)) {
+        // Clear any leftover empty nodes (br, empty spans, etc.)
+        inputArea.innerHTML = '';
       }
+    }
+
+    inputArea.addEventListener('focus', function() {
+      handleEmptyState();
     });
     
     inputArea.addEventListener('blur', function() {
-      if (this.textContent === '') {
-        this.removeAttribute('data-empty');
-      }
+      handleEmptyState();
     });
     
     inputArea.addEventListener('input', function() {
-      if (this.textContent === '') {
-        this.setAttribute('data-empty', 'true');
-      } else {
-        this.removeAttribute('data-empty');
-      }
+      // Small delay to let the DOM settle
+      setTimeout(handleEmptyState, 0);
     });
     
     // Prevent Enter from creating new lines (optional)
@@ -418,13 +427,33 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectedItem = slashCommandItems[selectedCommandIndex];
     if (!selectedItem || !inputArea) return;
 
-    const command = selectedItem.getAttribute('data-command');
-    const text = selectedItem.textContent.trim();
+    // Get tag data from attributes
+    const icon = selectedItem.getAttribute('data-tag-icon') || 'label';
+    const label = selectedItem.getAttribute('data-tag-label') || selectedItem.textContent.trim();
 
-    // Replace "/" with the selected command (or handle as needed)
+    // Get current text and find the "/" position
     const currentText = inputArea.textContent;
-    const newText = currentText.replace('/', `/${text} `);
-    inputArea.textContent = newText;
+    const slashIndex = currentText.lastIndexOf('/');
+
+    // Text before the slash
+    const textBefore = currentText.substring(0, slashIndex);
+
+    // Clear the input and rebuild with tag
+    inputArea.textContent = '';
+
+    // Add text before slash
+    if (textBefore) {
+      inputArea.appendChild(document.createTextNode(textBefore));
+    }
+
+    // Add the inline tag using Tag component
+    const tagElement = window.Tag ? window.Tag.inline(icon, label) : null;
+    if (tagElement) {
+      inputArea.appendChild(tagElement);
+    }
+
+    // Add a space after the tag
+    inputArea.appendChild(document.createTextNode(' '));
 
     // Move cursor to end
     const range = document.createRange();
@@ -436,6 +465,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Hide popup
     hideSlashCommandPopup();
+
+    // Focus the input
+    inputArea.focus();
   }
 
   // Listen for input in chat area

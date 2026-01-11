@@ -25,11 +25,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const workflows = [
     {
+          name: 'Tag Demo',
+          steps: [
+              { action: 'clear' },
+              { action: 'type', text: 'Help me understand the trends for ' },
+              { action: 'insertTag', icon: 'steps', label: 'Summer Footwear' },
+              { action: 'type', text: ' this season' },
+              { action: 'pause', duration: 3000 },
+              { action: 'clear' },
+          ]
+      },
+      {
       name: 'Feature Tour',
       steps: [
         { action: 'clear' },
-        { action: 'type', text: 'Create a campaign for running shoes' },
-        { action: 'pause', duration: 1000 },
+          { action: 'type', text: 'Create a campaign for ' },
+          { action: 'insertTag', icon: 'folder', label: "Spring/Summer '26" },
+          { action: 'pause', duration: 1500 },
         { action: 'openPopup', popupId: 'thinking-popup', triggerSelector: '[data-popup="thinking-popup"]' },
         { action: 'pause', duration: 2000 },
         { action: 'closeAllPopups' },
@@ -71,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
     clear: function() {
       const inputArea = document.querySelector('.chat-input-area');
       if (inputArea) {
-        inputArea.textContent = '';
+          inputArea.innerHTML = ''; // Use innerHTML to fully clear
       }
       return Promise.resolve();
     },
@@ -118,6 +130,17 @@ document.addEventListener('DOMContentLoaded', function() {
         window.closeAllPopups();
       }
       return Promise.resolve();
+      },
+
+      insertTag: function (icon, label) {
+          return new Promise((resolve) => {
+              const inputArea = document.querySelector('.chat-input-area');
+              if (!inputArea || !window.Tag) return resolve();
+
+              const tagElement = window.Tag.inline(icon, label);
+              inputArea.appendChild(tagElement);
+              resolve();
+          });
     }
   };
 
@@ -133,7 +156,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
       const actionFn = actions[step.action];
       if (actionFn) {
-        await actionFn(step.text || step.duration || step.popupId, step.triggerSelector);
+          // Handle different action parameter patterns
+          if (step.action === 'insertTag') {
+              await actionFn(step.icon, step.label);
+          } else if (step.action === 'openPopup') {
+              await actionFn(step.popupId, step.triggerSelector);
+          } else {
+              await actionFn(step.text || step.duration);
+          }
       }
 
       if (step.action !== 'pause') {

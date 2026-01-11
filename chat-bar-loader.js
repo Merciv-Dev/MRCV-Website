@@ -59,16 +59,22 @@
                 container.innerHTML = chatContainer.outerHTML;
             }
 
-            // 7. Load main JS after HTML is ready
-            const script = document.createElement('script');
-            script.src = BASE_URL + '/chat-bar.js';
-            script.onload = function () {
-                // 8. Load workflow automation after main JS is loaded
-                const workflowScript = document.createElement('script');
-                workflowScript.src = BASE_URL + '/chat-bar-workflows.js';
-                document.body.appendChild(workflowScript);
+            // 7. Load Tag component first
+            const tagScript = document.createElement('script');
+            tagScript.src = BASE_URL + '/components/tag.js';
+            tagScript.onload = function () {
+                // 8. Load main JS after component is ready
+                const script = document.createElement('script');
+                script.src = BASE_URL + '/chat-bar.js';
+                script.onload = function () {
+                    // 9. Load workflow automation after main JS is loaded
+                    const workflowScript = document.createElement('script');
+                    workflowScript.src = BASE_URL + '/chat-bar-workflows.js';
+                    document.body.appendChild(workflowScript);
+                };
+                document.body.appendChild(script);
             };
-            document.body.appendChild(script);
+            document.body.appendChild(tagScript);
         })
         .catch(function (err) {
             console.error('Chat Bar: Failed to load', err);

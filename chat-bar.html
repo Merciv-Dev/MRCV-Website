@@ -28,7 +28,7 @@
       <div class="bg-neutral-99 border border-neutral-10/5 rounded-[25px] shadow-lg p-2 flex flex-col gap-2">
         
         <!-- Text Input Area -->
-        <div class="chat-input-area w-full min-h-[80px] p-4 rounded-2xl text-lg text-neutral-10 outline-none resize-none overflow-y-auto empty:before:content-[attr(data-placeholder)] empty:before:text-neutral-40 focus:ring-2 focus:ring-orange-50" contenteditable="true" data-placeholder="Make sense of something..."></div>
+        <div class="chat-input-area w-full min-h-[80px] max-h-[200px] p-4 rounded-2xl text-lg text-neutral-10 outline-none resize-none overflow-y-auto empty:before:content-[attr(data-placeholder)] empty:before:text-neutral-40 focus:ring-2 focus:ring-orange-50" contenteditable="true" data-placeholder="Make sense of something..."></div>
         
         <!-- Actions Row -->
         <div class="w-full flex items-end justify-between">
@@ -166,18 +166,24 @@
     </div>
     
     <!-- Slash Command Popup -->
-    <div class="slash-command-popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-[280px] max-w-[calc(100vw-40px)] -translate-y-2 bg-neutral-98 rounded-2xl border border-neutral-90 shadow-lg p-2 flex flex-col gap-0" id="slash-command-popup" aria-hidden="true">
-      <div class="slash-command-item active flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-all text-sm text-neutral-40 backdrop-blur-[20px] relative hover:bg-green-highlight-hover" data-command="spring-summer-26">
-        <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">folder</span>
-        <span>Spring/Summer '26</span>
+    <div class="slash-command-popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-[280px] max-w-[calc(100vw-40px)] -translate-y-2 bg-neutral-98 rounded-2xl border border-neutral-90 shadow-lg p-2 flex flex-col gap-1" id="slash-command-popup" aria-hidden="true">
+      <div class="slash-command-item flex items-center px-2 py-2 rounded-lg cursor-pointer transition-all hover:bg-neutral-95" data-command="spring-summer-26" data-tag-icon="folder" data-tag-label="Spring/Summer '26">
+        <span class="tag-lg">
+          <span class="material-symbols-outlined">folder</span>
+          <span>Spring/Summer '26</span>
+        </span>
       </div>
-      <div class="slash-command-item flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-all text-sm text-neutral-40 backdrop-blur-[20px] relative hover:bg-green-highlight-hover" data-command="summer-footwear">
-        <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">description</span>
-        <span>Summer Footwear</span>
+      <div class="slash-command-item flex items-center px-2 py-2 rounded-lg cursor-pointer transition-all hover:bg-neutral-95" data-command="summer-footwear" data-tag-icon="shoe" data-tag-label="Summer Footwear">
+        <span class="tag-lg">
+          <span class="material-symbols-outlined">steps</span>
+          <span>Summer Footwear</span>
+        </span>
       </div>
-      <div class="slash-command-item flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-all text-sm text-neutral-40 backdrop-blur-[20px] relative hover:bg-green-highlight-hover" data-command="spring-summer-25">
-        <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">description</span>
-        <span>Spring/Summer '25</span>
+      <div class="slash-command-item flex items-center px-2 py-2 rounded-lg cursor-pointer transition-all hover:bg-neutral-95" data-command="spring-summer-25" data-tag-icon="description" data-tag-label="Spring/Summer '25">
+        <span class="tag-lg">
+          <span class="material-symbols-outlined">description</span>
+          <span>Spring/Summer '25</span>
+        </span>
       </div>
     </div>
     
@@ -186,6 +192,10 @@
     
   </div>
   
+  <!-- Components -->
+  <script src="components/tag.js"></script>
+  
+  <!-- Main Scripts -->
   <script src="chat-bar.js"></script>
   <script src="chat-bar-workflows.js"></script>
 </body>

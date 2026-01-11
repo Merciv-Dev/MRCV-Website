@@ -46,10 +46,10 @@
           <!-- Right: Action Buttons -->
           <div class="flex-1 flex items-center justify-end gap-1">
             
-            <!-- Thinking Button -->
-            <button class="backdrop-blur-[20px] border border-neutral-90 flex items-center gap-1 pl-1.5 pr-3 py-1.5 rounded-2xl hover:bg-neutral-95/50 transition-all cursor-pointer shadow-[inset_0px_0px_3px_0px_rgba(242,242,237,0.25)]" data-popup="thinking-popup">
-              <span class="material-symbols-outlined text-[21px] text-neutral-40 shrink-0">psychology</span>
-              <span class="text-sm text-neutral-40 whitespace-nowrap leading-none">Thinking</span>
+            <!-- Mode Button (ASK/WORK/RESEARCH) -->
+            <button id="mode-button" class="backdrop-blur-[20px] border border-neutral-90 flex items-center gap-1 pl-1.5 pr-3 py-1.5 rounded-2xl hover:bg-neutral-95/50 transition-all cursor-pointer shadow-[inset_0px_0px_3px_0px_rgba(242,242,237,0.25)]" data-popup="mode-popup">
+              <span class="mode-icon material-symbols-outlined text-[21px] text-neutral-40 shrink-0">build</span>
+              <span class="mode-label text-sm text-neutral-40 whitespace-nowrap leading-none">Work</span>
             </button>
             
             <!-- Add Context Button -->
@@ -99,25 +99,30 @@
       </div>
     </div>
     
-    <!-- Thinking Popup -->
-    <div class="popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-80 max-w-[calc(100vw-40px)] -translate-y-2" id="thinking-popup" aria-hidden="true">
-      <div class="bg-neutral-99 rounded-2xl border border-neutral-90 shadow-lg overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-90">
-          <span class="text-base font-medium text-neutral-10">Thinking Mode</span>
-          <button class="popup-close text-2xl text-neutral-40 hover:text-neutral-10 transition-colors leading-none w-6 h-6 flex items-center justify-center" aria-label="Close">&times;</button>
+    <!-- Mode Popup (ASK/WORK/RESEARCH) -->
+    <div class="popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-[140px] max-w-[calc(100vw-40px)] -translate-y-2 bg-neutral-98 rounded-2xl border border-neutral-90 shadow-lg p-2 flex flex-col gap-1" id="mode-popup" aria-hidden="true">
+      <div class="mode-option self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-mode="ask" data-icon="chat" data-label="Ask">
+        <div class="flex justify-start items-center gap-1.5">
+          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
+            <span class="material-symbols-outlined text-[18px]">chat</span>
+          </span>
+          <span class="text-neutral-40 text-sm font-normal leading-4">Ask</span>
         </div>
-        <div class="p-6">
-          <p class="text-sm text-neutral-40 mb-4">Enable deeper reasoning for complex queries</p>
-          <div class="flex flex-col gap-3">
-            <button class="toggle-option active flex items-center gap-3 px-4 py-3 rounded-xl bg-neutral-95 hover:bg-neutral-90 transition-all text-left w-full relative">
-              <span class="toggle-dot w-4 h-4 rounded-full border-2 border-neutral-40 relative after:absolute after:inset-1 after:rounded-full after:bg-orange-50 after:opacity-0 after:transition-opacity"></span>
-              <span class="text-sm text-neutral-10">Quick response</span>
-            </button>
-            <button class="toggle-option flex items-center gap-3 px-4 py-3 rounded-xl bg-neutral-95 hover:bg-neutral-90 transition-all text-left w-full relative">
-              <span class="toggle-dot w-4 h-4 rounded-full border-2 border-neutral-40 relative after:absolute after:inset-1 after:rounded-full after:bg-orange-50 after:opacity-0 after:transition-opacity"></span>
-              <span class="text-sm text-neutral-10">Deep thinking</span>
-            </button>
-          </div>
+      </div>
+      <div class="mode-option active self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-mode="work" data-icon="build" data-label="Work">
+        <div class="flex justify-start items-center gap-1.5">
+          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
+            <span class="material-symbols-outlined text-[18px]">build</span>
+          </span>
+          <span class="text-neutral-40 text-sm font-normal leading-4">Work</span>
+        </div>
+      </div>
+      <div class="mode-option self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-mode="research" data-icon="science" data-label="Research">
+        <div class="flex justify-start items-center gap-1.5">
+          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
+            <span class="material-symbols-outlined text-[18px]">science</span>
+          </span>
+          <span class="text-neutral-40 text-sm font-normal leading-4">Research</span>
         </div>
       </div>
     </div>

@@ -22,7 +22,6 @@ function initChatBarCore() {
   const popups = document.querySelectorAll('.popup');
   const popupTriggers = document.querySelectorAll('[data-popup]');
   const closeButtons = document.querySelectorAll('.popup-close');
-  const toggleOptions = document.querySelectorAll('.toggle-option');
   const sendButton = document.querySelector('[data-action="send"]');
   const inputArea = document.querySelector('.chat-input-area');
   const dropZone = document.querySelector('.drop-zone');
@@ -152,22 +151,68 @@ function initChatBarCore() {
   });
 
   // ============================================
-  // Toggle Options (Thinking Popup)
+  // Mode Options (ASK/WORK/RESEARCH)
   // ============================================
   
-  toggleOptions.forEach(option => {
-    option.addEventListener('click', function() {
-      // Remove active class from all options in the same group
-      const parent = this.closest('.toggle-options');
-      parent.querySelectorAll('.toggle-option').forEach(opt => {
+  const modeButton = document.getElementById('mode-button');
+  const modeOptions = document.querySelectorAll('.mode-option');
+  let currentMode = 'work'; // Default mode
+
+  // Mode configuration
+  const modeConfig = {
+    ask: { icon: 'chat', label: 'Ask' },
+    work: { icon: 'build', label: 'Work' },
+    research: { icon: 'science', label: 'Research' }
+  };
+
+  /**
+   * Update the mode button to show selected mode
+   * @param {string} mode - The mode to set ('ask', 'work', 'research')
+   */
+  function setMode(mode) {
+    if (!modeConfig[mode]) return;
+
+    currentMode = mode;
+    const config = modeConfig[mode];
+
+    if (modeButton) {
+      // Update button icon and label
+      const iconEl = modeButton.querySelector('.mode-icon');
+      const labelEl = modeButton.querySelector('.mode-label');
+
+      if (iconEl) iconEl.textContent = config.icon;
+      if (labelEl) labelEl.textContent = config.label;
+
+      // Add selected class for blue highlight
+      modeButton.classList.add('selected');
+    }
+
+    // Update active state in popup
+    modeOptions.forEach(opt => {
+      if (opt.dataset.mode === mode) {
+        opt.classList.add('active');
+      } else {
         opt.classList.remove('active');
-      });
-      
-      // Add active class to clicked option
-      this.classList.add('active');
+      }
+    });
+  }
+
+  // Handle mode option clicks
+  modeOptions.forEach(option => {
+    option.addEventListener('click', function () {
+      const mode = this.dataset.mode;
+      setMode(mode);
+      closeAllPopups();
     });
   });
   
+  // Initialize with default mode (work is active by default)
+  // Don't call setMode here to avoid blue highlight initially
+
+  // Expose setMode globally for workflows
+  window.setMode = setMode;
+  window.getCurrentMode = () => currentMode;
+
   // ============================================
   // Context Tags
   // ============================================

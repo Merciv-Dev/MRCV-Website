@@ -1,48 +1,88 @@
 /**
- * Chat Bar Component - Minimal Custom CSS
- * Most styles are now in Tailwind classes
- * This file contains only what can't be done in Tailwind
+ * Chat Bar Component CSS
+ * 
+ * SCOPED PREFLIGHT: We disable Tailwind's global preflight to protect Webflow.
+ * These resets ONLY apply inside #chat-bar.
  */
 
-/* Base resets (since Tailwind preflight is disabled) */
+/* ===== SCOPED PREFLIGHT FOR #chat-bar ===== */
+
+/* Container setup */
 #chat-bar {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  box-sizing: border-box;
   width: 100%;
   max-width: 520px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
 }
 
+/* All elements inherit font and have proper box-sizing */
+#chat-bar,
 #chat-bar *,
 #chat-bar *::before,
 #chat-bar *::after {
   box-sizing: border-box;
 }
 
-/* Reset all buttons inside chat-bar */
-#chat-bar button,
-#chat-bar button.toggle-option,
-#chat-bar .popup button,
-#chat-bar .slash-command-popup button {
+/* Font inheritance for all elements (low specificity with :where) */
+:where(#chat-bar) * {
   font-family: inherit;
-  border: none !important;
-  border-width: 0 !important;
-  border-style: none !important;
-  background: transparent;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  outline: none;
-  box-shadow: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
 }
 
-/* Restore intentional borders on pill buttons */
-#chat-bar button[data-popup="thinking-popup"],
-#chat-bar button[data-popup="context-popup"] {
-  border: 1px solid #E5E5DF !important;
+/* 
+ * Border reset - Set border-style to solid so border-width utilities work.
+ * Use :where() for zero specificity so Tailwind classes can override.
+ */
+:where(#chat-bar) *,
+:where(#chat-bar) *::before,
+:where(#chat-bar) *::after {
+  border-style: solid;
+  border-width: 0;
+  border-color: #e5e5e5;
 }
+
+/* Button reset - remove browser defaults (low specificity with :where) */
+:where(#chat-bar) button,
+:where(#chat-bar) [type='button'],
+:where(#chat-bar) [type='reset'],
+:where(#chat-bar) [type='submit'] {
+  -webkit-appearance: button;
+  appearance: button;
+  background-color: transparent;
+  background-image: none;
+}
+
+/* Remove default margins */
+#chat-bar h1, #chat-bar h2, #chat-bar h3, #chat-bar h4, #chat-bar p,
+#chat-bar blockquote, #chat-bar dl, #chat-bar dd, #chat-bar hr,
+#chat-bar figure, #chat-bar pre {
+  margin: 0;
+}
+
+/* Lists reset */
+#chat-bar ol, #chat-bar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Image reset */
+#chat-bar img, #chat-bar svg, #chat-bar video, #chat-bar canvas,
+#chat-bar audio, #chat-bar iframe, #chat-bar embed, #chat-bar object {
+  display: block;
+  vertical-align: middle;
+}
+
+#chat-bar img, #chat-bar video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ===== END SCOPED PREFLIGHT ===== */
 
 /* Material Symbols font setup */
 .material-symbols-outlined {

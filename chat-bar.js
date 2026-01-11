@@ -52,15 +52,18 @@ function initChatBarCore() {
     const top = buttonRect.bottom + offset;
 
     // Determine alignment based on button position
-    // If button is in the left half of the screen, align left
-    // If button is in the right half, align right
+    // Popups for right-side buttons should always be right-aligned
     const windowWidth = window.innerWidth;
-    const isLeftSide = buttonRect.left < windowWidth / 2;
+    const buttonCenter = buttonRect.left + buttonRect.width / 2;
+    const isLeftSide = buttonCenter < windowWidth / 2;
+    
+    // Force right alignment for specific popups (mode, context, attach)
+    const forceRightAlign = ['mode-popup', 'context-popup', 'attach-popup'].includes(popupId);
 
     // Remove any existing alignment classes
     popup.classList.remove('align-left', 'align-right');
 
-    if (isLeftSide) {
+    if (isLeftSide && !forceRightAlign) {
       // Align popup to the left edge of button
       popup.classList.add('align-left');
       popup.style.setProperty('--popup-left', `${buttonRect.left}px`);

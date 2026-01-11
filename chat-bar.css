@@ -148,10 +148,10 @@ body.chat-bar-standalone {
 }
 
 /* ============================================
-   Buttons - Base Styles
+   Buttons - Base Styles (scoped to chat-container)
    ============================================ */
 
-button {
+.chat-container button {
   cursor: pointer;
   border: none;
   background: none;
@@ -159,7 +159,7 @@ button {
   transition: all 0.2s ease;
 }
 
-button:focus-visible {
+.chat-container button:focus-visible {
   outline: 2px solid var(--orange-50);
   outline-offset: 2px;
 }

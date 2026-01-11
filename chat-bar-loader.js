@@ -30,7 +30,13 @@
   fontLink.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap';
   document.head.appendChild(fontLink);
 
-  // 3. Fetch HTML and inject component
+    // 3. Load Material Symbols
+    const materialSymbols = document.createElement('link');
+    materialSymbols.rel = 'stylesheet';
+    materialSymbols.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined';
+    document.head.appendChild(materialSymbols);
+
+    // 4. Fetch HTML and inject component
   fetch(BASE_URL + '/chat-bar.html')
     .then(function(response) { return response.text(); })
     .then(function(html) {
@@ -43,7 +49,7 @@
         container.innerHTML = chatContainer.outerHTML;
       }
       
-      // 4. Load JS after HTML is ready
+        // 5. Load JS after HTML is ready
       const script = document.createElement('script');
       script.src = BASE_URL + '/chat-bar.js';
       document.body.appendChild(script);

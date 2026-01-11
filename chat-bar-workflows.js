@@ -141,6 +141,35 @@ document.addEventListener('DOMContentLoaded', function() {
               inputArea.appendChild(tagElement);
               resolve();
           });
+      },
+
+      send: function () {
+          return new Promise((resolve) => {
+              if (typeof window.sendMessage === 'function') {
+                  window.sendMessage();
+              }
+              resolve();
+          });
+      },
+
+      showOutput: function (lines) {
+          return new Promise((resolve) => {
+              if (window.TextCardOutput) {
+                  const inputArea = document.querySelector('.chat-input-area');
+                  const prompt = inputArea ? inputArea.textContent.trim() : '';
+                  window.TextCardOutput.show({ prompt, lines: lines || 8 });
+              }
+              resolve();
+          });
+      },
+
+      hideOutput: function () {
+          return new Promise((resolve) => {
+              if (window.TextCardOutput) {
+                  window.TextCardOutput.hide();
+              }
+              resolve();
+          });
     }
   };
 

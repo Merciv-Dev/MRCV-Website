@@ -59,11 +59,26 @@
                 container.innerHTML = chatContainer.outerHTML;
             }
 
-            // 7. Load Tag component first
-            const tagScript = document.createElement('script');
-            tagScript.src = BASE_URL + '/components/tag.js';
-            tagScript.onload = function () {
-                // 8. Load main JS after component is ready
+            // 7. Load components in sequence
+            const components = [
+                '/components/tag.js',
+                '/components/source-library.js',
+                '/components/source-tag.js',
+                '/components/text-card-output.js'
+            ];
+
+            function loadScripts(scripts, callback) {
+                if (scripts.length === 0) return callback();
+                const script = document.createElement('script');
+                script.src = BASE_URL + scripts[0];
+                script.onload = function () {
+                    loadScripts(scripts.slice(1), callback);
+                };
+                document.body.appendChild(script);
+            }
+
+            loadScripts(components, function () {
+            // 8. Load main JS after components are ready
                 const script = document.createElement('script');
                 script.src = BASE_URL + '/chat-bar.js';
                 script.onload = function () {
@@ -73,8 +88,7 @@
                     document.body.appendChild(workflowScript);
                 };
                 document.body.appendChild(script);
-            };
-            document.body.appendChild(tagScript);
+            });
         })
         .catch(function (err) {
             console.error('Chat Bar: Failed to load', err);

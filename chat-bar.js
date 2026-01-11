@@ -206,39 +206,47 @@ document.addEventListener('DOMContentLoaded', function() {
   // Send Button
   // ============================================
   
-  if (sendButton) {
-    sendButton.addEventListener('click', function() {
-      const message = inputArea ? inputArea.textContent.trim() : '';
-      
-      if (message) {
-        // Simulate sending - you can customize this behavior
-        console.log('Sending message:', message);
-        
-        // Visual feedback
-        this.style.transform = 'scale(0.9)';
+  // Send message function (exposed globally for workflows)
+  function sendMessage() {
+    const message = inputArea ? inputArea.textContent.trim() : '';
+
+    if (message) {
+      console.log('Sending message:', message);
+
+      // Visual feedback on button
+      if (sendButton) {
+        sendButton.style.transform = 'scale(0.9)';
         setTimeout(() => {
-          this.style.transform = '';
+          sendButton.style.transform = '';
         }, 150);
         
-        // Clear input (optional - comment out if you want to keep the text)
-        // inputArea.textContent = '';
-        
-        // Show a brief "sent" state
-        this.innerHTML = `
-          <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8.5 14.5L4.5 10.5L5.9 9.1L8.5 11.7L15.1 5.1L16.5 6.5L8.5 14.5Z" fill="white"/>
-          </svg>
-        `;
-        
+        // Show checkmark briefly
+        sendButton.innerHTML = '<span class="material-symbols-outlined text-[21px] text-white">check</span>';
         setTimeout(() => {
-          this.innerHTML = `
-            <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9.66504 17.355V7.25508L5.60254 11.3176L4.41504 10.105L10.5 4.02002L16.585 10.105L15.3975 11.3176L11.335 7.25508V17.355H9.66504Z" fill="white"/>
-            </svg>
-          `;
+          sendButton.innerHTML = '<span class="material-symbols-outlined text-[21px] text-white">arrow_upward</span>';
         }, 1500);
       }
-    });
+
+      // Show the text card output with skeleton animation
+      if (window.TextCardOutput) {
+        window.TextCardOutput.show({
+          prompt: message,
+          lines: 8
+        });
+      }
+
+      // Clear input
+      if (inputArea) {
+        inputArea.innerHTML = '';
+      }
+    }
+  }
+
+  // Expose globally for workflows
+  window.sendMessage = sendMessage;
+
+  if (sendButton) {
+    sendButton.addEventListener('click', sendMessage);
   }
   
   // ============================================

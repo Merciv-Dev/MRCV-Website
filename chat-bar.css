@@ -59,6 +59,11 @@
   word-wrap: normal;
   white-space: nowrap;
   direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
 }
 
 /* Reset - scoped to chat component only */

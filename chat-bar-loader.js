@@ -31,15 +31,19 @@
         return;
     }
 
-    // 1. Load Tailwind CSS
-    const tailwindScript = document.createElement('script');
-    tailwindScript.src = 'https://cdn.tailwindcss.com';
-    document.head.appendChild(tailwindScript);
+    // 1. Load Tailwind CSS (skip if already loaded in Webflow head)
+    if (typeof tailwind === 'undefined') {
+        const tailwindScript = document.createElement('script');
+        tailwindScript.src = 'https://cdn.tailwindcss.com';
+        document.head.appendChild(tailwindScript);
 
-    // 2. Load Tailwind Config
-    const tailwindConfig = document.createElement('script');
-    tailwindConfig.src = BASE_URL + '/tailwind-config.js';
-    document.head.appendChild(tailwindConfig);
+        // 2. Load Tailwind Config after Tailwind loads
+        const tailwindConfig = document.createElement('script');
+        tailwindConfig.src = BASE_URL + '/tailwind-config.js';
+        document.head.appendChild(tailwindConfig);
+    } else {
+        console.log('Chat Bar: Tailwind already loaded, skipping');
+    }
 
     // 3. Load Custom CSS
     const link = document.createElement('link');

@@ -3,8 +3,23 @@
  * Automated sequences that showcase features when user is idle
  */
 
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
   'use strict';
+
+  // Handle both direct load and dynamic injection (DOMContentLoaded may have already fired)
+  function init() {
+    console.log('🎬 Workflows initializing...');
+    startWorkflowEngine();
+  }
+
+  // Start immediately if DOM is ready, otherwise wait
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+  function startWorkflowEngine() {
 
   // ============================================
   // Configuration
@@ -259,5 +274,6 @@ document.addEventListener('DOMContentLoaded', function() {
   resetIdleTimer();
 
   console.log('🎭 Auto-demo workflows initialized');
-});
+  } // End of startWorkflowEngine
+})();
 

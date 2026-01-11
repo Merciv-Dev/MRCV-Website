@@ -265,6 +265,30 @@
           });
       },
 
+      // Cleanup everything before starting a new workflow
+      cleanup: function () {
+          return new Promise((resolve) => {
+              // Close all popups
+              if (window.closeAllPopups) {
+                  window.closeAllPopups();
+              }
+              // Hide text card output
+              if (window.TextCardOutput) {
+                  window.TextCardOutput.hide();
+              }
+              // Hide visualization card
+              if (window.VisualizationCard) {
+                  window.VisualizationCard.hide();
+              }
+              // Clear status bar
+              if (window.StatusBar) {
+                  window.StatusBar.clearAction();
+              }
+              // Wait for animations to complete
+              setTimeout(resolve, 500);
+          });
+      },
+
       // New action for background changes
       setBackground: function (imageUrl) {
           return new Promise((resolve) => {
@@ -324,6 +348,12 @@
   async function runWorkflow(workflow) {
     console.log(`🎬 Running workflow: ${workflow.name}`);
     
+      // Cleanup before starting new workflow
+      await actions.cleanup();
+
+      // Half pause after cleanup before starting
+      await actions.pause(PAUSE_BETWEEN_WORKFLOWS / 2);
+
     for (const step of workflow.steps) {
       if (!isRunningWorkflow) break;
 

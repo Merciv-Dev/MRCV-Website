@@ -37,9 +37,12 @@ const TextCardOutput = (function() {
       container.id = 'text-card-output-container';
       container.className = 'w-full mt-3 flex flex-col gap-3';
       
-      const wrapper = document.querySelector('body > div') || document.querySelector('.max-w-\\[520px\\]');
+      // Look for chat-bar container (Webflow) or chat-container (local)
+      const wrapper = document.getElementById('chat-bar') || document.querySelector('.chat-container');
       if (wrapper) {
         wrapper.appendChild(container);
+      } else {
+        console.error('TextCardOutput: Could not find #chat-bar or .chat-container');
       }
     }
     return container;

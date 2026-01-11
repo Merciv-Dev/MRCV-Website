@@ -102,8 +102,8 @@ const VisualizationCard = (function() {
   function init() {
     if (container) return;
 
-    // Find the chat bar wrapper
-    const chatWrapper = document.querySelector('.max-w-\\[520px\\]');
+      // Find the chat bar wrapper (Webflow or local)
+      const chatWrapper = document.getElementById('chat-bar') || document.querySelector('.chat-container');
     if (chatWrapper) {
       // Create container for visualization (above chat bar)
       container = document.createElement('div');
@@ -112,6 +112,8 @@ const VisualizationCard = (function() {
       
       // Insert at the beginning of the wrapper (above chat bar)
       chatWrapper.insertBefore(container, chatWrapper.firstChild);
+    } else {
+        console.error('VisualizationCard: Could not find #chat-bar or .chat-container');
     }
   }
 

@@ -1,31 +1,27 @@
 /**
  * Chat Bar Loader
- * Single script that loads the chat bar component from GitHub
+ * Single script that loads the chat bar component from GitHub Pages
  * 
  * Usage in Webflow embed:
  * <div id="chat-bar"></div>
- * <script src="https://cdn.jsdelivr.net/gh/Merciv-Dev/MRCV-Website@main/chat-bar-loader.js"></script>
- * 
- * For specific version (recommended):
- * <script src="https://cdn.jsdelivr.net/gh/Merciv-Dev/MRCV-Website@COMMIT_HASH/chat-bar-loader.js"></script>
+ * <script src="https://merciv-dev.github.io/MRCV-Website/chat-bar-loader.js"></script>
  */
 
 (function () {
     'use strict';
 
-    // Auto-detect version from the loader script URL
+    // Auto-detect base URL from the loader script location
     const scripts = document.getElementsByTagName('script');
     const loaderScript = Array.from(scripts).find(s => s.src.includes('chat-bar-loader.js'));
 
-    let BASE_URL = 'https://cdn.jsdelivr.net/gh/Merciv-Dev/MRCV-Website@main';
+    // Default to GitHub Pages URL
+    let BASE_URL = 'https://merciv-dev.github.io/MRCV-Website';
 
     if (loaderScript) {
-        // Extract the base URL from the loader script src (preserves @version)
-        const match = loaderScript.src.match(/(https:\/\/cdn\.jsdelivr\.net\/gh\/Merciv-Dev\/MRCV-Website@[^/]+)/);
-        if (match) {
-            BASE_URL = match[1];
-            console.log('Chat Bar: Using version from URL:', BASE_URL);
-        }
+        // Extract base URL by removing the filename
+        const scriptUrl = loaderScript.src;
+        BASE_URL = scriptUrl.substring(0, scriptUrl.lastIndexOf('/'));
+        console.log('Chat Bar: Loading from:', BASE_URL);
     }
 
     const container = document.getElementById('chat-bar');

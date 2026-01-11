@@ -1,17 +1,28 @@
 #!/bin/bash
 
 # Post-push purge script for jsDelivr CDN
-echo "🧹 Purging entire jsDelivr cache after push..."
+echo "🧹 Purging jsDelivr cache after push..."
 echo ""
 
-# Purge the entire repository using wildcard
-echo "Purging all files in Merciv-Dev/MRCV-Website@main..."
+# Get latest commit hash
+COMMIT=$(git rev-parse --short HEAD)
+echo "Latest commit: $COMMIT"
+echo ""
+
+# Purge the entire repository using wildcard for @main
+echo "Purging @main branch cache..."
 curl -s "https://purge.jsdelivr.net/gh/Merciv-Dev/MRCV-Website@main/*"
+echo ""
 
+# Also purge specific commit for immediate availability
+echo "Purging @$COMMIT cache..."
+curl -s "https://purge.jsdelivr.net/gh/Merciv-Dev/MRCV-Website@$COMMIT/*"
 echo ""
-echo "✅ Entire repository cache purged from jsDelivr!"
-echo "💡 New versions will be available shortly at:"
-echo "   https://cdn.jsdelivr.net/gh/Merciv-Dev/MRCV-Website@main/"
+
+echo "✅ Cache purged from jsDelivr!"
 echo ""
-echo "📦 No need to update this script when adding new components!"
+echo "💡 If @main still shows old content, use the commit hash URL:"
+echo "   https://cdn.jsdelivr.net/gh/Merciv-Dev/MRCV-Website@$COMMIT/"
+echo ""
+echo "📦 To update Webflow, replace @main with @$COMMIT in your embed code."
 

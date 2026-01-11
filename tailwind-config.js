@@ -11,6 +11,12 @@
   }
 
   tailwind.config = {
+      // Disable Tailwind's CSS reset to prevent affecting Webflow styles
+      corePlugins: {
+          preflight: false,
+      },
+      // Scope all Tailwind classes to only work inside #chat-bar
+      important: '#chat-bar',
     theme: {
       extend: {
         colors: {

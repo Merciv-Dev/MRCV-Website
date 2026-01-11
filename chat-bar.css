@@ -4,6 +4,46 @@
  * This file contains only what can't be done in Tailwind
  */
 
+/* Base resets (since Tailwind preflight is disabled) */
+#chat-bar {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 520px;
+}
+
+#chat-bar *,
+#chat-bar *::before,
+#chat-bar *::after {
+  box-sizing: border-box;
+}
+
+/* Reset all buttons inside chat-bar */
+#chat-bar button,
+#chat-bar button.toggle-option,
+#chat-bar .popup button,
+#chat-bar .slash-command-popup button {
+  font-family: inherit;
+  border: none !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Restore intentional borders on pill buttons */
+#chat-bar button[data-popup="thinking-popup"],
+#chat-bar button[data-popup="context-popup"] {
+  border: 1px solid #E5E5DF !important;
+}
+
 /* Material Symbols font setup */
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined';

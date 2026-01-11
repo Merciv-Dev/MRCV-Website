@@ -49,9 +49,14 @@ const BackgroundManager = (function() {
     if (options.overlayOpacity !== undefined) config.overlayOpacity = options.overlayOpacity;
 
     // Find or create the background container
+    // Priority: #hero-anim (GitHub Pages) > .hero-anim (Webflow class) > #chat-bar fallback
     container = document.getElementById('hero-anim') || 
+                document.querySelector('.hero-anim') ||
+                document.getElementById('chat-bar')?.closest('.hero-anim') ||
                 document.getElementById('chat-bar') || 
                 document.querySelector('.chat-container')?.parentElement;
+    
+    console.log('BackgroundManager: Using container:', container?.id || container?.className);
 
     if (!container) {
       console.warn('BackgroundManager: No container found');

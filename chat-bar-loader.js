@@ -31,13 +31,15 @@
         return;
     }
 
-    // Check for hero-anim wrapper (Webflow setup)
-    const heroAnim = document.getElementById('hero-anim');
+    // Check for hero-anim wrapper (Webflow uses class, GitHub Pages uses id)
+    const heroAnim = document.getElementById('hero-anim') || 
+                     document.querySelector('.hero-anim') ||
+                     container.closest('.hero-anim');
     if (heroAnim) {
         // Only add positioning for background layers - don't override Webflow's layout
         heroAnim.style.position = 'relative';
         heroAnim.style.overflow = 'hidden';
-        console.log('Chat Bar: Found #hero-anim wrapper, adding positioning for backgrounds');
+        console.log('Chat Bar: Found hero-anim wrapper:', heroAnim.id || heroAnim.className);
     }
 
     // Ensure chat-bar container has proper z-index to sit above backgrounds

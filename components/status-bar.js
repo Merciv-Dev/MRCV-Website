@@ -25,9 +25,13 @@ const StatusBar = (function() {
     if (isInitialized) return;
 
     // Find the hero-anim container or create at body level
+    // Priority: #hero-anim (GitHub Pages) > .hero-anim (Webflow class) > body fallback
     const heroAnim = document.getElementById('hero-anim') || 
-                     document.getElementById('chat-bar')?.parentElement ||
+                     document.querySelector('.hero-anim') ||
+                     document.getElementById('chat-bar')?.closest('.hero-anim') ||
                      document.body;
+    
+    console.log('StatusBar: Using container:', heroAnim?.id || heroAnim?.className || 'body');
 
     // Create status bar container
     container = document.createElement('div');

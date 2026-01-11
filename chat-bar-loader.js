@@ -31,6 +31,27 @@
         return;
     }
 
+    // Check for hero-anim wrapper (Webflow setup)
+    const heroAnim = document.getElementById('hero-anim');
+    if (heroAnim) {
+        // Ensure hero-anim has proper full-viewport styles
+        heroAnim.style.position = 'relative';
+        heroAnim.style.width = '100%';
+        heroAnim.style.height = '100vh';
+        heroAnim.style.overflow = 'hidden';
+        heroAnim.style.display = 'flex';
+        heroAnim.style.alignItems = 'center';
+        heroAnim.style.justifyContent = 'center';
+        console.log('Chat Bar: Found #hero-anim wrapper, applying full-viewport styles');
+    }
+
+    // Ensure chat-bar container has proper styles
+    container.style.position = 'relative';
+    container.style.zIndex = '10';
+    container.style.width = '100%';
+    container.style.maxWidth = '520px';
+    container.style.padding = '40px';
+
     // 1. Load Tailwind CSS (skip if already loaded in Webflow head)
     if (typeof tailwind === 'undefined') {
         const tailwindScript = document.createElement('script');

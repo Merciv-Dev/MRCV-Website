@@ -64,7 +64,8 @@
                 '/components/tag.js',
                 '/components/source-library.js',
                 '/components/source-tag.js',
-                '/components/text-card-output.js'
+                '/components/text-card-output.js',
+                '/components/visualization-card.js'
             ];
 
             function loadScripts(scripts, callback) {

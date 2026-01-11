@@ -267,6 +267,33 @@ const TextCardOutput = (function() {
     }
   }
 
+    /**
+     * Slide the card under the chat bar and trigger visualization
+     * @param {Object} vizOptions - Options for the visualization card
+     */
+    function slideUnderAndShowViz(vizOptions = {}) {
+        if (!currentCard) return;
+
+        // Add slide-under animation
+        currentCard.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        currentCard.style.transform = 'translateY(20px) scale(0.95)';
+        currentCard.style.opacity = '0';
+        currentCard.style.zIndex = '-1';
+
+        // After card slides under, show visualization above
+        setTimeout(() => {
+            if (currentCard) {
+                currentCard.remove();
+                currentCard = null;
+            }
+
+            // Trigger visualization card
+            if (window.VisualizationCard) {
+                window.VisualizationCard.show(vizOptions);
+            }
+        }, 600);
+    }
+
   /**
    * Clear all output cards
    */
@@ -325,6 +352,7 @@ const TextCardOutput = (function() {
     show,
     hide,
     clear,
+      slideUnderAndShowViz,
     // Expose animation functions for manual control
     animateSources,
     animateTextLines

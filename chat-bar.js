@@ -233,6 +233,16 @@ document.addEventListener('DOMContentLoaded', function() {
           prompt: message,
           lines: 8
         });
+
+        // After text animation completes, slide under and show visualization
+        // Sources: 300ms + 5 tags * 100ms = ~800ms
+        // Text lines: 2000ms delay + 8 lines * 80ms = ~2640ms
+        // Wait for full animation then transition
+        setTimeout(() => {
+          window.TextCardOutput.slideUnderAndShowViz({
+            // Random chart type will be selected
+          });
+        }, 5000); // 5 seconds to watch the text animation
       }
 
       // Clear input

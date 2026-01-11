@@ -4,53 +4,63 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat Bar</title>
-  <link rel="stylesheet" href="chat-bar.css">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="tailwind-config.js"></script>
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  
+  <!-- Custom CSS (remaining styles) -->
+  <link rel="stylesheet" href="chat-bar.css">
 </head>
-<body class="chat-bar-standalone">
-  <div class="chat-container">
+<body class="font-dm-sans bg-gradient-to-br from-[#2a2a28] to-[#1a1a18] min-h-screen flex items-center justify-center p-10">
+  <div class="w-full max-w-[520px] relative">
     
-    <!-- Chat Bar Component -->
-    <div class="chat-bar">
-      <div class="chat-bar-inner">
+    <!-- Chat Bar Component - Glass Morphism Container -->
+    <div class="backdrop-blur-[12px] bg-neutral-95/10 border border-neutral-99/25 rounded-[33px] p-3 flex flex-col">
+      
+      <!-- Inner Content Container -->
+      <div class="bg-neutral-99 border border-neutral-10/5 rounded-[25px] shadow-lg p-2 flex flex-col gap-2">
         
         <!-- Text Input Area -->
-        <div class="chat-input-area" contenteditable="true" data-placeholder="Ask anything...">Explain the rise of running in 2025 and how we can take advantage of it in our campaign for /S</div>
+        <div class="chat-input-area w-full min-h-[80px] p-4 rounded-2xl text-lg text-neutral-10 outline-none resize-none overflow-y-auto empty:before:content-[attr(data-placeholder)] empty:before:text-neutral-40 focus:ring-2 focus:ring-orange-50" contenteditable="true" data-placeholder="Make sense of something..."></div>
         
         <!-- Actions Row -->
-        <div class="chat-actions">
+        <div class="w-full flex items-end justify-between">
           
           <!-- Left: Add Button -->
-          <button class="btn-add-main" data-popup="add-menu">
-            <span class="material-symbols-outlined">add</span>
+          <button class="flex items-center justify-center w-[33px] h-[33px] bg-neutral-90 rounded-full hover:bg-neutral-40 transition-all cursor-pointer shrink-0" data-popup="add-menu">
+            <span class="material-symbols-outlined text-[21px] text-neutral-10">add</span>
           </button>
           
           <!-- Right: Action Buttons -->
-          <div class="chat-actions-right">
+          <div class="flex-1 flex items-center justify-end gap-1">
             
             <!-- Thinking Button -->
-            <button class="btn-pill" data-popup="thinking-popup">
-              <span class="material-symbols-outlined">psychology</span>
-              <span>Thinking</span>
+            <button class="backdrop-blur-[20px] border border-neutral-90 flex items-center gap-1 pl-1.5 pr-3 py-1.5 rounded-2xl hover:bg-neutral-95/50 transition-all cursor-pointer shadow-[inset_0px_0px_3px_0px_rgba(242,242,237,0.25)]" data-popup="thinking-popup">
+              <span class="material-symbols-outlined text-[21px] text-neutral-40 shrink-0">psychology</span>
+              <span class="text-sm text-neutral-40 whitespace-nowrap leading-none">Thinking</span>
             </button>
             
             <!-- Add Context Button -->
-            <button class="btn-pill" data-popup="context-popup">
-              <span class="material-symbols-outlined">add_circle</span>
-              <span>Add Context</span>
+            <button class="backdrop-blur-[20px] border border-neutral-90 flex items-center gap-1 pl-1.5 pr-3 py-1.5 rounded-2xl hover:bg-neutral-95/50 transition-all cursor-pointer shadow-[inset_0px_0px_3px_0px_rgba(242,242,237,0.25)]" data-popup="context-popup">
+              <span class="material-symbols-outlined text-[21px] text-neutral-40 shrink-0">add_circle</span>
+              <span class="text-sm text-neutral-40 whitespace-nowrap leading-none">Add Context</span>
             </button>
             
             <!-- Attach File Button -->
-            <button class="btn-icon btn-attach" data-popup="attach-popup">
-              <span class="material-symbols-outlined">attach_file</span>
+            <button class="flex items-center justify-center w-[33px] h-[33px] bg-neutral-95 rounded-full hover:bg-neutral-90 transition-all cursor-pointer shrink-0" data-popup="attach-popup">
+              <span class="material-symbols-outlined text-[21px] text-neutral-40">attach_file</span>
             </button>
             
             <!-- Send Button -->
-            <button class="btn-icon btn-send" data-action="send">
-              <span class="material-symbols-outlined">send</span>
+            <button class="flex items-center justify-center w-[33px] h-[33px] bg-orange-50 rounded-2xl hover:opacity-90 transition-all cursor-pointer shrink-0 p-2" data-action="send">
+              <span class="material-symbols-outlined text-[21px] text-white">arrow_upward</span>
             </button>
             
           </div>
@@ -61,46 +71,46 @@
     <!-- Popups -->
     
     <!-- Add Menu Popup -->
-    <div class="popup" id="add-menu" aria-hidden="true">
-      <div class="popup-content">
-        <div class="popup-header">
-          <span>Quick Actions</span>
-          <button class="popup-close" aria-label="Close">&times;</button>
+    <div class="popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-80 max-w-[calc(100vw-40px)] -translate-y-2" id="add-menu" aria-hidden="true">
+      <div class="bg-neutral-99 rounded-2xl border border-neutral-90 shadow-lg overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-90">
+          <span class="text-base font-medium text-neutral-10">Quick Actions</span>
+          <button class="popup-close text-2xl text-neutral-40 hover:text-neutral-10 transition-colors leading-none w-6 h-6 flex items-center justify-center" aria-label="Close">&times;</button>
         </div>
-        <div class="popup-body">
-          <button class="popup-action">
-            <span class="material-symbols-outlined">description</span>
-            <span>Write copy</span>
+        <div class="p-3 flex flex-col gap-1">
+          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-neutral-95 transition-all text-left w-full">
+            <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">description</span>
+            <span class="text-sm text-neutral-10">Write copy</span>
           </button>
-          <button class="popup-action">
-            <span class="material-symbols-outlined">campaign</span>
-            <span>Create campaign</span>
+          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-neutral-95 transition-all text-left w-full">
+            <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">campaign</span>
+            <span class="text-sm text-neutral-10">Create campaign</span>
           </button>
-          <button class="popup-action">
-            <span class="material-symbols-outlined">bar_chart</span>
-            <span>Analyze trends</span>
+          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-neutral-95 transition-all text-left w-full">
+            <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">bar_chart</span>
+            <span class="text-sm text-neutral-10">Analyze trends</span>
           </button>
         </div>
       </div>
     </div>
     
     <!-- Thinking Popup -->
-    <div class="popup" id="thinking-popup" aria-hidden="true">
-      <div class="popup-content">
-        <div class="popup-header">
-          <span>Thinking Mode</span>
-          <button class="popup-close" aria-label="Close">&times;</button>
+    <div class="popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-80 max-w-[calc(100vw-40px)] -translate-y-2" id="thinking-popup" aria-hidden="true">
+      <div class="bg-neutral-99 rounded-2xl border border-neutral-90 shadow-lg overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-90">
+          <span class="text-base font-medium text-neutral-10">Thinking Mode</span>
+          <button class="popup-close text-2xl text-neutral-40 hover:text-neutral-10 transition-colors leading-none w-6 h-6 flex items-center justify-center" aria-label="Close">&times;</button>
         </div>
-        <div class="popup-body">
-          <p class="popup-description">Enable deeper reasoning for complex queries</p>
-          <div class="toggle-options">
-            <button class="toggle-option active">
-              <span class="toggle-dot"></span>
-              Quick response
+        <div class="p-6">
+          <p class="text-sm text-neutral-40 mb-4">Enable deeper reasoning for complex queries</p>
+          <div class="flex flex-col gap-3">
+            <button class="toggle-option active flex items-center gap-3 px-4 py-3 rounded-xl bg-neutral-95 hover:bg-neutral-90 transition-all text-left w-full relative">
+              <span class="toggle-dot w-4 h-4 rounded-full border-2 border-neutral-40 relative after:absolute after:inset-1 after:rounded-full after:bg-orange-50 after:opacity-0 after:transition-opacity"></span>
+              <span class="text-sm text-neutral-10">Quick response</span>
             </button>
-            <button class="toggle-option">
-              <span class="toggle-dot"></span>
-              Deep thinking
+            <button class="toggle-option flex items-center gap-3 px-4 py-3 rounded-xl bg-neutral-95 hover:bg-neutral-90 transition-all text-left w-full relative">
+              <span class="toggle-dot w-4 h-4 rounded-full border-2 border-neutral-40 relative after:absolute after:inset-1 after:rounded-full after:bg-orange-50 after:opacity-0 after:transition-opacity"></span>
+              <span class="text-sm text-neutral-10">Deep thinking</span>
             </button>
           </div>
         </div>
@@ -108,29 +118,29 @@
     </div>
     
     <!-- Context Popup -->
-    <div class="popup" id="context-popup" aria-hidden="true">
-      <div class="popup-content">
-        <div class="popup-header">
-          <span>Add Context</span>
-          <button class="popup-close" aria-label="Close">&times;</button>
+    <div class="popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-80 max-w-[calc(100vw-40px)] -translate-y-2" id="context-popup" aria-hidden="true">
+      <div class="bg-neutral-99 rounded-2xl border border-neutral-90 shadow-lg overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-90">
+          <span class="text-base font-medium text-neutral-10">Add Context</span>
+          <button class="popup-close text-2xl text-neutral-40 hover:text-neutral-10 transition-colors leading-none w-6 h-6 flex items-center justify-center" aria-label="Close">&times;</button>
         </div>
-        <div class="popup-body">
-          <div class="context-tags">
-            <button class="context-tag">
-              <span class="material-symbols-outlined">bar_chart</span>
-              <span>Market data</span>
+        <div class="p-4">
+          <div class="grid grid-cols-2 gap-2">
+            <button class="context-tag flex items-center gap-2 px-3 py-2.5 rounded-xl bg-neutral-95 hover:bg-orange-50/10 hover:border-orange-50 border border-transparent transition-all text-left">
+              <span class="material-symbols-outlined text-[18px] text-neutral-40">bar_chart</span>
+              <span class="text-sm text-neutral-10">Market data</span>
             </button>
-            <button class="context-tag">
-              <span class="material-symbols-outlined">description</span>
-              <span>Brand guidelines</span>
+            <button class="context-tag flex items-center gap-2 px-3 py-2.5 rounded-xl bg-neutral-95 hover:bg-orange-50/10 hover:border-orange-50 border border-transparent transition-all text-left">
+              <span class="material-symbols-outlined text-[18px] text-neutral-40">description</span>
+              <span class="text-sm text-neutral-10">Brand guidelines</span>
             </button>
-            <button class="context-tag">
-              <span class="material-symbols-outlined">group</span>
-              <span>Audience insights</span>
+            <button class="context-tag flex items-center gap-2 px-3 py-2.5 rounded-xl bg-neutral-95 hover:bg-orange-50/10 hover:border-orange-50 border border-transparent transition-all text-left">
+              <span class="material-symbols-outlined text-[18px] text-neutral-40">group</span>
+              <span class="text-sm text-neutral-10">Audience insights</span>
             </button>
-            <button class="context-tag">
-              <span class="material-symbols-outlined">flag</span>
-              <span>Campaign goals</span>
+            <button class="context-tag flex items-center gap-2 px-3 py-2.5 rounded-xl bg-neutral-95 hover:bg-orange-50/10 hover:border-orange-50 border border-transparent transition-all text-left">
+              <span class="material-symbols-outlined text-[18px] text-neutral-40">flag</span>
+              <span class="text-sm text-neutral-10">Campaign goals</span>
             </button>
           </div>
         </div>
@@ -138,20 +148,36 @@
     </div>
     
     <!-- Attach Popup -->
-    <div class="popup" id="attach-popup" aria-hidden="true">
-      <div class="popup-content">
-        <div class="popup-header">
-          <span>Attach Files</span>
-          <button class="popup-close" aria-label="Close">&times;</button>
+    <div class="popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-80 max-w-[calc(100vw-40px)] -translate-y-2" id="attach-popup" aria-hidden="true">
+      <div class="bg-neutral-99 rounded-2xl border border-neutral-90 shadow-lg overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-90">
+          <span class="text-base font-medium text-neutral-10">Attach Files</span>
+          <button class="popup-close text-2xl text-neutral-40 hover:text-neutral-10 transition-colors leading-none w-6 h-6 flex items-center justify-center" aria-label="Close">&times;</button>
         </div>
-        <div class="popup-body">
-          <div class="drop-zone">
-            <span class="material-symbols-outlined">attach_file</span>
-            <p>Drag & drop files here</p>
-            <span>or</span>
-            <button class="btn-browse">Browse files</button>
+        <div class="p-6">
+          <div class="drop-zone flex flex-col items-center justify-center gap-2 p-8 border-2 border-dashed border-neutral-90 rounded-xl bg-neutral-95 hover:border-orange-50 hover:bg-orange-50/5 transition-all text-center">
+            <span class="material-symbols-outlined text-[48px] text-neutral-40 opacity-50">attach_file</span>
+            <p class="text-base text-neutral-10 font-medium">Drag & drop files here</p>
+            <span class="text-sm text-neutral-40">or</span>
+            <button class="btn-browse mt-2 px-4 py-2 bg-neutral-99 border border-neutral-90 rounded-xl text-sm text-neutral-10 hover:border-orange-50 hover:text-orange-50 transition-all">Browse files</button>
           </div>
         </div>
+      </div>
+    </div>
+    
+    <!-- Slash Command Popup -->
+    <div class="slash-command-popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-[280px] max-w-[calc(100vw-40px)] -translate-y-2 bg-neutral-98 rounded-2xl border border-neutral-90 shadow-lg p-2 flex flex-col gap-0" id="slash-command-popup" aria-hidden="true">
+      <div class="slash-command-item active flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-all text-sm text-neutral-40 backdrop-blur-[20px] relative hover:bg-green-highlight-hover" data-command="spring-summer-26">
+        <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">folder</span>
+        <span>Spring/Summer '26</span>
+      </div>
+      <div class="slash-command-item flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-all text-sm text-neutral-40 backdrop-blur-[20px] relative hover:bg-green-highlight-hover" data-command="summer-footwear">
+        <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">description</span>
+        <span>Summer Footwear</span>
+      </div>
+      <div class="slash-command-item flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-all text-sm text-neutral-40 backdrop-blur-[20px] relative hover:bg-green-highlight-hover" data-command="spring-summer-25">
+        <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">description</span>
+        <span>Spring/Summer '25</span>
       </div>
     </div>
     
@@ -161,6 +187,7 @@
   </div>
   
   <script src="chat-bar.js"></script>
+  <script src="chat-bar-workflows.js"></script>
 </body>
 </html>
 

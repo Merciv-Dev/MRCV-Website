@@ -17,26 +17,57 @@ document.addEventListener('DOMContentLoaded', function() {
   const sendButton = document.querySelector('[data-action="send"]');
   const inputArea = document.querySelector('.chat-input-area');
   const dropZone = document.querySelector('.drop-zone');
+  const slashCommandPopup = document.getElementById('slash-command-popup');
+  const slashCommandItems = document.querySelectorAll('.slash-command-item');
   
   // ============================================
   // Popup Functions
   // ============================================
-  
+
   /**
-   * Opens a popup by ID
+   * Opens a popup by ID and positions it relative to the trigger button
    * @param {string} popupId - The ID of the popup to open
+   * @param {HTMLElement} triggerButton - The button that triggered the popup
    */
-  function openPopup(popupId) {
+  function openPopup(popupId, triggerButton) {
     const popup = document.getElementById(popupId);
     if (!popup) return;
     
     // Close any open popups first
     closeAllPopups();
     
+    // Calculate position
+    const buttonRect = triggerButton.getBoundingClientRect();
+    const offset = 8; // Gap between button and popup
+
+    // Position popup below the button
+    const top = buttonRect.bottom + offset;
+
+    // Determine alignment based on button position
+    // If button is in the left half of the screen, align left
+    // If button is in the right half, align right
+    const windowWidth = window.innerWidth;
+    const isLeftSide = buttonRect.left < windowWidth / 2;
+
+    // Remove any existing alignment classes
+    popup.classList.remove('align-left', 'align-right');
+
+    if (isLeftSide) {
+      // Align popup to the left edge of button
+      popup.classList.add('align-left');
+      popup.style.setProperty('--popup-left', `${buttonRect.left}px`);
+      popup.style.setProperty('--popup-top', `${top}px`);
+    } else {
+      // Align popup to the right edge of button
+      popup.classList.add('align-right');
+      const right = windowWidth - buttonRect.right;
+      popup.style.setProperty('--popup-right', `${right}px`);
+      popup.style.setProperty('--popup-top', `${top}px`);
+    }
+
     // Open the selected popup
     popup.classList.add('active');
     popup.setAttribute('aria-hidden', 'false');
-    overlay.classList.add('active');
     
     // Focus the close button for accessibility
     const closeBtn = popup.querySelector('.popup-close');
@@ -53,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
       popup.classList.remove('active');
       popup.setAttribute('aria-hidden', 'true');
     });
-    overlay.classList.remove('active');
   }
   
   // ============================================
@@ -65,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function() {
     trigger.addEventListener('click', function(e) {
       e.preventDefault();
       const popupId = this.getAttribute('data-popup');
-      openPopup(popupId);
+      openPopup(popupId, this);
     });
   });
   
@@ -77,10 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Close popup when overlay is clicked
-  if (overlay) {
-    overlay.addEventListener('click', closeAllPopups);
-  }
+  // Overlay is hidden for popover style, no need for click handler
   
   // Close popup on Escape key
   document.addEventListener('keydown', function(e) {
@@ -89,6 +116,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
+  // Close popups on window resize
+  window.addEventListener('resize', function () {
+    closeAllPopups();
+  });
+
+  // Close popup when clicking outside
+  document.addEventListener('click', function (e) {
+    const isPopupClick = e.target.closest('.popup');
+    const isTriggerClick = e.target.closest('[data-popup]');
+    const isSlashCommandClick = e.target.closest('.slash-command-popup');
+    const isInputClick = e.target.closest('.chat-input-area');
+
+    if (!isPopupClick && !isTriggerClick) {
+      closeAllPopups();
+    }
+
+    if (!isSlashCommandClick && !isInputClick && slashCommandActive) {
+      hideSlashCommandPopup();
+    }
+  });
+
   // ============================================
   // Toggle Options (Thinking Popup)
   // ============================================
@@ -303,10 +351,149 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // ============================================
+  // Slash Command Popup
+  // ============================================
+
+  let slashCommandActive = false;
+  let selectedCommandIndex = 0;
+
+  /**
+   * Shows the slash command popup
+   */
+  function showSlashCommandPopup() {
+    if (!inputArea || !slashCommandPopup) return;
+
+    // Close other popups
+    closeAllPopups();
+
+    // Get input area position
+    const inputRect = inputArea.getBoundingClientRect();
+    const offset = 8;
+
+    // Position popup above the input area
+    const top = inputRect.top - slashCommandPopup.offsetHeight - offset;
+    const left = inputRect.left;
+
+    slashCommandPopup.style.top = `${top}px`;
+    slashCommandPopup.style.left = `${left}px`;
+
+    // Show popup
+    slashCommandPopup.classList.add('active');
+    slashCommandPopup.setAttribute('aria-hidden', 'false');
+    slashCommandActive = true;
+    selectedCommandIndex = 0;
+
+    // Highlight first item
+    updateSlashCommandSelection();
+  }
+
+  /**
+   * Hides the slash command popup
+   */
+  function hideSlashCommandPopup() {
+    if (!slashCommandPopup) return;
+
+    slashCommandPopup.classList.remove('active');
+    slashCommandPopup.setAttribute('aria-hidden', 'true');
+    slashCommandActive = false;
+  }
+
+  /**
+   * Updates the highlighted item in slash command popup
+   */
+  function updateSlashCommandSelection() {
+    slashCommandItems.forEach((item, index) => {
+      if (index === selectedCommandIndex) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  /**
+   * Selects a slash command
+   */
+  function selectSlashCommand() {
+    const selectedItem = slashCommandItems[selectedCommandIndex];
+    if (!selectedItem || !inputArea) return;
+
+    const command = selectedItem.getAttribute('data-command');
+    const text = selectedItem.textContent.trim();
+
+    // Replace "/" with the selected command (or handle as needed)
+    const currentText = inputArea.textContent;
+    const newText = currentText.replace('/', `/${text} `);
+    inputArea.textContent = newText;
+
+    // Move cursor to end
+    const range = document.createRange();
+    const sel = window.getSelection();
+    range.selectNodeContents(inputArea);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    // Hide popup
+    hideSlashCommandPopup();
+  }
+
+  // Listen for input in chat area
+  if (inputArea) {
+    inputArea.addEventListener('input', function () {
+      const text = this.textContent;
+
+      // Check if user typed "/"
+      if (text === '/' || text.endsWith(' /')) {
+        showSlashCommandPopup();
+      } else if (slashCommandActive && !text.includes('/')) {
+        hideSlashCommandPopup();
+      }
+    });
+
+    // Handle keyboard navigation in slash command popup
+    inputArea.addEventListener('keydown', function (e) {
+      if (!slashCommandActive) return;
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedCommandIndex = (selectedCommandIndex + 1) % slashCommandItems.length;
+        updateSlashCommandSelection();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedCommandIndex = (selectedCommandIndex - 1 + slashCommandItems.length) % slashCommandItems.length;
+        updateSlashCommandSelection();
+      } else if (e.key === 'Enter' && slashCommandActive) {
+        e.preventDefault();
+        selectSlashCommand();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        hideSlashCommandPopup();
+      }
+    });
+  }
+
+  // Click on slash command item
+  slashCommandItems.forEach((item, index) => {
+    item.addEventListener('click', function () {
+      selectedCommandIndex = index;
+      selectSlashCommand();
+    });
+  });
+
+  // ============================================
   // Initialize
   // ============================================
   
   console.log('Chat Bar initialized');
   
+  // ============================================
+  // Expose Functions for Workflow Automation
+  // ============================================
+
+  // Make these functions available globally for the workflows script
+  window.openPopup = openPopup;
+  window.closeAllPopups = closeAllPopups;
+
 });
 

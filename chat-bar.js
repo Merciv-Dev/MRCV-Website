@@ -271,6 +271,7 @@ function initChatBarCore() {
   // Send message function (exposed globally for workflows)
   function sendMessage() {
     const message = inputArea ? inputArea.textContent.trim() : '';
+    const messageHTML = inputArea ? inputArea.innerHTML : '';
 
     if (message) {
       console.log('Sending message:', message);
@@ -293,8 +294,14 @@ function initChatBarCore() {
       if (window.TextCardOutput) {
         window.TextCardOutput.show({
           prompt: message,
+          promptHTML: messageHTML, // Pass HTML to preserve tag styling
           lines: 8
         });
+
+        // Clear input when sources card appears
+        if (inputArea) {
+          inputArea.innerHTML = '';
+        }
 
         // After text animation completes, slide under and show visualization
         // Sources: 300ms + 5 tags * 100ms = ~800ms
@@ -305,11 +312,6 @@ function initChatBarCore() {
             // Random chart type will be selected
           });
         }, 5000); // 5 seconds to watch the text animation
-      }
-
-      // Clear input
-      if (inputArea) {
-        inputArea.innerHTML = '';
       }
     }
   }

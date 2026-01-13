@@ -61,7 +61,7 @@
               { action: 'clear' },
               { action: 'setStatus', text: 'Typing...' },
               { action: 'type', text: 'What are the latest trends in ' },
-              { action: 'insertTag', icon: 'footwear', label: 'Running Shoes' },
+              { action: 'typeAsTag', icon: 'footwear', label: 'Running Shoes' },
               { action: 'type', text: ' for Q2 2026?' },
               { action: 'pause', duration: 400 },
               { action: 'setStatus', text: 'Searching...' },
@@ -71,8 +71,11 @@
               { action: 'pause', duration: 1500 },
               { action: 'setStatus', text: 'Generating...' },
               { action: 'pause', duration: 1500 },
+              { action: 'setStatus', text: 'Complete' },
+              { action: 'pause', duration: 7000 }, // Wait for viz to appear + 5s view time
               { action: 'clearStatus' },
               { action: 'hideOutput' },
+              { action: 'clear' }, // Clear input at end of sequence
               { action: 'pause', duration: 300 },
           ]
       },
@@ -86,7 +89,7 @@
         { action: 'clear' },
           { action: 'setStatus', text: 'Typing...' },
           { action: 'type', text: 'Analyze consumer sentiment for ' },
-          { action: 'insertTag', icon: 'category', label: 'Baby Products' },
+          { action: 'typeAsTag', icon: 'category', label: 'Baby Products' },
           { action: 'pause', duration: 300 },
           { action: 'setStatus', text: 'Thinking...' },
         { action: 'openPopup', popupId: 'thinking-popup', triggerSelector: '[data-popup="thinking-popup"]' },
@@ -100,8 +103,11 @@
           { action: 'pause', duration: 1500 },
           { action: 'setStatus', text: 'Generating...' },
           { action: 'pause', duration: 1500 },
+          { action: 'setStatus', text: 'Complete' },
+          { action: 'pause', duration: 7000 }, // Wait for viz to appear + 5s view time
           { action: 'clearStatus' },
           { action: 'hideOutput' },
+          { action: 'clear' }, // Clear input at end of sequence
           { action: 'pause', duration: 300 },
       ]
     },
@@ -115,7 +121,7 @@
         { action: 'clear' },
           { action: 'setStatus', text: 'Typing...' },
           { action: 'type', text: 'How does weather affect sales of ' },
-          { action: 'insertTag', icon: 'apparel', label: 'Outdoor Apparel' },
+          { action: 'typeAsTag', icon: 'apparel', label: 'Outdoor Apparel' },
           { action: 'type', text: '?' },
           { action: 'pause', duration: 300 },
           { action: 'setStatus', text: 'Adding context...' },
@@ -130,8 +136,11 @@
           { action: 'pause', duration: 1500 },
           { action: 'setStatus', text: 'Generating...' },
           { action: 'pause', duration: 1500 },
+          { action: 'setStatus', text: 'Complete' },
+          { action: 'pause', duration: 7000 }, // Wait for viz to appear + 5s view time
           { action: 'clearStatus' },
           { action: 'hideOutput' },
+          { action: 'clear' }, // Clear input at end of sequence
           { action: 'pause', duration: 300 },
       ]
     },
@@ -150,7 +159,7 @@
           { action: 'pause', duration: 200 },
           { action: 'setStatus', text: 'Typing...' },
           { action: 'type', text: 'Create a market report for ' },
-          { action: 'insertTag', icon: 'project', label: "Spring/Summer '26" },
+          { action: 'typeAsTag', icon: 'project', label: "Spring/Summer '26" },
           { action: 'pause', duration: 600 },
           { action: 'clearStatus' },
         { action: 'clear' },
@@ -180,10 +189,14 @@
           // Remove empty attribute when typing starts
           inputArea.removeAttribute('data-empty');
 
+        // Create a text node to append characters to (preserves existing elements like tags)
+        const textNode = document.createTextNode('');
+        inputArea.appendChild(textNode);
+
         let index = 0;
         const typeChar = () => {
           if (index < text.length && isRunningWorkflow) {
-            inputArea.textContent += text[index];
+            textNode.textContent += text[index];
             index++;
             setTimeout(typeChar, TYPING_SPEED);
           } else {
@@ -230,6 +243,40 @@
               const tagElement = window.Tag.inline(icon, label);
               inputArea.appendChild(tagElement);
               resolve();
+          });
+      },
+
+      // Type text character by character, then wrap it in an inline tag
+      typeAsTag: function (icon, label) {
+          return new Promise((resolve) => {
+              const inputArea = document.querySelector('.chat-input-area');
+              if (!inputArea) return resolve();
+
+              // Remove empty attribute
+              inputArea.removeAttribute('data-empty');
+
+              // Create a temporary text node to type into
+              const textNode = document.createTextNode('');
+              inputArea.appendChild(textNode);
+
+              let index = 0;
+              const typeChar = () => {
+                  if (index < label.length && isRunningWorkflow) {
+                      textNode.textContent += label[index];
+                      index++;
+                      setTimeout(typeChar, TYPING_SPEED);
+                  } else {
+                      // Typing complete - wait 750ms then replace with styled tag
+                      setTimeout(() => {
+                          if (window.Tag) {
+                              const tagElement = window.Tag.inline(icon, label);
+                              textNode.replaceWith(tagElement);
+                          }
+                          resolve();
+                      }, 750); // 0.75 second delay before tag styling
+                  }
+              };
+              typeChar();
           });
       },
 
@@ -360,7 +407,7 @@
       const actionFn = actions[step.action];
       if (actionFn) {
           // Handle different action parameter patterns
-          if (step.action === 'insertTag') {
+          if (step.action === 'insertTag' || step.action === 'typeAsTag') {
               await actionFn(step.icon, step.label);
           } else if (step.action === 'openPopup') {
               await actionFn(step.popupId, step.triggerSelector);

@@ -129,6 +129,7 @@ const TextCardOutput = (function() {
   function create(options = {}) {
     const { 
       prompt = '', 
+      promptHTML = '', // HTML version to preserve tag styling
       sources = getRandomSources(4), // Random 4 sources from library
       lines = 8,
       sourceDelay = 300,
@@ -142,11 +143,15 @@ const TextCardOutput = (function() {
     const content = document.createElement('div');
     content.className = 'max-h-[300px] overflow-y-auto p-4';
     
-    // Prompt section (always visible)
-    if (prompt) {
+    // Prompt section (always visible) - use HTML if available to preserve tags
+    if (prompt || promptHTML) {
       const promptSection = document.createElement('div');
       promptSection.className = 'text-base text-neutral-10 font-medium mb-4 pb-3 border-b border-neutral-90';
-      promptSection.textContent = prompt;
+      if (promptHTML) {
+        promptSection.innerHTML = promptHTML; // Preserves tag styling
+      } else {
+        promptSection.textContent = prompt;
+      }
       content.appendChild(promptSection);
     }
     

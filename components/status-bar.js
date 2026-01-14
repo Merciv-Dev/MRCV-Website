@@ -40,16 +40,6 @@ const StatusBar = (function() {
     container.innerHTML = `
       <!-- Left: Category Ticker with Navigation -->
       <div class="status-left inline-flex justify-start items-center gap-3">
-        <!-- Navigation Arrows -->
-
-        <div class="status-nav inline-flex items-center pointer-events-auto">
-          <div class="nav-prev flex items-center justify-center rounded-full h-8 cursor-pointer w-8 hover:bg-white/10 bg-transparent transition-colors cursor-pointer" title="Previous workflow">
-            <span class="material-symbols-outlined  justify-center text-white/70 hover:text-white text-sm leading-none">chevron_left</span>
-          </div>
-          <div class="nav-next flex items-center justify-center rounded-full h-8 cursor-pointer w-8 hover:bg-white/10 bg-transparent transition-colors cursor-pointer" title="Next workflow">
-            <span class="material-symbols-outlined text-white/70 hover:text-white text-sm leading-none">chevron_right</span>
-          </div>
-        </div>
 
         <!-- Category -->
         <div class="status-category inline-flex justify-start items-center gap-2.5 opacity-0 translate-y-4 transition-all duration-500">

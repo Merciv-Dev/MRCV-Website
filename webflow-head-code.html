@@ -1,0 +1,115 @@
+<!--
+  WEBFLOW HEAD OPTIMIZATIONS - OPTIMIZED VERSION
+  Add these to your Webflow site's Head Code for faster loading
+  (Project Settings > Custom Code > Head Code)
+  
+  This version preloads ALL resources for instant workflow start
+  
+  RECOMMENDED: Upload images to Webflow's asset manager for fastest loading!
+  Then update the WORKFLOW_IMAGES URLs below with your Webflow asset URLs.
+-->
+
+<!-- ============================================ -->
+<!-- 1. WORKFLOW IMAGES CONFIGURATION -->
+<!-- Upload these images to Webflow and replace URLs with your Webflow asset URLs -->
+<!-- ============================================ -->
+<script>
+// OPTION A: Use Webflow-hosted images (RECOMMENDED - fastest)
+// Upload images to Webflow asset manager, then use those URLs:
+window.WORKFLOW_IMAGES = {
+  runners: 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9e87f9f3eacc62ff9_Runners.jpg',
+  childcare: 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a921e1ddb27d3de258_ChildCare1.jpg',
+  snacking: 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a931854657f440b9cf_Snacking.jpg',
+  beverage: 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9847bad50a98a8983_Beverage.jpg',
+  weather: 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a7e5e65ffc89a38aff_Weather2.jpeg'
+};
+
+// OPTION B: Use GitHub-hosted images (slower, no config needed)
+// Comment out the above and uncomment this:
+// window.WORKFLOW_IMAGES = null; // Will use default GitHub-hosted images
+</script>
+
+<!-- ============================================ -->
+<!-- 2. PRECONNECT TO EXTERNAL DOMAINS -->
+<!-- ============================================ -->
+<link rel="preconnect" href="https://merciv-dev.github.io">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.tailwindcss.com">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+<!-- DNS Prefetch as fallback -->
+<link rel="dns-prefetch" href="https://merciv-dev.github.io">
+
+<!-- ============================================ -->
+<!-- 3. PRELOAD BACKGROUND IMAGES (Webflow CDN) -->
+<!-- These match the WORKFLOW_IMAGES above -->
+<!-- ============================================ -->
+<link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9e87f9f3eacc62ff9_Runners.jpg" as="image" fetchpriority="high">
+<link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a921e1ddb27d3de258_ChildCare1.jpg" as="image">
+<link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a931854657f440b9cf_Snacking.jpg" as="image">
+<link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9847bad50a98a8983_Beverage.jpg" as="image">
+<link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a7e5e65ffc89a38aff_Weather2.jpeg" as="image">
+
+<!-- ============================================ -->
+<!-- 3. PRELOAD CRITICAL SCRIPTS & STYLES -->
+<!-- ============================================ -->
+<link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/chat-bar.css" as="style">
+<link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/chat-bar-loader.js" as="script">
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" as="script">
+
+<!-- ============================================ -->
+<!-- 4. TAILWIND CSS (load before page for faster styling) -->
+<!-- ============================================ -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  corePlugins: { preflight: false },
+  theme: {
+    extend: {
+      colors: {
+        'neutral-05': '#0D0D0D',
+        'neutral-10': '#0D0D0C',
+        'neutral-40': '#666560',
+        'neutral-60': '#999990',
+        'neutral-90': '#E5E5DF',
+        'neutral-95': '#F2F2ED',
+        'neutral-98': '#FAF9F5',
+        'neutral-99': '#FAF9F5',
+        'orange-50': '#ED4421',
+        'green-highlight': 'rgba(141, 220, 184, 0.25)',
+        'green-highlight-hover': 'rgba(141, 220, 184, 0.15)',
+      },
+      fontFamily: {
+        'dm-sans': ['DM Sans', 'sans-serif'],
+      },
+      borderRadius: {
+        'sm-custom': '16px',
+        'md-custom': '24px',
+        'lg-custom': '33px',
+      },
+    }
+  }
+};
+</script>
+
+<!-- ============================================ -->
+<!-- 5. MATERIAL SYMBOLS (load early for icons) -->
+<!-- ============================================ -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
+
+<!-- ============================================ -->
+<!-- 6. PRELOAD CHART.JS (needed for visualizations) -->
+<!-- ============================================ -->
+<script>
+// Start loading Chart.js immediately so it's ready when needed
+(function() {
+  var script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
+  script.async = true;
+  document.head.appendChild(script);
+})();
+</script>
+
+<!-- Your other scripts (e.g., analytics) go here -->
+

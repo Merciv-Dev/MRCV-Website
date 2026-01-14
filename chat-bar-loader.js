@@ -35,13 +35,6 @@
     // 1. PRELOAD CRITICAL RESOURCES IMMEDIATELY
     // ============================================
 
-    // Preload first background image (shown on load)
-    const preloadImg = document.createElement('link');
-    preloadImg.rel = 'preload';
-    preloadImg.as = 'image';
-    preloadImg.href = BASE_URL + '/imgs/Runners.jpg';
-    document.head.appendChild(preloadImg);
-
     // Preload CSS
     const preloadCSS = document.createElement('link');
     preloadCSS.rel = 'preload';
@@ -49,15 +42,40 @@
     preloadCSS.href = BASE_URL + '/chat-bar.css';
     document.head.appendChild(preloadCSS);
 
-    // Prefetch other background images
-    const prefetchImages = ['ChildCare1.jpg', 'Weather2.jpeg'];
-    prefetchImages.forEach(img => {
-        const link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.as = 'image';
-        link.href = BASE_URL + '/imgs/' + img;
-        document.head.appendChild(link);
-    });
+    // Preload Chart.js (needed for visualizations)
+    const preloadChart = document.createElement('link');
+    preloadChart.rel = 'preload';
+    preloadChart.as = 'script';
+    preloadChart.href = 'https://cdn.jsdelivr.net/npm/chart.js';
+    document.head.appendChild(preloadChart);
+
+    // Only preload GitHub-hosted images if Webflow images aren't configured
+    // (Webflow images should be preloaded via <link rel="preload"> in head code)
+    if (!window.WORKFLOW_IMAGES) {
+        const backgroundImages = [
+            'Runners.jpg',
+            'ChildCare1.jpg',
+            'Weather2.jpeg',
+            'Snacking.jpg',
+            'Beverage.jpg'
+        ];
+
+        // Use high-priority preload for first image, prefetch for others
+        backgroundImages.forEach((img, index) => {
+            const link = document.createElement('link');
+            link.rel = index === 0 ? 'preload' : 'prefetch';
+            link.as = 'image';
+            link.href = BASE_URL + '/imgs/' + img;
+            if (index === 0) link.fetchPriority = 'high';
+            document.head.appendChild(link);
+        });
+
+        // Also start loading images via Image() for faster decode
+        backgroundImages.forEach(img => {
+            const preImg = new Image();
+            preImg.src = BASE_URL + '/imgs/' + img;
+        });
+    }
 
     const container = document.getElementById('chat-bar');
 

@@ -21,6 +21,8 @@ const BackgroundManager = (function() {
   const defaultImages = [
     'imgs/Runners.jpg',
     'imgs/ChildCare1.jpg',
+    'imgs/Snacking.jpg',
+    'imgs/Beverage.jpg',
     'imgs/Weather2.jpeg'
   ];
 

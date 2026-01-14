@@ -26,6 +26,16 @@
   // ============================================
   
       const IDLE_TIMEOUT = 2000; // Wait 2 seconds before starting demo
+
+    // Background image URLs - can be overridden by Webflow
+    // Set window.WORKFLOW_IMAGES before loading this script to use Webflow-hosted images
+    const BACKGROUND_IMAGES = window.WORKFLOW_IMAGES || {
+      'runners': 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9e87f9f3eacc62ff9_Runners.jpg',
+      'childcare': 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a921e1ddb27d3de258_ChildCare1.jpg',
+      'snacking': 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a931854657f440b9cf_Snacking.jpg',
+      'beverage': 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9847bad50a98a8983_Beverage.jpg',
+      'weather': 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a7e5e65ffc89a38aff_Weather2.jpeg'
+    };
       const TYPING_SPEED = 30; // ms per character (fast typing)
       const PAUSE_BETWEEN_ACTIONS = 400; // ms between workflow steps
       const PAUSE_BETWEEN_WORKFLOWS = 800; // ms between complete workflows
@@ -55,7 +65,7 @@
     {
           name: 'Running Trends',
           category: 'Athletic Footwear Trends',
-          background: 'imgs/Runners.jpg',
+      background: BACKGROUND_IMAGES.runners,
           steps: [
               { action: 'setBackground' },
               { action: 'setCategory' },
@@ -83,7 +93,7 @@
       {
           name: 'Childcare Analysis',
         category: 'Connected Nursery Tech',
-          background: 'imgs/ChildCare1.jpg',
+        background: BACKGROUND_IMAGES.childcare,
       steps: [
           { action: 'setBackground' },
           { action: 'setCategory' },
@@ -126,7 +136,7 @@
     {
         name: 'Weather Impact',
         category: 'Weather & Retail Impact',
-        background: 'imgs/Weather2.jpeg',
+      background: BACKGROUND_IMAGES.weather,
       steps: [
           { action: 'setBackground' },
           { action: 'setCategory' },
@@ -154,7 +164,7 @@
     {
       name: 'Snacking Behaviors',
       category: 'At-Home Snacking Trends',
-      background: 'imgs/Snacking.jpg',
+      background: BACKGROUND_IMAGES.snacking,
       steps: [
         { action: 'setBackground' },
         { action: 'setCategory' },
@@ -182,7 +192,7 @@
     {
       name: 'Beverage Hydration',
       category: 'Beverage Industry Trends',
-      background: 'imgs/Beverage.jpg',
+      background: BACKGROUND_IMAGES.beverage,
       steps: [
         { action: 'setBackground' },
         { action: 'setCategory' },
@@ -666,10 +676,35 @@
   // ============================================
 
     // Workflows run continuously - no user interaction stops them
-    // Start workflows after a brief delay to let page load
+    // Wait for first background image to load before starting
+    function startWhenReady() {
+      // Check if first workflow's background image is loaded
+      const firstWorkflow = workflows[0];
+      const firstImageUrl = firstWorkflow?.background || 'imgs/Runners.jpg';
+      const base = window.BACKGROUND_BASE_URL || '';
+      const fullUrl = base ? `${base}/${firstImageUrl}` : firstImageUrl;
+
+      const img = new Image();
+      img.onload = () => {
+        // Image loaded, start workflows
+        runAllWorkflows();
+      };
+      img.onerror = () => {
+        // Image failed, start anyway after a delay
+        setTimeout(runAllWorkflows, 500);
+      };
+      img.src = fullUrl;
+
+    // Fallback: start after max wait time even if image hasn't loaded
     setTimeout(() => {
-      runAllWorkflows();
-    }, IDLE_TIMEOUT);
+      if (!isRunningWorkflow) {
+        runAllWorkflows();
+      }
+    }, 3000);
+    }
+
+    // Start after brief delay for DOM to settle
+    setTimeout(startWhenReady, 500);
 
       // Expose functions for external control
       window.Workflows = {

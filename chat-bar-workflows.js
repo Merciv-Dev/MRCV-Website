@@ -215,6 +215,38 @@
   // ============================================
 
   const actions = {
+    // Full cleanup - clears input, popups, cards, and alerts before starting a new workflow
+    fullCleanup: function () {
+      // Clear input area
+      const inputArea = document.querySelector('.chat-input-area');
+      if (inputArea) {
+        inputArea.innerHTML = '';
+        inputArea.setAttribute('data-empty', 'true');
+      }
+
+      // Close all popups
+      if (typeof window.closeAllPopups === 'function') {
+        window.closeAllPopups();
+      }
+
+      // Hide text card output
+      if (window.TextCardOutput) {
+        window.TextCardOutput.hide();
+      }
+
+      // Hide visualization card
+      if (window.VisualizationCard) {
+        window.VisualizationCard.hide();
+      }
+
+      // Hide any alerts
+      if (window.Alert) {
+        window.Alert.hideAll(true);
+      }
+
+      return Promise.resolve();
+    },
+
     clear: function() {
       const inputArea = document.querySelector('.chat-input-area');
       if (inputArea) {
@@ -495,11 +527,11 @@
   async function runWorkflow(workflow) {
     console.log(`🎬 Running workflow: ${workflow.name}`);
     
-      // Cleanup before starting new workflow
-      await actions.cleanup();
+    // Full cleanup before starting new workflow - clears input, popups, cards, alerts
+    await actions.fullCleanup();
 
-      // Half pause after cleanup before starting
-      await actions.pause(PAUSE_BETWEEN_WORKFLOWS / 2);
+    // Brief pause after cleanup before starting
+    await actions.pause(300);
 
     for (const step of workflow.steps) {
       if (!isRunningWorkflow) break;

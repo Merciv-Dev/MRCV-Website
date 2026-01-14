@@ -45,10 +45,10 @@ const StatusBar = (function() {
 
         <div class="status-nav inline-flex items-center pointer-events-auto">
           <div class="nav-prev flex items-center justify-center rounded-full h-8 cursor-pointer w-8 hover:bg-white/10 bg-transparent transition-colors cursor-pointer" title="Previous workflow">
-            <span class="material-symbols-outlined h-full w-full flex items-center justify-center text-white/70 hover:text-white text-sm leading-none">chevron_left</span>
+            <span class="material-symbols-outlined  justify-center text-white/70 hover:text-white text-sm leading-none">chevron_left</span>
           </div>
           <div class="nav-next flex items-center justify-center rounded-full h-8 cursor-pointer w-8 hover:bg-white/10 bg-transparent transition-colors cursor-pointer" title="Next workflow">
-            <span class="material-symbols-outlined h-full w-full flex items-center justify-center text-white/70 hover:text-white text-sm leading-none">chevron_right</span>
+            <span class="material-symbols-outlined text-white/70 hover:text-white text-sm leading-none">chevron_right</span>
           </div>
         </div>
 

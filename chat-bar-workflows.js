@@ -61,7 +61,7 @@
               { action: 'clear' },
               { action: 'setStatus', text: 'Typing...' },
               { action: 'type', text: 'What are the latest trends in ' },
-              { action: 'typeAsTag', icon: 'footwear', label: 'Running Shoes' },
+            { action: 'slashSelect', index: 0, icon: 'checkroom', label: 'Running Shoes' },
               { action: 'type', text: ' for Q2 2026?' },
               { action: 'pause', duration: 400 },
               { action: 'setStatus', text: 'Searching...' },
@@ -89,7 +89,7 @@
         { action: 'clear' },
           { action: 'setStatus', text: 'Typing...' },
           { action: 'type', text: 'Analyze consumer sentiment for ' },
-          { action: 'typeAsTag', icon: 'category', label: 'Baby Products' },
+        { action: 'slashSelect', index: 2, icon: 'child_care', label: 'Baby Products' },
           { action: 'pause', duration: 300 },
           { action: 'setStatus', text: 'Searching...' },
           { action: 'send' },
@@ -116,7 +116,7 @@
         { action: 'clear' },
           { action: 'setStatus', text: 'Typing...' },
           { action: 'type', text: 'How does weather affect sales of ' },
-          { action: 'typeAsTag', icon: 'apparel', label: 'Outdoor Apparel' },
+        { action: 'slashSelect', index: 1, icon: 'checkroom', label: 'Outdoor Apparel' },
           { action: 'type', text: '?' },
           { action: 'pause', duration: 300 },
           { action: 'setStatus', text: 'Searching...' },
@@ -215,8 +215,8 @@
           });
       },
 
-      // Type text character by character, then wrap it in an inline tag
-      typeAsTag: function (icon, label) {
+    // Type "/" to trigger slash popup, show it, then select an item by index
+    slashSelect: function (index, icon, label) {
           return new Promise((resolve) => {
               const inputArea = document.querySelector('.chat-input-area');
               if (!inputArea) return resolve();
@@ -224,28 +224,65 @@
               // Remove empty attribute
               inputArea.removeAttribute('data-empty');
 
-              // Create a temporary text node to type into
-              const textNode = document.createTextNode('');
-              inputArea.appendChild(textNode);
+            // Type "/" character
+            const slashNode = document.createTextNode('/');
+            inputArea.appendChild(slashNode);
 
-              let index = 0;
-              const typeChar = () => {
-                  if (index < label.length && isRunningWorkflow) {
-                      textNode.textContent += label[index];
-                      index++;
-                      setTimeout(typeChar, TYPING_SPEED);
-                  } else {
-                      // Typing complete - wait 750ms then replace with styled tag
-                      setTimeout(() => {
+            // Get input area position for popup
+            const inputRect = inputArea.getBoundingClientRect();
+            const offset = 8;
+
+            // Show the slash popup positioned above the input
+            const popup = document.getElementById('slash-command-popup');
+            if (popup) {
+              // Position popup directly above the input area
+              popup.style.position = 'fixed';
+              popup.style.left = `${inputRect.left}px`;
+              popup.style.bottom = `${window.innerHeight - inputRect.top + offset}px`;
+              popup.style.top = 'auto';
+              popup.style.transform = 'none';
+
+              // Make popup visible
+              popup.classList.remove('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
+              popup.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
+              popup.setAttribute('aria-hidden', 'false');
+            }
+
+            // Wait for user to "see" the popup, then select
+            setTimeout(() => {
+              if (popup) {
+                // Get item by index
+                const items = popup.querySelectorAll('.popup-item');
+                const selectedItem = items[index];
+
+                if (selectedItem) {
+                  // Highlight the selected item briefly
+                  selectedItem.classList.add('bg-neutral-95');
+
+                  setTimeout(() => {
+                    // Remove the "/" from input
+                    slashNode.remove();
+
+                    // Insert the tag using existing insertTag action
                           if (window.Tag) {
                               const tagElement = window.Tag.inline(icon, label);
-                              textNode.replaceWith(tagElement);
+                            inputArea.appendChild(tagElement);
                           }
+
+                    // Close popup
+                    if (window.closeAllPopups) {
+                      window.closeAllPopups();
+                    }
+
                           resolve();
-                      }, 750); // 0.75 second delay before tag styling
-                  }
-              };
-              typeChar();
+                  }, 300);
+                } else {
+                  resolve();
+                }
+              } else {
+                resolve();
+              }
+            }, 600);
           });
       },
 
@@ -283,11 +320,7 @@
 
       // Cleanup everything before starting a new workflow
       cleanup: function () {
-          return new Promise((resolve) => {
-              // Close all popups
-              if (window.closeAllPopups) {
-                  window.closeAllPopups();
-              }
+        return new Promise((resolve) => {
               // Hide text card output
               if (window.TextCardOutput) {
                   window.TextCardOutput.hide();
@@ -378,6 +411,8 @@
           // Handle different action parameter patterns
           if (step.action === 'insertTag' || step.action === 'typeAsTag') {
               await actionFn(step.icon, step.label);
+          } else if (step.action === 'slashSelect') {
+            await actionFn(step.index, step.icon, step.label);
           } else if (step.action === 'openPopup') {
               await actionFn(step.popupId, step.triggerSelector);
           } else if (step.action === 'setBackground') {
@@ -440,8 +475,9 @@
       console.log('⏹️  Workflow stopped by user interaction');
       isRunningWorkflow = false;
       currentWorkflowIndex = 0;
-      actions.closeAllPopups();
-        actions.hideOutput();
+      // Don't close popups here - user may be opening one
+      // Only hide workflow-generated output
+      actions.hideOutput();
     }
   }
 
@@ -485,3 +521,4 @@
       console.log('🎭 Auto-demo workflows initialized with background support');
   } // End of startWorkflowEngine
 })();
+

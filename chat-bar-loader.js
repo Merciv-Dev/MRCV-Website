@@ -156,7 +156,8 @@
         // Group 2: Depends on icon-library
         const tagComponents = [
             '/components/tag.js',
-            '/components/source-tag.js'
+            '/components/source-tag.js',
+            '/components/popup.js'
         ];
 
         // Group 3: UI components (can load in parallel after tags)

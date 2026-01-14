@@ -78,6 +78,18 @@ const TextCardOutput = (function() {
       }
     });
     
+    // Add "+X Sources" tag at the end
+    const moreCount = Math.floor(Math.random() * 150) + 50; // Random number 50-200
+    const moreTag = document.createElement('span');
+    // Include source-tag class so it gets animated
+    moreTag.className = 'source-tag inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer transition-all hover:opacity-80 bg-neutral-90/50 text-neutral-40';
+    moreTag.style.opacity = '0';
+    moreTag.style.transform = 'scale(0.8)';
+    moreTag.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    moreTag.style.transitionDelay = `${sources.length * 100}ms`;
+    moreTag.innerHTML = `<span class="material-symbols-outlined text-[18px]">add</span><span>${moreCount} Sources</span>`;
+    wrapper.appendChild(moreTag);
+
     section.appendChild(wrapper);
     return section;
   }

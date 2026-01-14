@@ -25,8 +25,10 @@ function initChatBarCore() {
   const sendButton = document.querySelector('[data-action="send"]');
   const inputArea = document.querySelector('.chat-input-area');
   const dropZone = document.querySelector('.drop-zone');
-  const slashCommandPopup = document.getElementById('slash-command-popup');
-  const slashCommandItems = document.querySelectorAll('.slash-command-item');
+
+  // Dynamic getters for popup elements (created by Popup component)
+  const getSlashCommandPopup = () => document.getElementById('slash-command-popup');
+  const getSlashCommandItems = () => document.querySelectorAll('#slash-command-popup .popup-item');
   
   // ============================================
   // Popup Functions
@@ -90,10 +92,12 @@ function initChatBarCore() {
   }
   
   /**
-   * Closes all open popups
+   * Closes all open popups (re-queries DOM to include dynamically created popups)
    */
   function closeAllPopups() {
-    popups.forEach(popup => {
+    // Re-query to include dynamically created popups
+    const allPopups = document.querySelectorAll('.popup');
+    allPopups.forEach(popup => {
       popup.classList.remove('active');
       // Restore Tailwind hidden classes
       popup.classList.remove('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
@@ -110,6 +114,7 @@ function initChatBarCore() {
   popupTriggers.forEach(trigger => {
     trigger.addEventListener('click', function(e) {
       e.preventDefault();
+      e.stopPropagation(); // Prevent document click from closing popup
       const popupId = this.getAttribute('data-popup');
       openPopup(popupId, this);
     });
@@ -154,14 +159,12 @@ function initChatBarCore() {
   });
 
   // ============================================
-  // Mode Options (ASK/WORK/RESEARCH)
+  // Mode Handling (uses Popup component)
   // ============================================
-  
-  const modeButton = document.getElementById('mode-button');
-  const modeOptions = document.querySelectorAll('.mode-option');
+
   let currentMode = 'work'; // Default mode
 
-  // Mode configuration
+  // Mode configuration for reference
   const modeConfig = {
     ask: { icon: 'chat', label: 'Ask' },
     work: { icon: 'build', label: 'Work' },
@@ -169,48 +172,28 @@ function initChatBarCore() {
   };
 
   /**
-   * Update the mode button to show selected mode
+   * Update the mode (delegates to Popup component)
    * @param {string} mode - The mode to set ('ask', 'work', 'research')
    */
   function setMode(mode) {
     if (!modeConfig[mode]) return;
-
     currentMode = mode;
-    const config = modeConfig[mode];
 
-    if (modeButton) {
-      // Update button icon and label
-      const iconEl = modeButton.querySelector('.mode-icon');
-      const labelEl = modeButton.querySelector('.mode-label');
-
-      if (iconEl) iconEl.textContent = config.icon;
-      if (labelEl) labelEl.textContent = config.label;
-
-      // Add selected class for blue highlight
-      modeButton.classList.add('selected');
+    // Update via Popup component if available
+    if (window.Popup) {
+      window.Popup.setActive('mode-popup', mode);
     }
 
-    // Update active state in popup
-    modeOptions.forEach(opt => {
-      if (opt.dataset.mode === mode) {
-        opt.classList.add('active');
-      } else {
-        opt.classList.remove('active');
-      }
-    });
+    // Update the mode button
+    const modeButton = document.getElementById('mode-button');
+    if (modeButton && modeConfig[mode]) {
+      const iconEl = modeButton.querySelector('.mode-icon');
+      const labelEl = modeButton.querySelector('.mode-label');
+      if (iconEl) iconEl.textContent = modeConfig[mode].icon;
+      if (labelEl) labelEl.textContent = modeConfig[mode].label;
+      modeButton.classList.add('selected');
+    }
   }
-
-  // Handle mode option clicks
-  modeOptions.forEach(option => {
-    option.addEventListener('click', function () {
-      const mode = this.dataset.mode;
-      setMode(mode);
-      closeAllPopups();
-    });
-  });
-  
-  // Initialize with default mode (work is active by default)
-  // Don't call setMode here to avoid blue highlight initially
 
   // Expose setMode globally for workflows
   window.setMode = setMode;
@@ -452,27 +435,49 @@ function initChatBarCore() {
    * Shows the slash command popup
    */
   function showSlashCommandPopup() {
-    if (!inputArea || !slashCommandPopup) return;
+    const popup = getSlashCommandPopup();
+    if (!inputArea || !popup) return;
 
     // Close other popups
     closeAllPopups();
 
-    // Get input area position
+    // Try to get cursor position near the "/" character
+    const selection = window.getSelection();
+    let cursorRect = null;
+
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      cursorRect = range.getBoundingClientRect();
+    }
+
+    // Fallback to input area if cursor rect isn't useful
     const inputRect = inputArea.getBoundingClientRect();
     const offset = 8;
 
-    // Position popup above the input area
-    const top = inputRect.top - slashCommandPopup.offsetHeight - offset;
-    const left = inputRect.left;
+    // Use cursor position if available, otherwise use input left edge
+    const left = (cursorRect && cursorRect.left > 0) ? cursorRect.left : inputRect.left;
 
-    slashCommandPopup.style.top = `${top}px`;
-    slashCommandPopup.style.left = `${left}px`;
+    // Position popup above the cursor/input
+    const baseTop = (cursorRect && cursorRect.top > 0) ? cursorRect.top : inputRect.top;
+
+    // Make popup visible first to measure its height
+    popup.style.visibility = 'hidden';
+    popup.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
+    const popupHeight = popup.offsetHeight;
+    popup.style.visibility = '';
+
+    const top = baseTop - popupHeight - offset;
+
+    popup.style.position = 'fixed';
+    popup.style.top = `${top}px`;
+    popup.style.left = `${left}px`;
+    popup.style.transform = 'none';
 
     // Show popup - toggle Tailwind classes too
-    slashCommandPopup.classList.add('active');
-    slashCommandPopup.classList.remove('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
-    slashCommandPopup.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
-    slashCommandPopup.setAttribute('aria-hidden', 'false');
+    popup.classList.add('active');
+    popup.classList.remove('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
+    popup.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
+    popup.setAttribute('aria-hidden', 'false');
     slashCommandActive = true;
     selectedCommandIndex = 0;
 
@@ -484,13 +489,14 @@ function initChatBarCore() {
    * Hides the slash command popup
    */
   function hideSlashCommandPopup() {
-    if (!slashCommandPopup) return;
+    const popup = getSlashCommandPopup();
+    if (!popup) return;
 
-    slashCommandPopup.classList.remove('active');
+    popup.classList.remove('active');
     // Restore Tailwind hidden classes
-    slashCommandPopup.classList.remove('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
-    slashCommandPopup.classList.add('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
-    slashCommandPopup.setAttribute('aria-hidden', 'true');
+    popup.classList.remove('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
+    popup.classList.add('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
+    popup.setAttribute('aria-hidden', 'true');
     slashCommandActive = false;
   }
 
@@ -498,11 +504,14 @@ function initChatBarCore() {
    * Updates the highlighted item in slash command popup
    */
   function updateSlashCommandSelection() {
-    slashCommandItems.forEach((item, index) => {
+    const items = getSlashCommandItems();
+    items.forEach((item, index) => {
       if (index === selectedCommandIndex) {
-        item.classList.add('active');
+        item.classList.add('bg-neutral-95', 'shadow-[inset_0_0_3px_0_rgba(242,242,237,0.25)]');
+        item.classList.remove('hover:bg-neutral-95/50');
       } else {
-        item.classList.remove('active');
+        item.classList.remove('bg-neutral-95', 'shadow-[inset_0_0_3px_0_rgba(242,242,237,0.25)]');
+        item.classList.add('hover:bg-neutral-95/50');
       }
     });
   }
@@ -511,7 +520,8 @@ function initChatBarCore() {
    * Selects a slash command
    */
   function selectSlashCommand() {
-    const selectedItem = slashCommandItems[selectedCommandIndex];
+    const items = getSlashCommandItems();
+    const selectedItem = items[selectedCommandIndex];
     if (!selectedItem || !inputArea) return;
 
     // Get tag data from attributes
@@ -574,13 +584,16 @@ function initChatBarCore() {
     inputArea.addEventListener('keydown', function (e) {
       if (!slashCommandActive) return;
 
+      const items = getSlashCommandItems();
+      const itemCount = items.length || 1;
+
       if (e.key === 'ArrowDown') {
         e.preventDefault();
-        selectedCommandIndex = (selectedCommandIndex + 1) % slashCommandItems.length;
+        selectedCommandIndex = (selectedCommandIndex + 1) % itemCount;
         updateSlashCommandSelection();
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        selectedCommandIndex = (selectedCommandIndex - 1 + slashCommandItems.length) % slashCommandItems.length;
+        selectedCommandIndex = (selectedCommandIndex - 1 + itemCount) % itemCount;
         updateSlashCommandSelection();
       } else if (e.key === 'Enter' && slashCommandActive) {
         e.preventDefault();
@@ -592,19 +605,15 @@ function initChatBarCore() {
     });
   }
 
-  // Click on slash command item
-  slashCommandItems.forEach((item, index) => {
-    item.addEventListener('click', function () {
-      selectedCommandIndex = index;
-      selectSlashCommand();
-    });
-  });
+  // Note: Click handlers for slash command items are set up by Popup.init()
 
   // ============================================
-  // Initialize
+  // Initialize Popup Component
   // ============================================
   
-  console.log('Chat Bar initialized');
+  if (window.Popup) {
+    window.Popup.init();
+  }
   
   // ============================================
   // Expose Functions for Workflow Automation

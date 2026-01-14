@@ -48,13 +48,13 @@
             
             <!-- Mode Button (ASK/WORK/RESEARCH) -->
             <button id="mode-button" class="backdrop-blur-[20px] border border-neutral-90 flex items-center gap-1 pl-1.5 pr-3 py-1.5 rounded-2xl hover:bg-neutral-95/50 transition-all cursor-pointer shadow-[inset_0px_0px_3px_0px_rgba(242,242,237,0.25)]" data-popup="mode-popup">
-              <span class="mode-icon material-symbols-outlined text-[21px] text-neutral-40 shrink-0">build</span>
+              <span class="mode-icon material-symbols-outlined text-[21px] text-neutral-40 shrink-0">psychology</span>
               <span class="mode-label text-sm text-neutral-40 whitespace-nowrap leading-none">Work</span>
             </button>
             
             <!-- Add Context Button -->
             <button class="backdrop-blur-[20px] border border-neutral-90 flex items-center gap-1 pl-1.5 pr-3 py-1.5 rounded-2xl hover:bg-neutral-95/50 transition-all cursor-pointer shadow-[inset_0px_0px_3px_0px_rgba(242,242,237,0.25)]" data-popup="context-popup">
-              <span class="material-symbols-outlined text-[21px] text-neutral-40 shrink-0">add_circle</span>
+              <span class="material-symbols-outlined text-[21px] text-neutral-40 shrink-0">add</span>
               <span class="text-sm text-neutral-40 whitespace-nowrap leading-none">Add Context</span>
             </button>
             
@@ -73,143 +73,8 @@
       </div>
     </div>
     
-    <!-- Popups -->
-    
-    <!-- Add Menu Popup -->
-    <div class="popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-80 max-w-[calc(100vw-40px)] -translate-y-2" id="add-menu" aria-hidden="true">
-      <div class="bg-neutral-99 rounded-2xl border border-neutral-90 shadow-lg overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-90">
-          <span class="text-base font-medium text-neutral-10">Quick Actions</span>
-          <button class="popup-close text-2xl text-neutral-40 hover:text-neutral-10 transition-colors leading-none w-6 h-6 flex items-center justify-center" aria-label="Close">&times;</button>
-        </div>
-        <div class="p-3 flex flex-col gap-1">
-          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-neutral-95 transition-all text-left w-full">
-            <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">description</span>
-            <span class="text-sm text-neutral-10">Write copy</span>
-          </button>
-          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-neutral-95 transition-all text-left w-full">
-            <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">campaign</span>
-            <span class="text-sm text-neutral-10">Create campaign</span>
-          </button>
-          <button class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-neutral-95 transition-all text-left w-full">
-            <span class="material-symbols-outlined text-[20px] text-neutral-40 shrink-0">bar_chart</span>
-            <span class="text-sm text-neutral-10">Analyze trends</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Mode Popup (ASK/WORK/RESEARCH) -->
-    <div class="popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-[140px] max-w-[calc(100vw-40px)] -translate-y-2 bg-neutral-98 rounded-2xl border border-neutral-90 shadow-lg p-2 flex flex-col gap-1" id="mode-popup" aria-hidden="true">
-      <div class="mode-option self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-mode="ask" data-icon="chat" data-label="Ask">
-        <div class="flex justify-start items-center gap-1.5">
-          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
-            <span class="material-symbols-outlined text-[18px]">chat</span>
-          </span>
-          <span class="text-neutral-40 text-sm font-normal leading-4">Ask</span>
-        </div>
-      </div>
-      <div class="mode-option active self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-mode="work" data-icon="build" data-label="Work">
-        <div class="flex justify-start items-center gap-1.5">
-          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
-            <span class="material-symbols-outlined text-[18px]">build</span>
-          </span>
-          <span class="text-neutral-40 text-sm font-normal leading-4">Work</span>
-        </div>
-      </div>
-      <div class="mode-option self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-mode="research" data-icon="science" data-label="Research">
-        <div class="flex justify-start items-center gap-1.5">
-          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
-            <span class="material-symbols-outlined text-[18px]">science</span>
-          </span>
-          <span class="text-neutral-40 text-sm font-normal leading-4">Research</span>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Context Popup -->
-    <div class="popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-80 max-w-[calc(100vw-40px)] -translate-y-2" id="context-popup" aria-hidden="true">
-      <div class="bg-neutral-99 rounded-2xl border border-neutral-90 shadow-lg overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-90">
-          <span class="text-base font-medium text-neutral-10">Add Context</span>
-          <button class="popup-close text-2xl text-neutral-40 hover:text-neutral-10 transition-colors leading-none w-6 h-6 flex items-center justify-center" aria-label="Close">&times;</button>
-        </div>
-        <div class="p-4">
-          <div class="grid grid-cols-2 gap-2">
-            <button class="context-tag flex items-center gap-2 px-3 py-2.5 rounded-xl bg-neutral-95 hover:bg-orange-50/10 hover:border-orange-50 border border-transparent transition-all text-left">
-              <span class="material-symbols-outlined text-[18px] text-neutral-40">bar_chart</span>
-              <span class="text-sm text-neutral-10">Market data</span>
-            </button>
-            <button class="context-tag flex items-center gap-2 px-3 py-2.5 rounded-xl bg-neutral-95 hover:bg-orange-50/10 hover:border-orange-50 border border-transparent transition-all text-left">
-              <span class="material-symbols-outlined text-[18px] text-neutral-40">description</span>
-              <span class="text-sm text-neutral-10">Brand guidelines</span>
-            </button>
-            <button class="context-tag flex items-center gap-2 px-3 py-2.5 rounded-xl bg-neutral-95 hover:bg-orange-50/10 hover:border-orange-50 border border-transparent transition-all text-left">
-              <span class="material-symbols-outlined text-[18px] text-neutral-40">group</span>
-              <span class="text-sm text-neutral-10">Audience insights</span>
-            </button>
-            <button class="context-tag flex items-center gap-2 px-3 py-2.5 rounded-xl bg-neutral-95 hover:bg-orange-50/10 hover:border-orange-50 border border-transparent transition-all text-left">
-              <span class="material-symbols-outlined text-[18px] text-neutral-40">flag</span>
-              <span class="text-sm text-neutral-10">Campaign goals</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Attach Popup -->
-    <div class="popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-80 max-w-[calc(100vw-40px)] -translate-y-2" id="attach-popup" aria-hidden="true">
-      <div class="bg-neutral-99 rounded-2xl border border-neutral-90 shadow-lg overflow-hidden">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-90">
-          <span class="text-base font-medium text-neutral-10">Attach Files</span>
-          <button class="popup-close text-2xl text-neutral-40 hover:text-neutral-10 transition-colors leading-none w-6 h-6 flex items-center justify-center" aria-label="Close">&times;</button>
-        </div>
-        <div class="p-6">
-          <div class="drop-zone flex flex-col items-center justify-center gap-2 p-8 border-2 border-dashed border-neutral-90 rounded-xl bg-neutral-95 hover:border-orange-50 hover:bg-orange-50/5 transition-all text-center">
-            <span class="material-symbols-outlined text-[48px] text-neutral-40 opacity-50">attach_file</span>
-            <p class="text-base text-neutral-10 font-medium">Drag & drop files here</p>
-            <span class="text-sm text-neutral-40">or</span>
-            <button class="btn-browse mt-2 px-4 py-2 bg-neutral-99 border border-neutral-90 rounded-xl text-sm text-neutral-10 hover:border-orange-50 hover:text-orange-50 transition-all">Browse files</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Slash Command Popup -->
-    <div class="slash-command-popup fixed z-50 opacity-0 invisible pointer-events-none transition-all duration-200 w-44 max-w-[calc(100vw-40px)] -translate-y-2 bg-neutral-98 rounded-2xl border border-neutral-10/5 shadow-lg backdrop-blur-md p-2 flex flex-col gap-0.5" id="slash-command-popup" aria-hidden="true">
-      <div class="slash-command-item self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-command="spring-summer-26" data-tag-icon="project" data-tag-label="Spring/Summer '26">
-        <div class="flex justify-start items-center gap-1.5">
-          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
-            <span class="material-symbols-outlined text-[18px]">folder_special</span>
-          </span>
-          <span class="text-neutral-40 text-sm font-normal leading-4">Project</span>
-        </div>
-      </div>
-      <div class="slash-command-item self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-command="report" data-tag-icon="document" data-tag-label="Report">
-        <div class="flex justify-start items-center gap-1.5">
-          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
-            <span class="material-symbols-outlined text-[18px]">description</span>
-          </span>
-          <span class="text-neutral-40 text-sm font-normal leading-4">Report</span>
-        </div>
-      </div>
-      <div class="slash-command-item self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-command="product" data-tag-icon="product" data-tag-label="Product">
-        <div class="flex justify-start items-center gap-1.5">
-          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
-            <span class="material-symbols-outlined text-[18px]">inventory_2</span>
-          </span>
-          <span class="text-neutral-40 text-sm font-normal leading-4">Product</span>
-        </div>
-      </div>
-      <div class="slash-command-item self-stretch pl-1.5 pr-3 py-1.5 rounded-lg inline-flex justify-start items-center gap-1 cursor-pointer transition-all hover:bg-neutral-95/50" data-command="file" data-tag-icon="file" data-tag-label="File">
-        <div class="flex justify-start items-center gap-1.5">
-          <span class="w-5 h-5 flex items-center justify-center text-neutral-40">
-            <span class="material-symbols-outlined text-[18px]">draft</span>
-          </span>
-          <span class="text-neutral-40 text-sm font-normal leading-4">File</span>
-        </div>
-      </div>
-    </div>
+    <!-- All popups are generated dynamically by Popup.init() -->
+    <!-- mode-popup, slash-command-popup, add-menu, context-popup, attach-popup -->
     
     <!-- Overlay -->
     <div class="popup-overlay" id="popup-overlay"></div>
@@ -222,6 +87,7 @@
   <!-- Components -->
   <script src="components/icon-library.js"></script>
   <script src="components/tag.js"></script>
+  <script src="components/popup.js"></script>
   <script src="components/source-library.js"></script>
   <script src="components/source-tag.js"></script>
   <script src="components/text-card-output.js"></script>

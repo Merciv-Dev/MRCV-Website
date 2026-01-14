@@ -227,25 +227,40 @@ Popup.register('mode-popup', {
 // Slash Command Popup
 Popup.register('slash-command-popup', {
   width: 'w-56',
-  maxHeight: 'max-h-40',
+    maxHeight: 'max-h-48',
   scrollable: true,
   items: [
-    // Products
+      // Index 0 - Used by Running Trends workflow
     { 
       icon: 'checkroom', 
       label: 'Running Shoes',
       onClick: () => insertTag('checkroom', 'Running Shoes')
     },
+      // Index 1 - Used by Weather Impact workflow
     { 
       icon: 'checkroom', 
       label: 'Outdoor Apparel',
       onClick: () => insertTag('checkroom', 'Outdoor Apparel')
     },
+      // Index 2 - Used by Childcare Analysis workflow
     { 
       icon: 'child_care', 
       label: 'Baby Products',
       onClick: () => insertTag('child_care', 'Baby Products')
     },
+      // Index 3 - Used by Snacking Behaviors workflow
+      {
+          icon: 'cookie',
+          label: 'Snacking',
+          onClick: () => insertTag('cookie', 'Snacking')
+      },
+      // Index 4 - Used by Beverage Hydration workflow
+      {
+          icon: 'local_cafe',
+          label: 'Beverage',
+          onClick: () => insertTag('local_cafe', 'Beverage')
+      },
+      // Additional items
     { 
       icon: 'fitness_center', 
       label: 'Fitness Equipment',

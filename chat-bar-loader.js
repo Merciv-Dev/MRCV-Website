@@ -147,25 +147,27 @@
 
     // Wait for both HTML and Tailwind, then load components
     Promise.all([htmlReady, tailwindReady]).then(() => {
-        // Group 1: Independent components (can load in parallel)
-        const parallelComponents = [
+        // Group 1: Core libraries (can load in parallel)
+        const coreLibraries = [
             '/components/icon-library.js',
-            '/components/source-library.js'
+            '/components/source-library.js',
+            '/components/visualization-library.js'
         ];
 
-        // Group 2: Depends on icon-library
+        // Group 2: Depends on icon-library (sequential)
         const tagComponents = [
             '/components/tag.js',
             '/components/source-tag.js',
             '/components/popup.js'
         ];
 
-        // Group 3: UI components (can load in parallel after tags)
+        // Group 3: UI components (can load in parallel after libs + tags)
         const uiComponents = [
             '/components/text-card-output.js',
             '/components/visualization-card.js',
             '/components/background-manager.js',
-            '/components/status-bar.js'
+            '/components/status-bar.js',
+            '/components/alert.js'
         ];
 
         // Load scripts in parallel within groups
@@ -194,7 +196,7 @@
         }
 
         // Load in optimized order
-        loadScriptsParallel(parallelComponents)
+        loadScriptsParallel(coreLibraries)
             .then(() => loadScriptsSequential(tagComponents))
             .then(() => loadScriptsParallel(uiComponents))
             .then(() => {

@@ -39,11 +39,25 @@ const StatusBar = (function() {
       container.className = 'absolute bottom-0 left-0 right-0 z-20 px-8 py-6 flex justify-between items-center pointer-events-none';
     
     container.innerHTML = `
-      <!-- Left: Category Ticker -->
-      <div class="status-category inline-flex justify-start items-center gap-2.5 opacity-0 translate-y-4 transition-all duration-500">
-        <div class="status-dot w-3 h-3 bg-orange-50 rounded-full"></div>
-        <div class="status-category-text text-white text-base font-normal uppercase leading-5 tracking-wide" style="font-family: 'GT Pressura Mono', 'SF Mono', 'Roboto Mono', monospace;">
-          <!-- Category text here -->
+      <!-- Left: Category Ticker with Navigation -->
+      <div class="status-left inline-flex justify-start items-center gap-3">
+        <!-- Navigation Arrows -->
+
+        <div class="status-nav inline-flex items-center pointer-events-auto">
+          <div class="nav-prev flex items-center justify-center rounded-full h-8 cursor-pointer w-8 hover:bg-white/10 bg-transparent transition-colors cursor-pointer" title="Previous workflow">
+            <span class="material-symbols-outlined h-full w-full flex items-center justify-center text-white/70 hover:text-white text-sm leading-none">chevron_left</span>
+          </div>
+          <div class="nav-next flex items-center justify-center rounded-full h-8 cursor-pointer w-8 hover:bg-white/10 bg-transparent transition-colors cursor-pointer" title="Next workflow">
+            <span class="material-symbols-outlined h-full w-full flex items-center justify-center text-white/70 hover:text-white text-sm leading-none">chevron_right</span>
+          </div>
+        </div>
+
+        <!-- Category -->
+        <div class="status-category inline-flex justify-start items-center gap-2.5 opacity-0 translate-y-4 transition-all duration-500">
+          <div class="status-dot w-3 h-3 bg-orange-50 rounded-full"></div>
+          <div class="status-category-text text-white text-base font-normal uppercase leading-5 tracking-wide" style="font-family: 'GT Pressura Mono', 'SF Mono', 'Roboto Mono', monospace;">
+            <!-- Category text here -->
+          </div>
         </div>
       </div>
       
@@ -62,11 +76,49 @@ const StatusBar = (function() {
     dotElement = container.querySelector('.status-dot');
     actionElement = container.querySelector('.status-action');
 
+    // Setup navigation
+    const prevBtn = container.querySelector('.nav-prev');
+    const nextBtn = container.querySelector('.nav-next');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navigatePrev();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        navigateNext();
+      });
+    }
+
     // Inject CSS for animations
     injectStyles();
 
     isInitialized = true;
     console.log('📊 Status Bar initialized');
+  }
+
+  // ============================================
+  // Navigation Functions
+  // ============================================
+
+  function navigateNext() {
+    // Stop current workflow and go to next
+    if (window.Workflows) {
+      window.Workflows.stop();
+      window.Workflows.next();
+    }
+  }
+
+  function navigatePrev() {
+    // Stop current workflow and go to previous
+    if (window.Workflows) {
+      window.Workflows.stop();
+      window.Workflows.prev();
+    }
   }
 
   function injectStyles() {

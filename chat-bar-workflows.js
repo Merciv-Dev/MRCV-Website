@@ -42,7 +42,9 @@
       const backgroundImages = [
           'imgs/Runners.jpg',
           'imgs/ChildCare1.jpg',
-          'imgs/Weather2.jpeg'
+        'imgs/Weather2.jpeg',
+        'imgs/Snacking.jpg',
+        'imgs/Beverage.jpg'
       ];
 
   // ============================================
@@ -81,18 +83,34 @@
       },
       {
           name: 'Childcare Analysis',
-          category: 'Childcare Product Sales',
+        category: 'Connected Nursery Tech',
           background: 'imgs/ChildCare1.jpg',
       steps: [
           { action: 'setBackground' },
           { action: 'setCategory' },
         { action: 'clear' },
-          { action: 'setStatus', text: 'Typing...' },
-          { action: 'type', text: 'Analyze consumer sentiment for ' },
+        // Show alert before typing starts (under chat bar like text-card)
+        {
+          action: 'showAlert', options: {
+            type: 'trend',
+            priority: 'high',
+            title: 'Baby Monitor Sales Surge',
+            description: 'Smart baby monitor category up 47% MoM. Parents increasingly prioritizing connected devices.',
+            timestamp: '2h ago',
+            position: 'under-chat',
+            autoHide: 0
+          }
+        },
+        { action: 'pause', duration: 3500 },
+        { action: 'hideAlerts' },
+        { action: 'pause', duration: 300 },
+        { action: 'setStatus', text: 'Typing...' },
+        { action: 'type', text: 'How is connected nursery tech reshaping parent purchasing behavior in ' },
         { action: 'slashSelect', index: 2, icon: 'child_care', label: 'Baby Products' },
-          { action: 'pause', duration: 300 },
-          { action: 'setStatus', text: 'Searching...' },
-          { action: 'send' },
+        { action: 'type', text: ', and which product attributes are driving premium adoption?' },
+        { action: 'pause', duration: 300 },
+        { action: 'setStatus', text: 'Searching...' },
+        { action: 'send' },
           { action: 'pause', duration: 1500 },
           { action: 'setStatus', text: 'Analyzing...' },
           { action: 'pause', duration: 1500 },
@@ -132,6 +150,62 @@
           { action: 'hideOutput' },
           { action: 'clear' }, // Clear input at end of sequence
           { action: 'pause', duration: 300 },
+      ]
+    },
+    {
+      name: 'Snacking Behaviors',
+      category: 'At-Home Snacking Trends',
+      background: 'imgs/Snacking.jpg',
+      steps: [
+        { action: 'setBackground' },
+        { action: 'setCategory' },
+        { action: 'clear' },
+        { action: 'setStatus', text: 'Typing...' },
+        { action: 'type', text: 'How are at-home ' },
+        { action: 'slashSelect', index: 3, icon: 'cookie', label: 'Snacking' },
+        { action: 'type', text: ' behaviors changing, and what does that mean for product innovation?' },
+        { action: 'pause', duration: 400 },
+        { action: 'setStatus', text: 'Searching...' },
+        { action: 'send' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Analyzing...' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Generating...' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Complete' },
+        { action: 'pause', duration: 7000 },
+        { action: 'clearStatus' },
+        { action: 'hideOutput' },
+        { action: 'clear' },
+        { action: 'pause', duration: 300 },
+      ]
+    },
+    {
+      name: 'Beverage Hydration',
+      category: 'Beverage Industry Trends',
+      background: 'imgs/Beverage.jpg',
+      steps: [
+        { action: 'setBackground' },
+        { action: 'setCategory' },
+        { action: 'clear' },
+        { action: 'setStatus', text: 'Typing...' },
+        { action: 'type', text: 'Across the ' },
+        { action: 'slashSelect', index: 4, icon: 'local_cafe', label: 'Beverage' },
+        { action: 'type', text: ' industry, how is everyday hydration behavior evolving?' },
+        { action: 'pause', duration: 400 },
+        { action: 'setStatus', text: 'Searching...' },
+        { action: 'send' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Processing...' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Generating...' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Complete' },
+        { action: 'pause', duration: 7000 },
+        { action: 'clearStatus' },
+        { action: 'hideOutput' },
+        { action: 'clear' },
+        { action: 'pause', duration: 300 },
       ]
     }
   ];
@@ -286,10 +360,10 @@
           });
       },
 
-      send: function () {
+    send: function (workflowName) {
           return new Promise((resolve) => {
               if (typeof window.sendMessage === 'function') {
-                  window.sendMessage();
+                window.sendMessage({ workflowName });
               }
               resolve();
           });
@@ -329,6 +403,10 @@
               if (window.VisualizationCard) {
                   window.VisualizationCard.hide();
               }
+          // Hide all alerts
+          if (window.Alert) {
+            window.Alert.hideAll();
+          }
               // Clear status bar
               if (window.StatusBar) {
                   window.StatusBar.clearAction();
@@ -387,6 +465,26 @@
               }
               resolve();
           });
+    },
+
+    // Show an alert notification
+    showAlert: function (options) {
+      return new Promise((resolve) => {
+        if (window.Alert) {
+          window.Alert.show(options);
+        }
+        setTimeout(resolve, 200); // Brief pause after showing
+      });
+    },
+
+    // Hide all alerts
+    hideAlerts: function () {
+      return new Promise((resolve) => {
+        if (window.Alert) {
+          window.Alert.hideAll();
+        }
+        resolve();
+      });
     }
   };
 
@@ -423,13 +521,19 @@
               await actionFn(step.text || workflow.category);
           } else if (step.action === 'setStatus') {
               await actionFn(step.text);
+          } else if (step.action === 'send') {
+            // Pass workflow name for visualization selection
+            await actionFn(workflow.name);
+          } else if (step.action === 'showAlert') {
+            // Pass alert options
+            await actionFn(step.options);
           } else {
               await actionFn(step.text || step.duration || step.lines);
           }
       }
 
         // Skip pause for instant actions
-        const skipPauseActions = ['pause', 'setBackground', 'setCategory', 'setStatus', 'clearStatus'];
+      const skipPauseActions = ['pause', 'setBackground', 'setCategory', 'setStatus', 'clearStatus', 'showAlert', 'hideAlerts'];
         if (!skipPauseActions.includes(step.action)) {
         await actions.pause(PAUSE_BETWEEN_ACTIONS);
       }
@@ -474,12 +578,65 @@
     if (isRunningWorkflow) {
       console.log('⏹️  Workflow stopped by user interaction');
       isRunningWorkflow = false;
-      currentWorkflowIndex = 0;
+      // Don't reset index - preserve position for navigation
       // Don't close popups here - user may be opening one
       // Only hide workflow-generated output
       actions.hideOutput();
     }
   }
+
+    // Navigate to next workflow
+    async function nextWorkflow() {
+      console.log('⏭️  Skipping to next workflow');
+      isRunningWorkflow = false;
+
+      // Cleanup current state
+      await actions.cleanup();
+
+      // Move to next (loop if at end)
+      currentWorkflowIndex = (currentWorkflowIndex + 1) % workflows.length;
+
+      // Start the new workflow
+      isRunningWorkflow = true;
+      await runWorkflow(workflows[currentWorkflowIndex]);
+
+      // Continue looping
+      if (isRunningWorkflow) {
+        currentWorkflowIndex++;
+        if (currentWorkflowIndex >= workflows.length) {
+          currentWorkflowIndex = 0;
+        }
+        runAllWorkflows();
+      }
+    }
+
+    // Navigate to previous workflow
+    async function prevWorkflow() {
+      console.log('⏮️  Going to previous workflow');
+      isRunningWorkflow = false;
+
+      // Cleanup current state
+      await actions.cleanup();
+
+      // Move to previous (loop if at start)
+      currentWorkflowIndex = currentWorkflowIndex - 1;
+      if (currentWorkflowIndex < 0) {
+        currentWorkflowIndex = workflows.length - 1;
+      }
+
+      // Start the new workflow
+      isRunningWorkflow = true;
+      await runWorkflow(workflows[currentWorkflowIndex]);
+
+      // Continue looping
+      if (isRunningWorkflow) {
+        currentWorkflowIndex++;
+        if (currentWorkflowIndex >= workflows.length) {
+          currentWorkflowIndex = 0;
+        }
+        runAllWorkflows();
+      }
+    }
 
   // ============================================
   // Idle Detection
@@ -514,6 +671,8 @@
           start: runAllWorkflows,
           stop: stopWorkflow,
           reset: resetIdleTimer,
+        next: nextWorkflow,
+        prev: prevWorkflow,
           setBackground: actions.setBackground,
           nextBackground: actions.nextBackground
       };

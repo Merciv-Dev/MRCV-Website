@@ -252,12 +252,13 @@ function initChatBarCore() {
   // ============================================
   
   // Send message function (exposed globally for workflows)
-  function sendMessage() {
+  function sendMessage(options = {}) {
     const message = inputArea ? inputArea.textContent.trim() : '';
     const messageHTML = inputArea ? inputArea.innerHTML : '';
+    const workflowName = options.workflowName || null;
 
     if (message) {
-      console.log('Sending message:', message);
+      console.log('Sending message:', message, workflowName ? `(Workflow: ${workflowName})` : '');
 
       // Visual feedback on button
       if (sendButton) {
@@ -292,7 +293,7 @@ function initChatBarCore() {
         // Wait for full animation then transition
         setTimeout(() => {
           window.TextCardOutput.slideUnderAndShowViz({
-            // Random chart type will be selected
+            workflowName: workflowName
           });
         }, 5000); // 5 seconds to watch the text animation
       }

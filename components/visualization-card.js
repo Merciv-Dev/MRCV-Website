@@ -2,6 +2,8 @@
  * Visualization Card Component
  * Displays animated charts with glass-morphism styling
  * Uses Chart.js for rendering
+ * 
+ * Requires: visualization-library.js to be loaded first
  */
 
 const VisualizationCard = (function() {
@@ -11,90 +13,8 @@ const VisualizationCard = (function() {
   let currentCard = null;
   let chartInstance = null;
 
-  // Sample data generators for demo
-  const sampleDatasets = {
-    trend: () => ({
-      title: 'Market Trend Analysis',
-      type: 'line',
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-      datasets: [{
-        label: 'This Year',
-        data: [65, 72, 78, 85, 82, 90],
-        borderColor: '#ED4421',
-        backgroundColor: 'rgba(237, 68, 33, 0.1)',
-        tension: 0.4,
-        fill: true
-      }, {
-        label: 'Last Year',
-        data: [55, 60, 65, 70, 68, 75],
-        borderColor: '#29B6F6',
-        backgroundColor: 'rgba(41, 182, 246, 0.1)',
-        tension: 0.4,
-        fill: true
-      }]
-    }),
-    comparison: () => ({
-      title: 'Category Performance',
-      type: 'bar',
-      labels: ['Footwear', 'Apparel', 'Accessories', 'Sports'],
-      datasets: [{
-        label: 'Revenue ($M)',
-        data: [42, 65, 28, 51],
-        backgroundColor: [
-          'rgba(237, 68, 33, 0.8)',
-          'rgba(41, 182, 246, 0.8)',
-          'rgba(141, 220, 184, 0.8)',
-          'rgba(255, 202, 40, 0.8)'
-        ],
-        borderRadius: 8
-      }]
-    }),
-    scatter: () => ({
-      title: 'Consumer Sentiment Analysis',
-      type: 'scatter',
-      datasets: [{
-        label: 'Positive',
-        data: Array.from({ length: 15 }, () => ({
-          x: Math.random() * 80 + 10,
-          y: Math.random() * 40 + 50
-        })),
-        backgroundColor: 'rgba(141, 220, 184, 0.8)',
-        pointRadius: 8
-      }, {
-        label: 'Neutral',
-        data: Array.from({ length: 10 }, () => ({
-          x: Math.random() * 60 + 20,
-          y: Math.random() * 30 + 30
-        })),
-        backgroundColor: 'rgba(255, 202, 40, 0.8)',
-        pointRadius: 6
-      }, {
-        label: 'Negative',
-        data: Array.from({ length: 5 }, () => ({
-          x: Math.random() * 40 + 5,
-          y: Math.random() * 20 + 5
-        })),
-        backgroundColor: 'rgba(237, 68, 33, 0.8)',
-        pointRadius: 5
-      }]
-    }),
-    doughnut: () => ({
-      title: 'Market Share Distribution',
-      type: 'doughnut',
-      labels: ['Brand A', 'Brand B', 'Brand C', 'Others'],
-      datasets: [{
-        data: [35, 28, 22, 15],
-        backgroundColor: [
-          'rgba(237, 68, 33, 0.9)',
-          'rgba(41, 182, 246, 0.9)',
-          'rgba(141, 220, 184, 0.9)',
-          'rgba(102, 101, 96, 0.5)'
-        ],
-        borderWidth: 0,
-        spacing: 2
-      }]
-    })
-  };
+  // Track current visualization index per workflow (for cycling)
+  let workflowVizIndex = {};
 
   /**
    * Initialize container
@@ -102,8 +22,8 @@ const VisualizationCard = (function() {
   function init() {
     if (container) return;
 
-      // Find the chat bar wrapper (Webflow or local)
-      const chatWrapper = document.getElementById('chat-bar') || document.querySelector('.chat-container');
+    // Find the chat bar wrapper (Webflow or local)
+    const chatWrapper = document.getElementById('chat-bar') || document.querySelector('.chat-container');
     if (chatWrapper) {
       // Create container for visualization (above chat bar)
       container = document.createElement('div');
@@ -113,24 +33,74 @@ const VisualizationCard = (function() {
       // Insert at the beginning of the wrapper (above chat bar)
       chatWrapper.insertBefore(container, chatWrapper.firstChild);
     } else {
-        console.error('VisualizationCard: Could not find #chat-bar or .chat-container');
+      console.error('VisualizationCard: Could not find #chat-bar or .chat-container');
     }
   }
 
   /**
-   * Get random chart type
+   * Get visualization by key from library
    */
-  function getRandomChartType() {
-    const types = Object.keys(sampleDatasets);
-    return types[Math.floor(Math.random() * types.length)];
+  function getVisualization(key) {
+    if (!window.VisualizationLibrary) {
+      console.warn('VisualizationLibrary not loaded');
+      return null;
+    }
+    return window.VisualizationLibrary.get(key);
+  }
+
+  /**
+   * Get next visualization for a workflow (cycles through available ones)
+   */
+  function getNextWorkflowVisualization(workflowName) {
+    if (!window.VisualizationLibrary) {
+      console.warn('VisualizationLibrary not loaded');
+      return null;
+    }
+
+    const vizKeys = window.VisualizationLibrary.forWorkflow(workflowName);
+
+    if (!vizKeys || vizKeys.length === 0) {
+      // Fallback to random general visualization
+      return window.VisualizationLibrary.random();
+    }
+
+    // Initialize index if needed
+    if (typeof workflowVizIndex[workflowName] === 'undefined') {
+      workflowVizIndex[workflowName] = 0;
+    }
+
+    const vizKey = vizKeys[workflowVizIndex[workflowName]];
+
+    // Increment for next time (cycle through)
+    workflowVizIndex[workflowName] = (workflowVizIndex[workflowName] + 1) % vizKeys.length;
+
+    return window.VisualizationLibrary.get(vizKey);
   }
 
   /**
    * Create chart card element
    */
   function create(options = {}) {
-    const chartType = options.chartType || getRandomChartType();
-    const data = options.data || sampleDatasets[chartType]();
+    let data;
+
+    if (options.visualizationKey) {
+      // Use specific visualization from library
+      data = getVisualization(options.visualizationKey);
+    } else if (options.workflowName) {
+      // Get next visualization for this workflow
+      data = getNextWorkflowVisualization(options.workflowName);
+    } else if (options.data) {
+      // Use provided data directly
+      data = options.data;
+    } else {
+      // Fallback to random
+      data = window.VisualizationLibrary ? window.VisualizationLibrary.random() : null;
+    }
+
+    if (!data) {
+      console.error('VisualizationCard: No visualization data available');
+      return null;
+    }
 
     const card = document.createElement('div');
     card.className = 'visualization-card backdrop-blur-[12px] bg-neutral-99/95 border border-neutral-90 rounded-2xl shadow-lg overflow-hidden opacity-0 -translate-y-4 transition-all duration-500';
@@ -154,7 +124,7 @@ const VisualizationCard = (function() {
         <div class="flex items-center justify-between mt-3 pt-3 border-t border-neutral-90">
           <div class="flex items-center gap-2 text-xs text-neutral-40">
             <span class="material-symbols-outlined text-sm">info</span>
-            <span>Based on ${Math.floor(Math.random() * 500 + 100)} data points</span>
+            <span>Based on ${data.dataPoints || Math.floor(Math.random() * 500 + 100)} data points</span>
           </div>
           <div class="flex items-center gap-1">
             <button class="p-1.5 rounded-lg hover:bg-neutral-90/50 transition-colors" title="Download">
@@ -234,26 +204,87 @@ const VisualizationCard = (function() {
             bodyFont: { family: 'DM Sans' }
           }
         },
-        scales: data.type === 'doughnut' ? {} : {
-          x: {
-            grid: { color: 'rgba(0, 0, 0, 0.05)' },
-            ticks: { 
-              font: { family: 'DM Sans', size: 11 },
-              color: '#666560'
-            }
-          },
-          y: {
-            grid: { color: 'rgba(0, 0, 0, 0.05)' },
-            ticks: { 
-              font: { family: 'DM Sans', size: 11 },
-              color: '#666560'
-            }
-          }
-        }
+        scales: getScalesConfig(data)
       }
     };
 
     chartInstance = new Chart(ctx, config);
+  }
+
+  /**
+   * Get scales configuration based on chart type
+   */
+  function getScalesConfig(data) {
+    // No scales for doughnut
+    if (data.type === 'doughnut') {
+      return {};
+    }
+
+    // Special config for scatter charts
+    if (data.type === 'scatter') {
+      return {
+        x: {
+          grid: { color: 'rgba(0, 0, 0, 0.05)' },
+          ticks: {
+            font: { family: 'DM Sans', size: 11 },
+            color: '#666560'
+          },
+          title: {
+            display: true,
+            text: 'Score',
+            font: { family: 'DM Sans', size: 11 },
+            color: '#666560'
+          }
+        },
+        y: {
+          grid: { color: 'rgba(0, 0, 0, 0.05)' },
+          ticks: {
+            font: { family: 'DM Sans', size: 11 },
+            color: '#666560'
+          },
+          title: {
+            display: true,
+            text: 'Engagement',
+            font: { family: 'DM Sans', size: 11 },
+            color: '#666560'
+          }
+        }
+      };
+    }
+
+    // Standard config for line/bar charts
+    const scales = {
+      x: {
+        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+        ticks: {
+          font: { family: 'DM Sans', size: 11 },
+          color: '#666560'
+        }
+      },
+      y: {
+        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+        ticks: {
+          font: { family: 'DM Sans', size: 11 },
+          color: '#666560'
+        }
+      }
+    };
+
+    // Add secondary y-axis if needed (e.g., weather impact chart)
+    if (data.datasets.some(d => d.yAxisID === 'y1')) {
+      scales.y1 = {
+        type: 'linear',
+        display: true,
+        position: 'right',
+        grid: { drawOnChartArea: false },
+        ticks: {
+          font: { family: 'DM Sans', size: 11 },
+          color: '#666560'
+        }
+      };
+    }
+
+    return scales;
   }
 
   /**
@@ -269,6 +300,8 @@ const VisualizationCard = (function() {
 
     currentCard = create(options);
     
+    if (!currentCard) return null;
+
     // Set initial state for smooth height animation
     currentCard.style.maxHeight = '0';
     currentCard.style.overflow = 'hidden';
@@ -330,6 +363,13 @@ const VisualizationCard = (function() {
   }
 
   /**
+   * Reset workflow visualization indices (start from beginning)
+   */
+  function resetWorkflowIndices() {
+    workflowVizIndex = {};
+  }
+
+  /**
    * Check if Chart.js is loaded, if not, load it
    */
   function ensureChartJS() {
@@ -363,11 +403,12 @@ const VisualizationCard = (function() {
     hide,
     clear,
     ensureChartJS,
-    sampleDatasets
+    getVisualization,
+    getNextWorkflowVisualization,
+    resetWorkflowIndices
   };
 })();
 
 // Expose globally
 window.VisualizationCard = VisualizationCard;
 console.log('📊 VisualizationCard component loaded');
-

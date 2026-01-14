@@ -180,7 +180,7 @@ const Alert = (function() {
       transition-all duration-300 ease-out
       pointer-events-auto
       cursor-pointer
-      hover:shadow-xl hover:scale-[1.02]
+      hover:shadow-xl
     `.replace(/\s+/g, ' ').trim();
     
     // Store position for hide animation

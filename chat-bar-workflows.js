@@ -607,10 +607,6 @@
   function stopWorkflow() {
     if (isRunningWorkflow) {
       isRunningWorkflow = false;
-      // Don't reset index - preserve position for navigation
-      // Don't close popups here - user may be opening one
-      // Only hide workflow-generated output
-      actions.hideOutput();
     }
   }
 

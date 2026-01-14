@@ -77,8 +77,25 @@ const BackgroundManager = (function() {
     // Mark as initialized BEFORE setting initial background to avoid recursion
     isInitialized = true;
     
-    // Set initial background
-    setBackground(0, false);
+    // Set initial background with fade-in (wait for image to load first)
+    const firstImageUrl = getFullUrl(images[0]);
+    const img = new Image();
+    img.onload = () => {
+      currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
+      // Fade in after a tiny delay to ensure CSS transition works
+      requestAnimationFrame(() => {
+        currentLayer.style.opacity = '1';
+      });
+    };
+    img.src = firstImageUrl;
+
+    // Fallback: show anyway after 2 seconds if image hasn't loaded
+    setTimeout(() => {
+      if (currentLayer.style.opacity === '0') {
+        currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
+        currentLayer.style.opacity = '1';
+      }
+    }, 2000);
 
   }
 
@@ -86,6 +103,9 @@ const BackgroundManager = (function() {
     // Create two layers for crossfade effect
     currentLayer = createLayer('bg-layer-current');
     nextLayer = createLayer('bg-layer-next');
+
+    // Start both layers hidden - first image will fade in
+    currentLayer.style.opacity = '0';
     nextLayer.style.opacity = '0';
 
     // Create gradient overlay (darker at bottom for status bar)

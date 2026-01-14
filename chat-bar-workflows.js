@@ -662,37 +662,19 @@
     }
 
   // ============================================
-  // Idle Detection
+    // Auto-start Workflows (Demo Mode)
   // ============================================
 
-  function resetIdleTimer() {
-    stopWorkflow();
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      if (!isRunningWorkflow) {
-        runAllWorkflows();
-      }
+    // Workflows run continuously - no user interaction stops them
+    // Start workflows after a brief delay to let page load
+    setTimeout(() => {
+      runAllWorkflows();
     }, IDLE_TIMEOUT);
-  }
-
-  // ============================================
-  // Event Listeners
-  // ============================================
-
-  // Detect user interaction to stop workflow
-  const userInteractionEvents = ['mousedown', 'keydown', 'touchstart', 'scroll'];
-  userInteractionEvents.forEach(eventType => {
-    document.addEventListener(eventType, resetIdleTimer, { passive: true });
-  });
-
-  // Start idle detection
-  resetIdleTimer();
 
       // Expose functions for external control
       window.Workflows = {
           start: runAllWorkflows,
-          stop: stopWorkflow,
-          reset: resetIdleTimer,
+        stop: stopWorkflow,
         next: nextWorkflow,
         prev: prevWorkflow,
           setBackground: actions.setBackground,

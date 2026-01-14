@@ -302,9 +302,10 @@ function initChatBarCore() {
   // Expose globally for workflows
   window.sendMessage = sendMessage;
 
-  if (sendButton) {
-    sendButton.addEventListener('click', sendMessage);
-  }
+  // Send button click disabled for demo - only workflows can trigger sends
+  // if (sendButton) {
+  //   sendButton.addEventListener('click', sendMessage);
+  // }
   
   // ============================================
   // Drop Zone (Attach Popup)
@@ -412,13 +413,13 @@ function initChatBarCore() {
     
     // Prevent Enter from creating new lines (optional)
     inputArea.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        // Trigger send
-        if (sendButton) {
-          sendButton.click();
-        }
-      }
+      // Enter key disabled for demo - only workflows can trigger sends
+      // if (e.key === 'Enter' && !e.shiftKey) {
+      //   e.preventDefault();
+      //   if (sendButton) {
+      //     sendButton.click();
+      //   }
+      // }
     });
   }
   

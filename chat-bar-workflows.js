@@ -91,11 +91,6 @@
           { action: 'type', text: 'Analyze consumer sentiment for ' },
           { action: 'typeAsTag', icon: 'category', label: 'Baby Products' },
           { action: 'pause', duration: 300 },
-          { action: 'setStatus', text: 'Thinking...' },
-        { action: 'openPopup', popupId: 'thinking-popup', triggerSelector: '[data-popup="thinking-popup"]' },
-          { action: 'pause', duration: 800 },
-        { action: 'closeAllPopups' },
-          { action: 'pause', duration: 200 },
           { action: 'setStatus', text: 'Searching...' },
           { action: 'send' },
           { action: 'pause', duration: 1500 },
@@ -124,11 +119,6 @@
           { action: 'typeAsTag', icon: 'apparel', label: 'Outdoor Apparel' },
           { action: 'type', text: '?' },
           { action: 'pause', duration: 300 },
-          { action: 'setStatus', text: 'Adding context...' },
-          { action: 'openPopup', popupId: 'context-popup', triggerSelector: '[data-popup="context-popup"]' },
-          { action: 'pause', duration: 800 },
-          { action: 'closeAllPopups' },
-          { action: 'pause', duration: 200 },
           { action: 'setStatus', text: 'Searching...' },
           { action: 'send' },
           { action: 'pause', duration: 1500 },
@@ -142,27 +132,6 @@
           { action: 'hideOutput' },
           { action: 'clear' }, // Clear input at end of sequence
           { action: 'pause', duration: 300 },
-      ]
-    },
-    {
-        name: 'Quick Actions Demo',
-        category: 'Campaign Planning',
-        background: 'imgs/Runners.jpg',
-      steps: [
-          { action: 'setBackground' },
-          { action: 'setCategory' },
-        { action: 'clear' },
-          { action: 'setStatus', text: 'Browsing...' },
-        { action: 'openPopup', popupId: 'add-menu', triggerSelector: '[data-popup="add-menu"]' },
-          { action: 'pause', duration: 800 },
-        { action: 'closeAllPopups' },
-          { action: 'pause', duration: 200 },
-          { action: 'setStatus', text: 'Typing...' },
-          { action: 'type', text: 'Create a market report for ' },
-          { action: 'typeAsTag', icon: 'project', label: "Spring/Summer '26" },
-          { action: 'pause', duration: 600 },
-          { action: 'clearStatus' },
-        { action: 'clear' },
       ]
     }
   ];

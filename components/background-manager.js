@@ -124,9 +124,16 @@ const BackgroundManager = (function() {
   }
 
   function preloadImages() {
+    // Only preload images that weren't already preloaded by the loader
+    // The loader preloads Runners.jpg and prefetches others
     images.forEach(src => {
-      const img = new Image();
-      img.src = getFullUrl(src);
+      const fullUrl = getFullUrl(src);
+      // Check if already preloaded via <link rel="preload">
+      const alreadyPreloaded = document.querySelector(`link[href="${fullUrl}"]`);
+      if (!alreadyPreloaded) {
+        const img = new Image();
+        img.src = fullUrl;
+      }
     });
   }
 

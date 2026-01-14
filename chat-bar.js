@@ -258,7 +258,6 @@ function initChatBarCore() {
     const workflowName = options.workflowName || null;
 
     if (message) {
-      console.log('Sending message:', message, workflowName ? `(Workflow: ${workflowName})` : '');
 
       // Visual feedback on button
       if (sendButton) {
@@ -329,7 +328,6 @@ function initChatBarCore() {
       
       const files = e.dataTransfer.files;
       if (files.length > 0) {
-        console.log('Files dropped:', Array.from(files).map(f => f.name));
         // Handle file upload logic here
         handleFiles(files);
       }
@@ -364,7 +362,6 @@ function initChatBarCore() {
    */
   function handleFiles(files) {
     const fileNames = Array.from(files).map(f => f.name).join(', ');
-    console.log('Files selected:', fileNames);
     
     // Update drop zone to show selected files
     if (dropZone) {
@@ -624,6 +621,5 @@ function initChatBarCore() {
   window.openPopup = openPopup;
   window.closeAllPopups = closeAllPopups;
 
-  console.log('🔌 Chat Bar initialized');
 }
 

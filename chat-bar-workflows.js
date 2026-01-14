@@ -9,7 +9,6 @@
 
   // Handle both direct load and dynamic injection (DOMContentLoaded may have already fired)
   function init() {
-    console.log('🎬 Workflows initializing...');
     startWorkflowEngine();
   }
 
@@ -525,7 +524,6 @@
   // ============================================
 
   async function runWorkflow(workflow) {
-    console.log(`🎬 Running workflow: ${workflow.name}`);
     
     // Full cleanup before starting new workflow - clears input, popups, cards, alerts
     await actions.fullCleanup();
@@ -608,7 +606,6 @@
 
   function stopWorkflow() {
     if (isRunningWorkflow) {
-      console.log('⏹️  Workflow stopped by user interaction');
       isRunningWorkflow = false;
       // Don't reset index - preserve position for navigation
       // Don't close popups here - user may be opening one
@@ -619,7 +616,6 @@
 
     // Navigate to next workflow
     async function nextWorkflow() {
-      console.log('⏭️  Skipping to next workflow');
       isRunningWorkflow = false;
 
       // Cleanup current state
@@ -644,7 +640,6 @@
 
     // Navigate to previous workflow
     async function prevWorkflow() {
-      console.log('⏮️  Going to previous workflow');
       isRunningWorkflow = false;
 
       // Cleanup current state
@@ -679,7 +674,6 @@
     clearTimeout(idleTimer);
     idleTimer = setTimeout(() => {
       if (!isRunningWorkflow) {
-        console.log('💤 User idle, starting workflows...');
         runAllWorkflows();
       }
     }, IDLE_TIMEOUT);
@@ -709,7 +703,6 @@
           nextBackground: actions.nextBackground
       };
 
-      console.log('🎭 Auto-demo workflows initialized with background support');
   } // End of startWorkflowEngine
 })();
 

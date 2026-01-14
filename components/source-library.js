@@ -309,5 +309,4 @@ SourceLibrary.getCategories = function() {
 // Expose globally
 window.SourceLibrary = SourceLibrary;
 
-console.log('📚 Source Library loaded with', SourceLibrary.getAllSources().length, 'sources');
 

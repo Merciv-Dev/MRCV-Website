@@ -448,5 +448,4 @@ const Alert = (function() {
 
 // Expose globally
 window.Alert = Alert;
-console.log('🔔 Alert component loaded');
 

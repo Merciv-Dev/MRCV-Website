@@ -8,8 +8,6 @@
  *   Popup.register('my-popup', {
  *     width: 'w-44',
  *     items: [
- *       { icon: 'edit', label: 'Edit', onClick: () => console.log('edit') },
- *       { icon: 'delete', label: 'Delete', onClick: () => console.log('delete') }
  *     ]
  *   });
  */
@@ -184,7 +182,6 @@ const Popup = {
       }
     });
 
-    console.log(`📋 Popup: Initialized ${Object.keys(this.configs).length} popups`);
   }
 };
 
@@ -307,22 +304,18 @@ Popup.register('add-menu', {
     { 
       icon: 'folder', 
       label: 'Project',
-      onClick: () => console.log('Project')
     },
     { 
       icon: 'description', 
       label: 'Report',
-      onClick: () => console.log('Report')
     },
     { 
       icon: 'chat', 
       label: 'Chat',
-      onClick: () => console.log('Chat')
     },
     { 
       icon: 'dashboard', 
       label: 'Dashboard',
-      onClick: () => console.log('Dashboard')
     }
   ]
 });
@@ -334,27 +327,22 @@ Popup.register('context-popup', {
     { 
       icon: 'bar_chart', 
       label: 'Market data',
-      onClick: () => console.log('Market data')
     },
     { 
       icon: 'description', 
       label: 'Brand guidelines',
-      onClick: () => console.log('Brand guidelines')
     },
     { 
       icon: 'group', 
       label: 'Audience insights',
-      onClick: () => console.log('Audience insights')
     },
     { 
       icon: 'flag', 
       label: 'Campaign goals',
-      onClick: () => console.log('Campaign goals')
     },
     { 
       icon: 'add', 
       label: 'Add new',
-      onClick: () => console.log('Add new context')
     }
   ]
 });
@@ -366,17 +354,14 @@ Popup.register('attach-popup', {
     { 
       icon: 'upload_file', 
       label: 'Upload file',
-      onClick: () => console.log('Upload file')
     },
     { 
       icon: 'link', 
       label: 'Add link',
-      onClick: () => console.log('Add link')
     },
     { 
       icon: 'image', 
       label: 'Add image',
-      onClick: () => console.log('Add image')
     }
   ]
 });
@@ -411,4 +396,3 @@ function insertTag(icon, label) {
 // Expose globally
 window.Popup = Popup;
 
-console.log('📋 Popup component loaded');

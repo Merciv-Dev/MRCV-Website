@@ -653,4 +653,3 @@ const VisualizationLibrary = (function() {
 
 // Expose globally
 window.VisualizationLibrary = VisualizationLibrary;
-console.log('📊 VisualizationLibrary loaded with', Object.keys(VisualizationLibrary.all).length, 'visualizations');

@@ -26,7 +26,6 @@
         // Extract base URL by removing the filename
         const scriptUrl = loaderScript.src;
         BASE_URL = scriptUrl.substring(0, scriptUrl.lastIndexOf('/'));
-        console.log('Chat Bar: Loading from:', BASE_URL);
     }
 
     // Set base URL immediately for background images
@@ -75,7 +74,6 @@
         // Only add positioning for background layers - don't override Webflow's layout
         heroAnim.style.position = 'relative';
         heroAnim.style.overflow = 'hidden';
-        console.log('Chat Bar: Found hero-anim wrapper:', heroAnim.id || heroAnim.className);
     }
 
     // Ensure chat-bar container has proper z-index to sit above backgrounds
@@ -124,7 +122,6 @@
             document.head.appendChild(tailwindScript);
         });
     } else {
-        console.log('Chat Bar: Tailwind already loaded, skipping');
     }
 
     // ============================================

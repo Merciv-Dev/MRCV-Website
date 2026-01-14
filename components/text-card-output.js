@@ -402,4 +402,3 @@ const TextCardOutput = (function() {
 // Expose globally
 window.TextCardOutput = TextCardOutput;
 
-console.log('📝 TextCardOutput component loaded');

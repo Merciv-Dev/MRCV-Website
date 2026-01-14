@@ -31,7 +31,6 @@ const StatusBar = (function() {
                      document.getElementById('chat-bar')?.closest('.hero-anim') ||
                      document.body;
     
-    console.log('StatusBar: Using container:', heroAnim?.id || heroAnim?.className || 'body');
 
     // Create status bar container
     container = document.createElement('div');
@@ -98,7 +97,6 @@ const StatusBar = (function() {
     injectStyles();
 
     isInitialized = true;
-    console.log('📊 Status Bar initialized');
   }
 
   // ============================================
@@ -303,5 +301,4 @@ const StatusBar = (function() {
 // Expose globally
 window.StatusBar = StatusBar;
 
-console.log('📊 Status Bar component loaded');
 

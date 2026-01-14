@@ -314,5 +314,4 @@ window.IconLibrary = IconLibrary;
 // Shorthand alias
 window.Icons = IconLibrary;
 
-console.log('🎨 Icon Library loaded with', IconLibrary.getAllKeys().length, 'icons');
 

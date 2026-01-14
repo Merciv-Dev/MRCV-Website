@@ -267,4 +267,3 @@ window.createSmallTag = function(icon, label) {
   return Tag.inline(icon, label);
 };
 
-console.log('🏷️ Tag component loaded');

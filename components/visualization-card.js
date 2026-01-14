@@ -382,7 +382,6 @@ const VisualizationCard = (function() {
       const script = document.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
       script.onload = () => {
-        console.log('📊 Chart.js loaded');
         resolve();
       };
       document.head.appendChild(script);
@@ -411,4 +410,3 @@ const VisualizationCard = (function() {
 
 // Expose globally
 window.VisualizationCard = VisualizationCard;
-console.log('📊 VisualizationCard component loaded');

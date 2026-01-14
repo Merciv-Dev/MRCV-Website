@@ -40,6 +40,5 @@
         }
     };
 
-    console.log('⚙️ Tailwind config loaded');
 })();
 

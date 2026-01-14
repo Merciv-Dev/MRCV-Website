@@ -56,7 +56,6 @@ const BackgroundManager = (function() {
                 document.getElementById('chat-bar') || 
                 document.querySelector('.chat-container')?.parentElement;
     
-    console.log('BackgroundManager: Using container:', container?.id || container?.className);
 
     if (!container) {
       console.warn('BackgroundManager: No container found');
@@ -79,7 +78,6 @@ const BackgroundManager = (function() {
     // Set initial background
     setBackground(0, false);
 
-    console.log('🖼️ Background Manager initialized with', images.length, 'images');
   }
 
   function createBackgroundLayers() {
@@ -268,5 +266,4 @@ const BackgroundManager = (function() {
 // Expose globally
 window.BackgroundManager = BackgroundManager;
 
-console.log('🖼️ Background Manager loaded');
 

@@ -149,5 +149,4 @@ const SourceTag = (function() {
 // Expose globally
 window.SourceTag = SourceTag;
 
-console.log('🏷️ SourceTag component loaded');
 

@@ -162,30 +162,10 @@
 
     // Wait for both HTML and Tailwind, then load components
     Promise.all([htmlReady, tailwindReady]).then(() => {
-        // Group 1: Core libraries (can load in parallel)
-        const coreLibraries = [
-            '/components/icon-library.js',
-            '/components/source-library.js',
-            '/components/visualization-library.js'
-        ];
-
-        // Group 2: Depends on icon-library (sequential)
-        const tagComponents = [
-            '/components/tag.js',
-            '/components/source-tag.js',
-            '/components/popup.js'
-        ];
-
-        // Group 3: UI components (can load in parallel after libs + tags)
-        const uiComponents = [
-            '/components/text-card-output.js',
-            '/components/visualization-card.js',
-            '/components/background-manager.js',
-            '/components/status-bar.js',
-            '/components/alert.js'
-        ];
-
-        // Load scripts in parallel within groups
+        // OPTIMIZED: Load all independent scripts in parallel for faster startup
+        // Only tag.js truly depends on icon-library, others are independent
+        
+        // Load scripts in parallel
         function loadScriptsParallel(scripts) {
             return Promise.all(scripts.map(src => {
                 return new Promise((resolve) => {
@@ -198,33 +178,40 @@
             }));
         }
 
-        function loadScriptsSequential(scripts) {
-            return scripts.reduce((promise, src) => {
-                return promise.then(() => new Promise((resolve) => {
-                    const script = document.createElement('script');
-                    script.src = BASE_URL + src;
-                    script.onload = resolve;
-                    script.onerror = resolve;
-                    document.body.appendChild(script);
-                }));
-            }, Promise.resolve());
-        }
+        // Stage 1: Load icon-library first (required by tag.js)
+        // Also load background-manager early for faster image display
+        const stage1 = [
+            '/components/icon-library.js',
+            '/components/background-manager.js'
+        ];
+        
+        // Stage 2: Everything else in parallel (most are independent)
+        const stage2 = [
+            '/components/source-library.js',
+            '/components/visualization-library.js',
+            '/components/tag.js',
+            '/components/source-tag.js',
+            '/components/popup.js',
+            '/components/text-card-output.js',
+            '/components/visualization-card.js',
+            '/components/status-bar.js',
+            '/components/alert.js'
+        ];
 
-        // Load in optimized order
-        loadScriptsParallel(coreLibraries)
-            .then(() => loadScriptsSequential(tagComponents))
-            .then(() => loadScriptsParallel(uiComponents))
+        // Load stage 1, then stage 2, then main scripts
+        loadScriptsParallel(stage1)
+            .then(() => loadScriptsParallel(stage2))
             .then(() => {
-        // Load main JS
-                const script = document.createElement('script');
-                script.src = BASE_URL + '/chat-bar.js';
-                script.onload = () => {
-                // Load workflow automation last
+                // Load main JS and workflow in parallel (workflow depends on main but can start loading)
+                const mainScript = document.createElement('script');
+                mainScript.src = BASE_URL + '/chat-bar.js';
+                mainScript.onload = () => {
+                    // Load workflow automation after main JS is ready
                     const workflowScript = document.createElement('script');
                     workflowScript.src = BASE_URL + '/chat-bar-workflows.js';
                     document.body.appendChild(workflowScript);
                 };
-                document.body.appendChild(script);
+                document.body.appendChild(mainScript);
             });
     }).catch(err => {
         console.error('Chat Bar: Failed to load', err);

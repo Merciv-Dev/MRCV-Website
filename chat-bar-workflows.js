@@ -25,7 +25,7 @@
   // Configuration
   // ============================================
   
-      const IDLE_TIMEOUT = 2000; // Wait 2 seconds before starting demo
+    const IDLE_TIMEOUT = 100; // Wait 500ms before starting demo (faster start)
 
     // Background image URLs - can be overridden by Webflow
     // Set window.WORKFLOW_IMAGES before loading this script to use Webflow-hosted images

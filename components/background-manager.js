@@ -77,25 +77,43 @@ const BackgroundManager = (function() {
     // Mark as initialized BEFORE setting initial background to avoid recursion
     isInitialized = true;
     
-    // Set initial background with fade-in (wait for image to load first)
+    // Set initial background with fade-in
     const firstImageUrl = getFullUrl(images[0]);
-    const img = new Image();
-    img.onload = () => {
+
+    // Check if first image was pre-decoded in head code (for instant display)
+    if (window.FIRST_IMAGE_DECODED) {
+      // Image is already decoded - show immediately!
       currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
-      // Fade in after a tiny delay to ensure CSS transition works
       requestAnimationFrame(() => {
         currentLayer.style.opacity = '1';
       });
-    };
-    img.src = firstImageUrl;
+    } else if (window.FIRST_IMAGE_READY) {
+      // Wait for pre-decode to finish
+      window.FIRST_IMAGE_READY.then(() => {
+        currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
+        requestAnimationFrame(() => {
+          currentLayer.style.opacity = '1';
+        });
+      });
+    } else {
+    // Fallback: load image normally
+      const img = new Image();
+      img.onload = () => {
+        currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
+        requestAnimationFrame(() => {
+          currentLayer.style.opacity = '1';
+        });
+      };
+      img.src = firstImageUrl;
+    }
 
-    // Fallback: show anyway after 2 seconds if image hasn't loaded
+    // Fallback: show anyway after 1 second if nothing else worked
     setTimeout(() => {
       if (currentLayer.style.opacity === '0') {
         currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
         currentLayer.style.opacity = '1';
       }
-    }, 2000);
+    }, 1000);
 
   }
 

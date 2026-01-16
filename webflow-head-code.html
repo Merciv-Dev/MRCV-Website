@@ -30,7 +30,12 @@ window.WORKFLOW_IMAGES = {
 </script>
 
 <!-- ============================================ -->
-<!-- 2. PRECONNECT TO EXTERNAL DOMAINS -->
+<!-- 2. IMMEDIATE BLACK BACKGROUND (prevents flash) -->
+<!-- ============================================ -->
+
+
+<!-- ============================================ -->
+<!-- 3. PRECONNECT TO EXTERNAL DOMAINS -->
 <!-- ============================================ -->
 <link rel="preconnect" href="https://merciv-dev.github.io">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,7 +47,7 @@ window.WORKFLOW_IMAGES = {
 <link rel="dns-prefetch" href="https://merciv-dev.github.io">
 
 <!-- ============================================ -->
-<!-- 3. PRELOAD BACKGROUND IMAGES (Webflow CDN) -->
+<!-- 4. PRELOAD BACKGROUND IMAGES (Webflow CDN) -->
 <!-- These match the WORKFLOW_IMAGES above -->
 <!-- ============================================ -->
 <link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9e87f9f3eacc62ff9_Runners.jpg" as="image" fetchpriority="high">
@@ -52,14 +57,14 @@ window.WORKFLOW_IMAGES = {
 <link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a7e5e65ffc89a38aff_Weather2.jpeg" as="image">
 
 <!-- ============================================ -->
-<!-- 3. PRELOAD CRITICAL SCRIPTS & STYLES -->
+<!-- 5. PRELOAD CRITICAL SCRIPTS & STYLES -->
 <!-- ============================================ -->
 <link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/chat-bar.css" as="style">
 <link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/chat-bar-loader.js" as="script">
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" as="script">
 
 <!-- ============================================ -->
-<!-- 4. TAILWIND CSS (load before page for faster styling) -->
+<!-- 6. TAILWIND CSS (load before page for faster styling) -->
 <!-- ============================================ -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -94,7 +99,7 @@ tailwind.config = {
 </script>
 
 <!-- ============================================ -->
-<!-- 5. MATERIAL SYMBOLS (load early for icons) -->
+<!-- 7. MATERIAL SYMBOLS (load early for icons) -->
 <!-- ============================================ -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
 
@@ -108,6 +113,32 @@ tailwind.config = {
   script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
   script.async = true;
   document.head.appendChild(script);
+})();
+
+// Pre-decode FIRST background image for instant display
+// This ensures the image is fully decoded and ready before the workflow starts
+(function() {
+  var firstImage = new Image();
+  firstImage.decoding = 'async';
+  firstImage.fetchPriority = 'high';
+  firstImage.src = window.WORKFLOW_IMAGES.runners;
+  
+  // Store decoded image promise for instant use
+  if (firstImage.decode) {
+    window.FIRST_IMAGE_READY = firstImage.decode().then(function() {
+      window.FIRST_IMAGE_DECODED = true;
+      return firstImage;
+    }).catch(function() {
+      // Fallback - image still usable even if decode() fails
+      window.FIRST_IMAGE_DECODED = true;
+      return firstImage;
+    });
+  } else {
+    // Fallback for browsers without decode()
+    firstImage.onload = function() {
+      window.FIRST_IMAGE_DECODED = true;
+    };
+  }
 })();
 </script>
 

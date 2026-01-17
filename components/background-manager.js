@@ -17,13 +17,13 @@ const BackgroundManager = (function() {
   let currentIndex = 0;
   let isInitialized = false;
 
-  // Default images - can be overridden
-  const defaultImages = [
-    'imgs/Runners.jpg',
-    'imgs/ChildCare1.jpg',
-    'imgs/Snacking.jpg',
-    'imgs/Beverage.jpg',
-    'imgs/Weather2.jpeg'
+  // Default images from S3/CDN - can be overridden via window.WORKFLOW_IMAGES or init()
+  const defaultImages = window.WORKFLOW_IMAGES ? Object.values(window.WORKFLOW_IMAGES) : [
+    'https://dev-eva-public.mercivcdn.com/MRCV-Website/running.webp',
+    'https://dev-eva-public.mercivcdn.com/MRCV-Website/baby.webp',
+    'https://dev-eva-public.mercivcdn.com/MRCV-Website/snacking.webp',
+    'https://dev-eva-public.mercivcdn.com/MRCV-Website/water.webp',
+    'https://dev-eva-public.mercivcdn.com/MRCV-Website/weather.webp'
   ];
 
   let images = [...defaultImages];

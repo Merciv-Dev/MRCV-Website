@@ -23,18 +23,15 @@
 
   // ============================================
   // Configuration
-  // ============================================
-  
-    const IDLE_TIMEOUT = 100; // Wait 500ms before starting demo (faster start)
-
+    // ============================================
     // Background image URLs - can be overridden by Webflow
     // Set window.WORKFLOW_IMAGES before loading this script to use Webflow-hosted images
     const BACKGROUND_IMAGES = window.WORKFLOW_IMAGES || {
-      'runners': 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9e87f9f3eacc62ff9_Runners.jpg',
-      'childcare': 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a921e1ddb27d3de258_ChildCare1.jpg',
-      'snacking': 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a931854657f440b9cf_Snacking.jpg',
-      'beverage': 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9847bad50a98a8983_Beverage.jpg',
-      'weather': 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a7e5e65ffc89a38aff_Weather2.jpeg'
+      'runners': 'https://dev-eva-public.mercivcdn.com/MRCV-Website/running.webp',
+      'childcare': 'https://dev-eva-public.mercivcdn.com/MRCV-Website/baby.webp',
+      'snacking': 'https://dev-eva-public.mercivcdn.com/MRCV-Website/snacking.webp',
+      'beverage': 'https://dev-eva-public.mercivcdn.com/MRCV-Website/water.webp',
+      'weather': 'https://dev-eva-public.mercivcdn.com/MRCV-Website/weather.webp'
     };
       const TYPING_SPEED = 30; // ms per character (fast typing)
       const PAUSE_BETWEEN_ACTIONS = 400; // ms between workflow steps
@@ -43,18 +40,6 @@
   let idleTimer = null;
   let isRunningWorkflow = false;
   let currentWorkflowIndex = 0;
-
-      // ============================================
-      // Background Images for Workflows
-      // ============================================
-
-      const backgroundImages = [
-          'imgs/Runners.jpg',
-          'imgs/ChildCare1.jpg',
-        'imgs/Weather2.jpeg',
-        'imgs/Snacking.jpg',
-        'imgs/Beverage.jpg'
-      ];
 
   // ============================================
   // Workflow Definitions
@@ -583,10 +568,10 @@
   async function runAllWorkflows() {
     isRunningWorkflow = true;
 
-      // Initialize background manager with our images
+    // Initialize background manager with S3/CDN images
       if (window.BackgroundManager) {
           window.BackgroundManager.init({
-              images: backgroundImages,
+            images: Object.values(BACKGROUND_IMAGES),
               transitionDuration: 600,
               overlayOpacity: 0.35
           });
@@ -680,9 +665,7 @@
     function startWhenReady() {
       // Check if first workflow's background image is loaded
       const firstWorkflow = workflows[0];
-      const firstImageUrl = firstWorkflow?.background || 'imgs/Runners.jpg';
-      const base = window.BACKGROUND_BASE_URL || '';
-      const fullUrl = base ? `${base}/${firstImageUrl}` : firstImageUrl;
+      const firstImageUrl = firstWorkflow?.background || BACKGROUND_IMAGES.runners;
 
       const img = new Image();
       img.onload = () => {
@@ -693,7 +676,7 @@
         // Image failed, start anyway after a delay
         setTimeout(runAllWorkflows, 500);
       };
-      img.src = fullUrl;
+      img.src = firstImageUrl;
 
     // Fallback: start after max wait time even if image hasn't loaded
     setTimeout(() => {

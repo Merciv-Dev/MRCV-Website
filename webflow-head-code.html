@@ -14,19 +14,14 @@
 <!-- Upload these images to Webflow and replace URLs with your Webflow asset URLs -->
 <!-- ============================================ -->
 <script>
-// OPTION A: Use Webflow-hosted images (RECOMMENDED - fastest)
-// Upload images to Webflow asset manager, then use those URLs:
+// S3/CDN hosted images for fast loading
 window.WORKFLOW_IMAGES = {
-  runners: 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9e87f9f3eacc62ff9_Runners.jpg',
-  childcare: 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a921e1ddb27d3de258_ChildCare1.jpg',
-  snacking: 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a931854657f440b9cf_Snacking.jpg',
-  beverage: 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9847bad50a98a8983_Beverage.jpg',
-  weather: 'https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a7e5e65ffc89a38aff_Weather2.jpeg'
+  runners: 'https://dev-eva-public.mercivcdn.com/MRCV-Website/running.webp',
+  childcare: 'https://dev-eva-public.mercivcdn.com/MRCV-Website/baby.webp',
+  snacking: 'https://dev-eva-public.mercivcdn.com/MRCV-Website/snacking.webp',
+  beverage: 'https://dev-eva-public.mercivcdn.com/MRCV-Website/water.webp',
+  weather: 'https://dev-eva-public.mercivcdn.com/MRCV-Website/weather.webp'
 };
-
-// OPTION B: Use GitHub-hosted images (slower, no config needed)
-// Comment out the above and uncomment this:
-// window.WORKFLOW_IMAGES = null; // Will use default GitHub-hosted images
 </script>
 
 <!-- ============================================ -->
@@ -47,14 +42,15 @@ window.WORKFLOW_IMAGES = {
 <link rel="dns-prefetch" href="https://merciv-dev.github.io">
 
 <!-- ============================================ -->
-<!-- 4. PRELOAD BACKGROUND IMAGES (Webflow CDN) -->
+<!-- 4. PRELOAD BACKGROUND IMAGES (S3/CDN) -->
 <!-- These match the WORKFLOW_IMAGES above -->
 <!-- ============================================ -->
-<link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9e87f9f3eacc62ff9_Runners.jpg" as="image" fetchpriority="high">
-<link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a921e1ddb27d3de258_ChildCare1.jpg" as="image">
-<link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a931854657f440b9cf_Snacking.jpg" as="image">
-<link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a9847bad50a98a8983_Beverage.jpg" as="image">
-<link rel="preload" href="https://cdn.prod.website-files.com/693cc246cb6e634bc8ac0cb8/696816a7e5e65ffc89a38aff_Weather2.jpeg" as="image">
+<link rel="preconnect" href="https://dev-eva-public.mercivcdn.com">
+<link rel="preload" href="https://dev-eva-public.mercivcdn.com/MRCV-Website/running.webp" as="image" fetchpriority="high">
+<link rel="preload" href="https://dev-eva-public.mercivcdn.com/MRCV-Website/baby.webp" as="image">
+<link rel="preload" href="https://dev-eva-public.mercivcdn.com/MRCV-Website/snacking.webp" as="image">
+<link rel="preload" href="https://dev-eva-public.mercivcdn.com/MRCV-Website/water.webp" as="image">
+<link rel="preload" href="https://dev-eva-public.mercivcdn.com/MRCV-Website/weather.webp" as="image">
 
 <!-- ============================================ -->
 <!-- 5. PRELOAD CRITICAL SCRIPTS & STYLES -->

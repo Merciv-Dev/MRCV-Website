@@ -49,33 +49,31 @@
     preloadChart.href = 'https://cdn.jsdelivr.net/npm/chart.js';
     document.head.appendChild(preloadChart);
 
-    // Only preload GitHub-hosted images if Webflow images aren't configured
-    // (Webflow images should be preloaded via <link rel="preload"> in head code)
-    if (!window.WORKFLOW_IMAGES) {
-        const backgroundImages = [
-            'Runners.jpg',
-            'ChildCare1.jpg',
-            'Weather2.jpeg',
-            'Snacking.jpg',
-            'Beverage.jpg'
-        ];
+    // Preload background images from S3/CDN
+    // Can be overridden via window.WORKFLOW_IMAGES in head code
+    const backgroundImages = window.WORKFLOW_IMAGES ? Object.values(window.WORKFLOW_IMAGES) : [
+        'https://dev-eva-public.mercivcdn.com/MRCV-Website/running.webp',
+        'https://dev-eva-public.mercivcdn.com/MRCV-Website/baby.webp',
+        'https://dev-eva-public.mercivcdn.com/MRCV-Website/snacking.webp',
+        'https://dev-eva-public.mercivcdn.com/MRCV-Website/water.webp',
+        'https://dev-eva-public.mercivcdn.com/MRCV-Website/weather.webp'
+    ];
 
-        // Use high-priority preload for first image, prefetch for others
-        backgroundImages.forEach((img, index) => {
-            const link = document.createElement('link');
-            link.rel = index === 0 ? 'preload' : 'prefetch';
-            link.as = 'image';
-            link.href = BASE_URL + '/imgs/' + img;
-            if (index === 0) link.fetchPriority = 'high';
-            document.head.appendChild(link);
-        });
+    // Use high-priority preload for first image, prefetch for others
+    backgroundImages.forEach((imgUrl, index) => {
+        const link = document.createElement('link');
+        link.rel = index === 0 ? 'preload' : 'prefetch';
+        link.as = 'image';
+        link.href = imgUrl;
+        if (index === 0) link.fetchPriority = 'high';
+        document.head.appendChild(link);
+    });
 
-        // Also start loading images via Image() for faster decode
-        backgroundImages.forEach(img => {
-            const preImg = new Image();
-            preImg.src = BASE_URL + '/imgs/' + img;
-        });
-    }
+    // Also start loading images via Image() for faster decode
+    backgroundImages.forEach(imgUrl => {
+        const preImg = new Image();
+        preImg.src = imgUrl;
+    });
 
     const container = document.getElementById('chat-bar');
 

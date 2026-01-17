@@ -16,6 +16,7 @@ const BackgroundManager = (function() {
   let nextLayer = null;
   let currentIndex = 0;
   let isInitialized = false;
+  let isTransitioning = false;
 
   // Default images from S3/CDN - can be overridden via window.WORKFLOW_IMAGES or init()
   const defaultImages = window.WORKFLOW_IMAGES ? Object.values(window.WORKFLOW_IMAGES) : [
@@ -197,6 +198,7 @@ const BackgroundManager = (function() {
   function setBackground(indexOrUrl, animate = true) {
     if (!isInitialized) init();
     if (!container) return;
+    if (isTransitioning) return; // Prevent overlapping transitions
 
     let imageUrl;
     
@@ -208,17 +210,45 @@ const BackgroundManager = (function() {
     }
 
     if (animate) {
-      // Crossfade: set next layer, fade it in, then swap
-      nextLayer.style.backgroundImage = `url('${imageUrl}')`;
-      nextLayer.style.opacity = '1';
-      currentLayer.style.opacity = '0';
+      isTransitioning = true;
 
-      // After transition, swap layers
-      setTimeout(() => {
-        currentLayer.style.backgroundImage = `url('${imageUrl}')`;
-        currentLayer.style.opacity = '1';
-        nextLayer.style.opacity = '0';
-      }, config.transitionDuration);
+      // Preload image first to prevent flicker
+      const img = new Image();
+      img.onload = () => {
+        // Set image on next layer (hidden)
+        nextLayer.style.backgroundImage = `url('${imageUrl}')`;
+
+        // Force a reflow to ensure image is ready
+        nextLayer.offsetHeight;
+
+        // Now crossfade: fade in next, fade out current
+        nextLayer.style.opacity = '1';
+        currentLayer.style.opacity = '0';
+
+        // After transition completes, swap layer references (no visual change)
+        setTimeout(() => {
+          // Swap the layer references
+          const temp = currentLayer;
+          currentLayer = nextLayer;
+          nextLayer = temp;
+
+          // Reset the now-hidden layer's opacity instantly (no transition)
+          nextLayer.style.transition = 'none';
+          nextLayer.style.opacity = '0';
+
+          // Restore transition for next use
+          requestAnimationFrame(() => {
+            nextLayer.style.transition = `opacity ${config.transitionDuration}ms ease-in-out`;
+            isTransitioning = false;
+          });
+        }, config.transitionDuration + 50);
+      };
+
+      img.onerror = () => {
+        isTransitioning = false;
+      };
+
+      img.src = imageUrl;
     } else {
       // Instant set
       currentLayer.style.backgroundImage = `url('${imageUrl}')`;

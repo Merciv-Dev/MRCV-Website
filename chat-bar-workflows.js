@@ -37,7 +37,6 @@
       const PAUSE_BETWEEN_ACTIONS = 400; // ms between workflow steps
       const PAUSE_BETWEEN_WORKFLOWS = 800; // ms between complete workflows
 
-  let idleTimer = null;
   let isRunningWorkflow = false;
   let currentWorkflowIndex = 0;
 

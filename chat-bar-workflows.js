@@ -26,12 +26,12 @@
     // ============================================
     // Background image URLs - can be overridden by Webflow
     // Set window.WORKFLOW_IMAGES before loading this script to use Webflow-hosted images
-    const BACKGROUND_IMAGES = window.WORKFLOW_IMAGES || {
-      'runners': 'https://dev-eva-public.mercivcdn.com/MRCV-Website/running.webp',
-      'childcare': 'https://dev-eva-public.mercivcdn.com/MRCV-Website/baby.webp',
-      'snacking': 'https://dev-eva-public.mercivcdn.com/MRCV-Website/snacking.webp',
-      'beverage': 'https://dev-eva-public.mercivcdn.com/MRCV-Website/water.webp',
-      'weather': 'https://dev-eva-public.mercivcdn.com/MRCV-Website/weather.webp'
+    const BACKGROUND_IMAGES = {
+      'runners': 'imgs/running.webp',
+      'childcare': 'imgs/baby.webp',
+      'snacking': 'imgs/snacking.webp',
+      'beverage': 'imgs/water.webp',
+      'weather': 'imgs/weather.webp'
     };
       const TYPING_SPEED = 30; // ms per character (fast typing)
       const PAUSE_BETWEEN_ACTIONS = 400; // ms between workflow steps

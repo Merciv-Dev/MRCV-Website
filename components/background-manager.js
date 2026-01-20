@@ -18,13 +18,13 @@ const BackgroundManager = (function() {
   let isInitialized = false;
   let isTransitioning = false;
 
-  // Default images from S3/CDN - can be overridden via window.WORKFLOW_IMAGES or init()
-  const defaultImages = window.WORKFLOW_IMAGES ? Object.values(window.WORKFLOW_IMAGES) : [
-    'https://dev-eva-public.mercivcdn.com/MRCV-Website/running.webp',
-    'https://dev-eva-public.mercivcdn.com/MRCV-Website/baby.webp',
-    'https://dev-eva-public.mercivcdn.com/MRCV-Website/snacking.webp',
-    'https://dev-eva-public.mercivcdn.com/MRCV-Website/water.webp',
-    'https://dev-eva-public.mercivcdn.com/MRCV-Website/weather.webp'
+  // Default images from local imgs folder (bundled with package for faster loading)
+  const defaultImages = [
+    'imgs/running.webp',
+    'imgs/baby.webp',
+    'imgs/snacking.webp',
+    'imgs/water.webp',
+    'imgs/weather.webp'
   ];
 
   let images = [...defaultImages];
@@ -108,12 +108,13 @@ const BackgroundManager = (function() {
   }
 
   function createBackgroundLayers() {
-    // Create two layers for crossfade effect
-    currentLayer = createLayer('bg-layer-current');
-    nextLayer = createLayer('bg-layer-next');
+    // Create two layers - currentLayer shows, nextLayer fades in on top
+    // z-index 0 = bottom (current), z-index 1 = top (next fades in here)
+    currentLayer = createLayer('bg-layer-current', 0);
+    nextLayer = createLayer('bg-layer-next', 1);
 
-    // Start both layers hidden - first image will fade in
-    currentLayer.style.opacity = '0';
+    // currentLayer will show the image, nextLayer starts hidden
+    currentLayer.style.opacity = '1';
     nextLayer.style.opacity = '0';
 
     // Create gradient overlay (darker at bottom for status bar)
@@ -124,7 +125,7 @@ const BackgroundManager = (function() {
       inset: 0;
       background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.2) 60%, rgba(0, 0, 0, 1) 100%);
       pointer-events: none;
-      z-index: 1;
+      z-index: 2;
     `;
 
     // Insert layers at the beginning of container
@@ -133,7 +134,7 @@ const BackgroundManager = (function() {
     container.insertBefore(currentLayer, container.firstChild);
   }
 
-  function createLayer(id) {
+  function createLayer(id, zIndex = 0) {
     const layer = document.createElement('div');
     layer.id = id;
     layer.style.cssText = `
@@ -142,8 +143,7 @@ const BackgroundManager = (function() {
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      transition: opacity ${config.transitionDuration}ms ease-in-out;
-      z-index: 0;
+      z-index: ${zIndex};
     `;
     if (config.blur > 0) {
       layer.style.filter = `blur(${config.blur}px)`;
@@ -204,36 +204,51 @@ const BackgroundManager = (function() {
     if (animate) {
       isTransitioning = true;
 
-      // Preload image first to prevent flicker
+      // Preload and decode image first to prevent flicker
       const img = new Image();
-      img.onload = () => {
-        // Set image on next layer (hidden)
+
+      const startTransition = () => {
+        // Step 1: Prepare nextLayer (hidden, on top with z-index 1)
+        // Make sure it's invisible and has no transition yet
+        nextLayer.style.transition = 'none';
+        nextLayer.style.opacity = '0';
         nextLayer.style.backgroundImage = `url('${imageUrl}')`;
 
-        // Force a reflow to ensure image is ready
-        nextLayer.offsetHeight;
+        // Force browser to paint the image while hidden
+        void nextLayer.offsetHeight;
 
-        // Now crossfade: fade in next, fade out current
-        nextLayer.style.opacity = '1';
-        currentLayer.style.opacity = '0';
+        // Step 2: Add transition and fade in the nextLayer
+        // currentLayer stays fully visible underneath (z-index 0)
+        nextLayer.style.transition = `opacity ${config.transitionDuration}ms ease-in-out`;
 
-        // After transition completes, swap layer references (no visual change)
-        setTimeout(() => {
-          // Swap the layer references
-          const temp = currentLayer;
-          currentLayer = nextLayer;
-          nextLayer = temp;
+        requestAnimationFrame(() => {
+          // Fade in nextLayer on top - currentLayer stays at opacity 1
+          nextLayer.style.opacity = '1';
 
-          // Reset the now-hidden layer's opacity instantly (no transition)
-          nextLayer.style.transition = 'none';
-          nextLayer.style.opacity = '0';
+          // Step 3: After transition, copy image to currentLayer and hide nextLayer
+          setTimeout(() => {
+            // Copy the new image to currentLayer (which is behind)
+            currentLayer.style.backgroundImage = `url('${imageUrl}')`;
 
-          // Restore transition for next use
-          requestAnimationFrame(() => {
-            nextLayer.style.transition = `opacity ${config.transitionDuration}ms ease-in-out`;
+            // Hide nextLayer instantly (no transition) for next use
+            nextLayer.style.transition = 'none';
+            nextLayer.style.opacity = '0';
+
+            // Force paint
+            void nextLayer.offsetHeight;
+
             isTransitioning = false;
-          });
-        }, config.transitionDuration + 50);
+          }, config.transitionDuration + 50);
+        });
+      };
+
+      // Try to decode the image first for smoother display
+      img.onload = () => {
+        if (img.decode) {
+          img.decode().then(startTransition).catch(startTransition);
+        } else {
+          startTransition();
+        }
       };
 
       img.onerror = () => {

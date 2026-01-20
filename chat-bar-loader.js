@@ -49,14 +49,14 @@
     preloadChart.href = 'https://cdn.jsdelivr.net/npm/chart.js';
     document.head.appendChild(preloadChart);
 
-    // Preload background images from S3/CDN
-    // Can be overridden via window.WORKFLOW_IMAGES in head code
-    const backgroundImages = window.WORKFLOW_IMAGES ? Object.values(window.WORKFLOW_IMAGES) : [
-        'https://dev-eva-public.mercivcdn.com/MRCV-Website/running.webp',
-        'https://dev-eva-public.mercivcdn.com/MRCV-Website/baby.webp',
-        'https://dev-eva-public.mercivcdn.com/MRCV-Website/snacking.webp',
-        'https://dev-eva-public.mercivcdn.com/MRCV-Website/water.webp',
-        'https://dev-eva-public.mercivcdn.com/MRCV-Website/weather.webp'
+    // Preload background images from local imgs folder
+    // Images are bundled with the package for faster loading
+    const backgroundImages = [
+        'imgs/running.webp',
+        'imgs/baby.webp',
+        'imgs/snacking.webp',
+        'imgs/water.webp',
+        'imgs/weather.webp'
     ];
 
     // Use high-priority preload for first image, prefetch for others

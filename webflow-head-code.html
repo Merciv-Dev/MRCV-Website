@@ -1,67 +1,18 @@
-<!--
-  WEBFLOW HEAD OPTIMIZATIONS - OPTIMIZED VERSION
-  Add these to your Webflow site's Head Code for faster loading
-  (Project Settings > Custom Code > Head Code)
-  
-  This version preloads ALL resources for instant workflow start
-  
-  RECOMMENDED: Upload images to Webflow's asset manager for fastest loading!
-  Then update the WORKFLOW_IMAGES URLs below with your Webflow asset URLs.
--->
 
-<!-- ============================================ -->
-<!-- 1. WORKFLOW IMAGES CONFIGURATION -->
-<!-- Upload these images to Webflow and replace URLs with your Webflow asset URLs -->
-<!-- ============================================ -->
-<script>
-// S3/CDN hosted images for fast loading
-window.WORKFLOW_IMAGES = {
-  runners: 'https://dev-eva-public.mercivcdn.com/MRCV-Website/running.webp',
-  childcare: 'https://dev-eva-public.mercivcdn.com/MRCV-Website/baby.webp',
-  snacking: 'https://dev-eva-public.mercivcdn.com/MRCV-Website/snacking.webp',
-  beverage: 'https://dev-eva-public.mercivcdn.com/MRCV-Website/water.webp',
-  weather: 'https://dev-eva-public.mercivcdn.com/MRCV-Website/weather.webp'
-};
-</script>
-
-<!-- ============================================ -->
-<!-- 2. IMMEDIATE BLACK BACKGROUND (prevents flash) -->
-<!-- ============================================ -->
-
-
-<!-- ============================================ -->
-<!-- 3. PRECONNECT TO EXTERNAL DOMAINS -->
-<!-- ============================================ -->
 <link rel="preconnect" href="https://merciv-dev.github.io">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.tailwindcss.com">
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
-<!-- DNS Prefetch as fallback -->
 <link rel="dns-prefetch" href="https://merciv-dev.github.io">
 
-<!-- ============================================ -->
-<!-- 4. PRELOAD BACKGROUND IMAGES (S3/CDN) -->
-<!-- These match the WORKFLOW_IMAGES above -->
-<!-- ============================================ -->
-<link rel="preconnect" href="https://dev-eva-public.mercivcdn.com">
-<link rel="preload" href="https://dev-eva-public.mercivcdn.com/MRCV-Website/running.webp" as="image" fetchpriority="high">
-<link rel="preload" href="https://dev-eva-public.mercivcdn.com/MRCV-Website/baby.webp" as="image">
-<link rel="preload" href="https://dev-eva-public.mercivcdn.com/MRCV-Website/snacking.webp" as="image">
-<link rel="preload" href="https://dev-eva-public.mercivcdn.com/MRCV-Website/water.webp" as="image">
-<link rel="preload" href="https://dev-eva-public.mercivcdn.com/MRCV-Website/weather.webp" as="image">
-
-<!-- ============================================ -->
-<!-- 5. PRELOAD CRITICAL SCRIPTS & STYLES -->
-<!-- ============================================ -->
+<!-- Preload first background image for instant display -->
+<link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/imgs/running.webp" as="image" type="image/webp">
 <link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/chat-bar.css" as="style">
 <link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/chat-bar-loader.js" as="script">
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" as="script">
 
-<!-- ============================================ -->
-<!-- 6. TAILWIND CSS (load before page for faster styling) -->
-<!-- ============================================ -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -94,16 +45,9 @@ tailwind.config = {
 };
 </script>
 
-<!-- ============================================ -->
-<!-- 7. MATERIAL SYMBOLS (load early for icons) -->
-<!-- ============================================ -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined">
 
-<!-- ============================================ -->
-<!-- 6. PRELOAD CHART.JS (needed for visualizations) -->
-<!-- ============================================ -->
 <script>
-// Start loading Chart.js immediately so it's ready when needed
 (function() {
   var script = document.createElement('script');
   script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js';
@@ -111,13 +55,12 @@ tailwind.config = {
   document.head.appendChild(script);
 })();
 
-// Pre-decode FIRST background image for instant display
-// This ensures the image is fully decoded and ready before the workflow starts
+// Pre-decode first image for instant display
 (function() {
   var firstImage = new Image();
   firstImage.decoding = 'async';
   firstImage.fetchPriority = 'high';
-  firstImage.src = window.WORKFLOW_IMAGES.runners;
+  firstImage.src = 'https://merciv-dev.github.io/MRCV-Website/imgs/running.webp';
   
   // Store decoded image promise for instant use
   if (firstImage.decode) {

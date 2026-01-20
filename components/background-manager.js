@@ -78,43 +78,32 @@ const BackgroundManager = (function() {
     // Mark as initialized BEFORE setting initial background to avoid recursion
     isInitialized = true;
     
-    // Set initial background with fade-in
+    // Set initial background - OPTIMIZED: Set immediately, don't wait for load
+    // The image is already preloaded in head code, so it should be in cache
     const firstImageUrl = getFullUrl(images[0]);
-
-    // Check if first image was pre-decoded in head code (for instant display)
+    
+    // Set background image immediately (browser will use cached/preloaded image)
+    currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
+    
+    // Show immediately if image was pre-decoded, otherwise wait briefly
     if (window.FIRST_IMAGE_DECODED) {
-      // Image is already decoded - show immediately!
-      currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
-      requestAnimationFrame(() => {
-        currentLayer.style.opacity = '1';
-      });
+      // Image is already decoded - show immediately, no delay
+      currentLayer.style.opacity = '1';   
     } else if (window.FIRST_IMAGE_READY) {
-      // Wait for pre-decode to finish
+      // Wait for pre-decode promise (should be very fast since it's already loading)
       window.FIRST_IMAGE_READY.then(() => {
-        currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
-        requestAnimationFrame(() => {
-          currentLayer.style.opacity = '1';
-        });
+        currentLayer.style.opacity = '1';
+      }).catch(() => {
+        // If promise fails, show anyway (image might still be in cache)
+        currentLayer.style.opacity = '1';
       });
     } else {
-    // Fallback: load image normally
-      const img = new Image();
-      img.onload = () => {
-        currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
-        requestAnimationFrame(() => {
-          currentLayer.style.opacity = '1';
-        });
-      };
-      img.src = firstImageUrl;
+      // No pre-decode, but image is preloaded - show immediately
+      // The browser will use the cached image from preload
+      currentLayer.style.opacity = '1';
     }
-
-    // Fallback: show anyway after 1 second if nothing else worked
-    setTimeout(() => {
-      if (currentLayer.style.opacity === '0') {
-        currentLayer.style.backgroundImage = `url('${firstImageUrl}')`;
-        currentLayer.style.opacity = '1';
-      }
-    }, 1000);
+    
+    // No timeout fallback needed - image is preloaded, so it should show immediately
 
   }
 
@@ -164,12 +153,15 @@ const BackgroundManager = (function() {
 
   function preloadImages() {
     // Only preload images that weren't already preloaded by the loader
-    // The loader preloads Runners.jpg and prefetches others
-    images.forEach(src => {
+    // The loader preloads the first image and prefetches others
+    images.forEach((src, index) => {
       const fullUrl = getFullUrl(src);
-      // Check if already preloaded via <link rel="preload">
+      // Check if already preloaded via <link rel="preload"> or <link rel="prefetch">
       const alreadyPreloaded = document.querySelector(`link[href="${fullUrl}"]`);
-      if (!alreadyPreloaded) {
+      // Also check if it's the first image (which is definitely preloaded)
+      const isFirstImage = index === 0;
+      if (!alreadyPreloaded && !isFirstImage) {
+        // Only preload if not already preloaded and not the first image
         const img = new Image();
         img.src = fullUrl;
       }
@@ -328,12 +320,36 @@ const BackgroundManager = (function() {
     addImage,
     configure,
     get images() { return [...images]; },
-    get currentIndex() { return currentIndex; }
+    get currentIndex() { return currentIndex; },
+    get isInitialized() { return isInitialized; }
   };
 
 })();
 
 // Expose globally
 window.BackgroundManager = BackgroundManager;
+
+// Auto-initialize immediately if container is ready
+// This ensures background shows as soon as possible, not waiting for workflows
+// The background manager will be initialized twice (here and in workflows), but init() checks for that
+(function autoInit() {
+  function tryInit() {
+    if (!BackgroundManager.isInitialized) {
+      const container = document.getElementById('hero-anim') || 
+                        document.querySelector('.hero-anim') ||
+                        document.getElementById('chat-bar')?.closest('.hero-anim');
+      if (container) {
+        BackgroundManager.init();
+      }
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryInit);
+  } else {
+    // DOM already ready - try immediately
+    tryInit();
+  }
+})();
 
 

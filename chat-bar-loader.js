@@ -60,11 +60,12 @@
     ];
 
     // Use high-priority preload for first image, prefetch for others
+    // IMPORTANT: Use full BASE_URL for cross-origin loading from Webflow
     backgroundImages.forEach((imgUrl, index) => {
         const link = document.createElement('link');
         link.rel = index === 0 ? 'preload' : 'prefetch';
         link.as = 'image';
-        link.href = imgUrl;
+        link.href = BASE_URL + '/' + imgUrl;
         if (index === 0) link.fetchPriority = 'high';
         document.head.appendChild(link);
     });
@@ -72,7 +73,7 @@
     // Also start loading images via Image() for faster decode
     backgroundImages.forEach(imgUrl => {
         const preImg = new Image();
-        preImg.src = imgUrl;
+        preImg.src = BASE_URL + '/' + imgUrl;
     });
 
     const container = document.getElementById('chat-bar');

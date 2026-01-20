@@ -450,8 +450,8 @@
                   }
                   // If no URL provided, the workflow's background will be used
               }
-              // Small delay to let the transition start
-              setTimeout(resolve, 200);
+            // Minimal delay - transition happens async
+            setTimeout(resolve, 50);
           });
       },
 
@@ -460,7 +460,7 @@
               if (window.BackgroundManager) {
                   window.BackgroundManager.next();
               }
-              setTimeout(resolve, 200);
+            setTimeout(resolve, 50);
           });
       },
 
@@ -470,7 +470,8 @@
               if (window.StatusBar) {
                   window.StatusBar.setCategory(text);
               }
-              setTimeout(resolve, 100);
+            // Resolve immediately - no need to wait
+            resolve();
           });
       },
 

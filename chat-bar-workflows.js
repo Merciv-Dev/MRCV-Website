@@ -522,8 +522,8 @@
     // Full cleanup before starting new workflow - clears input, popups, cards, alerts
     await actions.fullCleanup();
 
-    // Brief pause after cleanup before starting
-    await actions.pause(300);
+    // Brief pause after cleanup before starting (reduced from 300ms)
+    await actions.pause(100);
 
     for (const step of workflow.steps) {
       if (!isRunningWorkflow) break;
@@ -660,33 +660,34 @@
   // ============================================
 
     // Workflows run continuously - no user interaction stops them
-    // Wait for first background image to load before starting
+    // Images are already preloaded by chat-bar-loader.js and background-manager.js
+    // so we can start immediately without waiting for image load
     function startWhenReady() {
-      // Check if first workflow's background image is loaded
-      const firstWorkflow = workflows[0];
-      const firstImageUrl = firstWorkflow?.background || BACKGROUND_IMAGES.runners;
-
-      const img = new Image();
-      img.onload = () => {
-        // Image loaded, start workflows
+      // Check if first image was pre-decoded (set by head code or loader)
+      if (window.FIRST_IMAGE_DECODED || window.FIRST_IMAGE_READY) {
+        // Image is already loaded/loading, start immediately
         runAllWorkflows();
-      };
-      img.onerror = () => {
-        // Image failed, start anyway after a delay
-        setTimeout(runAllWorkflows, 500);
-      };
-      img.src = firstImageUrl;
+      } else {
+        // Quick check if image is in cache, otherwise start anyway
+        const firstWorkflow = workflows[0];
+        const firstImageUrl = firstWorkflow?.background || BACKGROUND_IMAGES.runners;
 
-    // Fallback: start after max wait time even if image hasn't loaded
-    setTimeout(() => {
-      if (!isRunningWorkflow) {
-        runAllWorkflows();
+        const img = new Image();
+        img.onload = () => runAllWorkflows();
+        img.onerror = () => runAllWorkflows();
+        img.src = firstImageUrl;
+
+        // Fallback: start after 300ms even if image hasn't loaded
+        setTimeout(() => {
+          if (!isRunningWorkflow) {
+            runAllWorkflows();
+          }
+        }, 300);
       }
-    }, 3000);
     }
 
-    // Start after brief delay for DOM to settle
-    setTimeout(startWhenReady, 500);
+    // Start immediately when DOM is ready (images are preloaded)
+    startWhenReady();
 
       // Expose functions for external control
       window.Workflows = {

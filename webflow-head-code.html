@@ -7,8 +7,8 @@
 
 <link rel="dns-prefetch" href="https://merciv-dev.github.io">
 
-<!-- Preload first background image for instant display -->
-<link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/imgs/running.webp" as="image" type="image/webp">
+<!-- Preload first background image for instant display (snacking is first workflow) -->
+<link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/imgs/snacking.webp" as="image" type="image/webp">
 <link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/chat-bar.css" as="style">
 <link rel="preload" href="https://merciv-dev.github.io/MRCV-Website/chat-bar-loader.js" as="script">
 <link rel="preload" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" as="script">
@@ -55,12 +55,12 @@ tailwind.config = {
   document.head.appendChild(script);
 })();
 
-// Pre-decode first image for instant display
+// Pre-decode first image for instant display (snacking is first workflow)
 (function() {
   var firstImage = new Image();
   firstImage.decoding = 'async';
   firstImage.fetchPriority = 'high';
-  firstImage.src = 'https://merciv-dev.github.io/MRCV-Website/imgs/running.webp';
+  firstImage.src = 'https://merciv-dev.github.io/MRCV-Website/imgs/snacking.webp';
   
   // Store decoded image promise for instant use
   if (firstImage.decode) {

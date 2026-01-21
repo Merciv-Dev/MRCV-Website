@@ -47,105 +47,6 @@
 
   const workflows = [
     {
-          name: 'Running Trends',
-          category: 'Athletic Footwear Trends',
-      background: BACKGROUND_IMAGES.runners,
-          steps: [
-              { action: 'setBackground' },
-              { action: 'setCategory' },
-              { action: 'clear' },
-              { action: 'setStatus', text: 'Typing...' },
-              { action: 'type', text: 'What are the latest trends in ' },
-            { action: 'slashSelect', index: 0, icon: 'checkroom', label: 'Running Shoes' },
-              { action: 'type', text: ' for Q2 2026?' },
-              { action: 'pause', duration: 400 },
-              { action: 'setStatus', text: 'Searching...' },
-              { action: 'send' },
-              { action: 'pause', duration: 1500 },
-              { action: 'setStatus', text: 'Analyzing...' },
-              { action: 'pause', duration: 1500 },
-              { action: 'setStatus', text: 'Generating...' },
-              { action: 'pause', duration: 1500 },
-              { action: 'setStatus', text: 'Complete' },
-              { action: 'pause', duration: 7000 }, // Wait for viz to appear + 5s view time
-              { action: 'clearStatus' },
-              { action: 'hideOutput' },
-              { action: 'clear' }, // Clear input at end of sequence
-              { action: 'pause', duration: 300 },
-          ]
-      },
-      {
-          name: 'Childcare Analysis',
-        category: 'Connected Nursery Tech',
-        background: BACKGROUND_IMAGES.childcare,
-      steps: [
-          { action: 'setBackground' },
-          { action: 'setCategory' },
-        { action: 'clear' },
-        // Show alert before typing starts (under chat bar like text-card)
-        {
-          action: 'showAlert', options: {
-            type: 'trend',
-            priority: 'high',
-            title: 'Baby Monitor Sales Surge',
-            description: 'Smart baby monitor category up 47% MoM. Parents increasingly prioritizing connected devices.',
-            timestamp: '2h ago',
-            position: 'under-chat',
-            autoHide: 0
-          }
-        },
-        { action: 'pause', duration: 3500 },
-        { action: 'hideAlerts' },
-        { action: 'pause', duration: 300 },
-        { action: 'setStatus', text: 'Typing...' },
-        { action: 'type', text: 'How is connected nursery tech reshaping parent purchasing behavior in ' },
-        { action: 'slashSelect', index: 2, icon: 'child_care', label: 'Baby Products' },
-        { action: 'type', text: ', and which product attributes are driving premium adoption?' },
-        { action: 'pause', duration: 300 },
-        { action: 'setStatus', text: 'Searching...' },
-        { action: 'send' },
-          { action: 'pause', duration: 1500 },
-          { action: 'setStatus', text: 'Analyzing...' },
-          { action: 'pause', duration: 1500 },
-          { action: 'setStatus', text: 'Generating...' },
-          { action: 'pause', duration: 1500 },
-          { action: 'setStatus', text: 'Complete' },
-          { action: 'pause', duration: 7000 }, // Wait for viz to appear + 5s view time
-          { action: 'clearStatus' },
-          { action: 'hideOutput' },
-          { action: 'clear' }, // Clear input at end of sequence
-          { action: 'pause', duration: 300 },
-      ]
-    },
-    {
-        name: 'Weather Impact',
-        category: 'Weather & Retail Impact',
-      background: BACKGROUND_IMAGES.weather,
-      steps: [
-          { action: 'setBackground' },
-          { action: 'setCategory' },
-        { action: 'clear' },
-          { action: 'setStatus', text: 'Typing...' },
-          { action: 'type', text: 'How does weather affect sales of ' },
-        { action: 'slashSelect', index: 1, icon: 'checkroom', label: 'Outdoor Apparel' },
-          { action: 'type', text: '?' },
-          { action: 'pause', duration: 300 },
-          { action: 'setStatus', text: 'Searching...' },
-          { action: 'send' },
-          { action: 'pause', duration: 1500 },
-          { action: 'setStatus', text: 'Processing...' },
-          { action: 'pause', duration: 1500 },
-          { action: 'setStatus', text: 'Generating...' },
-          { action: 'pause', duration: 1500 },
-          { action: 'setStatus', text: 'Complete' },
-          { action: 'pause', duration: 7000 }, // Wait for viz to appear + 5s view time
-          { action: 'clearStatus' },
-          { action: 'hideOutput' },
-          { action: 'clear' }, // Clear input at end of sequence
-          { action: 'pause', duration: 300 },
-      ]
-    },
-    {
       name: 'Snacking Behaviors',
       category: 'At-Home Snacking Trends',
       background: BACKGROUND_IMAGES.snacking,
@@ -174,6 +75,77 @@
       ]
     },
     {
+      name: 'Running Trends',
+      category: 'Athletic Footwear Trends',
+      background: BACKGROUND_IMAGES.runners,
+      steps: [
+        { action: 'setBackground' },
+        { action: 'setCategory' },
+        { action: 'clear' },
+        { action: 'setStatus', text: 'Typing...' },
+        { action: 'type', text: 'What are the latest trends in ' },
+        { action: 'slashSelect', index: 0, icon: 'checkroom', label: 'Running Shoes' },
+        { action: 'type', text: ' for Q2 2026?' },
+        { action: 'pause', duration: 400 },
+        { action: 'setStatus', text: 'Searching...' },
+        { action: 'send' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Analyzing...' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Generating...' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Complete' },
+        { action: 'pause', duration: 7000 },
+        { action: 'clearStatus' },
+        { action: 'hideOutput' },
+        { action: 'clear' },
+        { action: 'pause', duration: 300 },
+      ]
+    },
+    {
+      name: 'Childcare Analysis',
+      category: 'Connected Nursery Tech',
+      background: BACKGROUND_IMAGES.childcare,
+      steps: [
+        { action: 'setBackground' },
+        { action: 'setCategory' },
+        { action: 'clear' },
+        // Show alert before typing starts (under chat bar like text-card)
+        {
+          action: 'showAlert', options: {
+            type: 'trend',
+            priority: 'high',
+            title: 'Baby Monitor Sales Surge',
+            description: 'Smart baby monitor category up 47% MoM. Parents increasingly prioritizing connected devices.',
+            timestamp: '2h ago',
+            position: 'under-chat',
+            autoHide: 0
+          }
+        },
+        { action: 'pause', duration: 3500 },
+        { action: 'hideAlerts' },
+        { action: 'pause', duration: 300 },
+        { action: 'setStatus', text: 'Typing...' },
+        { action: 'type', text: 'How is connected nursery tech reshaping parent purchasing behavior in ' },
+        { action: 'slashSelect', index: 2, icon: 'child_care', label: 'Baby Products' },
+        { action: 'type', text: ', and which product attributes are driving premium adoption?' },
+        { action: 'pause', duration: 300 },
+        { action: 'setStatus', text: 'Searching...' },
+        { action: 'send' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Analyzing...' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Generating...' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Complete' },
+        { action: 'pause', duration: 7000 },
+        { action: 'clearStatus' },
+        { action: 'hideOutput' },
+        { action: 'clear' },
+        { action: 'pause', duration: 300 },
+      ]
+    },
+    {
       name: 'Beverage Hydration',
       category: 'Beverage Industry Trends',
       background: BACKGROUND_IMAGES.beverage,
@@ -186,6 +158,34 @@
         { action: 'slashSelect', index: 4, icon: 'local_cafe', label: 'Beverage' },
         { action: 'type', text: ' industry, how is everyday hydration behavior evolving?' },
         { action: 'pause', duration: 400 },
+        { action: 'setStatus', text: 'Searching...' },
+        { action: 'send' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Processing...' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Generating...' },
+        { action: 'pause', duration: 1500 },
+        { action: 'setStatus', text: 'Complete' },
+        { action: 'pause', duration: 7000 },
+        { action: 'clearStatus' },
+        { action: 'hideOutput' },
+        { action: 'clear' },
+        { action: 'pause', duration: 300 },
+      ]
+    },
+    {
+      name: 'Weather Impact',
+      category: 'Weather & Retail Impact',
+      background: BACKGROUND_IMAGES.weather,
+      steps: [
+        { action: 'setBackground' },
+        { action: 'setCategory' },
+        { action: 'clear' },
+        { action: 'setStatus', text: 'Typing...' },
+        { action: 'type', text: 'How does weather affect sales of ' },
+        { action: 'slashSelect', index: 1, icon: 'checkroom', label: 'Outdoor Apparel' },
+        { action: 'type', text: '?' },
+        { action: 'pause', duration: 300 },
         { action: 'setStatus', text: 'Searching...' },
         { action: 'send' },
         { action: 'pause', duration: 1500 },
@@ -327,21 +327,40 @@
             const slashNode = document.createTextNode('/');
             inputArea.appendChild(slashNode);
 
-            // Get input area position for popup
+            // Insert a temporary marker to get the exact position of the "/"
+            const marker = document.createElement('span');
+            marker.style.cssText = 'position: relative; display: inline;';
+            inputArea.appendChild(marker);
+
+            // Get position from marker (right after the "/")
+            const markerRect = marker.getBoundingClientRect();
             const inputRect = inputArea.getBoundingClientRect();
             const offset = 8;
+
+            // Remove marker immediately
+            marker.remove();
+
+            // Use marker position, fallback to input left if marker failed
+            const slashLeft = (markerRect.left > 0) ? markerRect.left - 8 : inputRect.left; // -8 to align with "/"
 
             // Show the slash popup positioned above the input
             const popup = document.getElementById('slash-command-popup');
             if (popup) {
-              // Position popup directly above the input area
+              // Calculate popup height for positioning above input
+              popup.style.visibility = 'hidden';
+              popup.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
+              const popupHeight = popup.offsetHeight;
+              popup.style.visibility = '';
+
+              // Position popup directly above the "/" character
               popup.style.position = 'fixed';
-              popup.style.left = `${inputRect.left}px`;
-              popup.style.bottom = `${window.innerHeight - inputRect.top + offset}px`;
-              popup.style.top = 'auto';
+              popup.style.left = `${slashLeft}px`;
+              popup.style.top = `${inputRect.top - popupHeight - offset}px`;
+              popup.style.bottom = 'auto';
               popup.style.transform = 'none';
 
               // Make popup visible
+              popup.classList.add('active');
               popup.classList.remove('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
               popup.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
               popup.setAttribute('aria-hidden', 'false');

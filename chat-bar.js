@@ -34,6 +34,12 @@ function initChatBarCore() {
   // Popup Functions
   // ============================================
 
+  // Track active popup for scroll/resize repositioning
+  let activePopupId = null;
+  let activePopupTrigger = null;
+  let activePopupAnchor = null; // For slash command popup (cursor position anchor)
+  let popupTrackingRAF = null; // requestAnimationFrame ID for popup tracking
+
   /**
    * Opens a popup by ID and positions it relative to the trigger button
    * @param {string} popupId - The ID of the popup to open
@@ -46,6 +52,68 @@ function initChatBarCore() {
     // Close any open popups first
     closeAllPopups();
     
+    // Track active popup and trigger for repositioning
+    activePopupId = popupId;
+    activePopupTrigger = triggerButton;
+    activePopupAnchor = null;
+
+    // Position the popup
+    positionPopupRelativeToTrigger(popup, triggerButton, popupId);
+
+    // Open the selected popup - toggle both active class AND Tailwind classes
+    popup.classList.add('active');
+    popup.classList.remove('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
+    popup.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
+    popup.setAttribute('aria-hidden', 'false');
+    startPopupTracking();
+
+    // Focus the close button for accessibility
+    const closeBtn = popup.querySelector('.popup-close');
+    if (closeBtn) {
+      setTimeout(() => closeBtn.focus(), 100);
+    }
+  }
+
+  /**
+   * Start continuous popup position tracking using requestAnimationFrame
+   * This handles cases where the chat bar moves due to layout changes
+   */
+  function startPopupTracking() {
+    // Cancel any existing tracking
+    if (popupTrackingRAF) {
+      cancelAnimationFrame(popupTrackingRAF);
+    }
+
+    function trackPosition() {
+      if (!activePopupId) {
+        popupTrackingRAF = null;
+        return;
+      }
+
+      repositionActivePopup();
+      popupTrackingRAF = requestAnimationFrame(trackPosition);
+    }
+
+    popupTrackingRAF = requestAnimationFrame(trackPosition);
+  }
+
+  /**
+   * Stop popup position tracking
+   */
+  function stopPopupTracking() {
+    if (popupTrackingRAF) {
+      cancelAnimationFrame(popupTrackingRAF);
+      popupTrackingRAF = null;
+    }
+  }
+
+  /**
+   * Position a popup relative to its trigger button
+   * @param {HTMLElement} popup - The popup element
+   * @param {HTMLElement} triggerButton - The button that triggered the popup
+   * @param {string} popupId - The popup ID
+   */
+  function positionPopupRelativeToTrigger(popup, triggerButton, popupId) {
     // Calculate position
     const buttonRect = triggerButton.getBoundingClientRect();
     const offset = 8; // Gap between button and popup
@@ -62,32 +130,19 @@ function initChatBarCore() {
     // Force right alignment for specific popups (mode, context, attach)
     const forceRightAlign = ['mode-popup', 'context-popup', 'attach-popup'].includes(popupId);
 
-    // Remove any existing alignment classes
-    popup.classList.remove('align-left', 'align-right');
+    // Use direct inline styles for reliable positioning
+    popup.style.position = 'fixed';
+    popup.style.top = `${top}px`;
 
     if (isLeftSide && !forceRightAlign) {
       // Align popup to the left edge of button
-      popup.classList.add('align-left');
-      popup.style.setProperty('--popup-left', `${buttonRect.left}px`);
-      popup.style.setProperty('--popup-top', `${top}px`);
+      popup.style.left = `${buttonRect.left}px`;
+      popup.style.right = 'auto';
     } else {
       // Align popup to the right edge of button
-      popup.classList.add('align-right');
       const right = windowWidth - buttonRect.right;
-      popup.style.setProperty('--popup-right', `${right}px`);
-      popup.style.setProperty('--popup-top', `${top}px`);
-    }
-
-    // Open the selected popup - toggle both active class AND Tailwind classes
-    popup.classList.add('active');
-    popup.classList.remove('opacity-0', 'invisible', 'pointer-events-none', '-translate-y-2');
-    popup.classList.add('opacity-100', 'visible', 'pointer-events-auto', 'translate-y-0');
-    popup.setAttribute('aria-hidden', 'false');
-    
-    // Focus the close button for accessibility
-    const closeBtn = popup.querySelector('.popup-close');
-    if (closeBtn) {
-      setTimeout(() => closeBtn.focus(), 100);
+      popup.style.right = `${right}px`;
+      popup.style.left = 'auto';
     }
   }
   
@@ -95,6 +150,13 @@ function initChatBarCore() {
    * Closes all open popups (re-queries DOM to include dynamically created popups)
    */
   function closeAllPopups() {
+    stopPopupTracking();
+
+    // Clear active popup tracking
+    activePopupId = null;
+    activePopupTrigger = null;
+    activePopupAnchor = null;
+
     // Re-query to include dynamically created popups
     const allPopups = document.querySelectorAll('.popup');
     allPopups.forEach(popup => {
@@ -106,6 +168,35 @@ function initChatBarCore() {
     });
   }
   
+  /**
+   * Reposition the active popup on scroll/resize
+   */
+  function repositionActivePopup() {
+    if (!activePopupId) return;
+
+    const popup = document.getElementById(activePopupId);
+    if (!popup || !popup.classList.contains('active')) return;
+
+    // Handle slash command popup (anchored to input area with offset)
+    if (activePopupId === 'slash-command-popup' && inputArea) {
+      const inputRect = inputArea.getBoundingClientRect();
+      const offset = 8;
+      const popupHeight = popup.offsetHeight;
+
+      // Calculate left position using stored offset from input left edge
+      const offsetFromLeft = activePopupAnchor ? activePopupAnchor.offsetFromInputLeft : 0;
+      const left = inputRect.left + offsetFromLeft;
+      const top = inputRect.top - popupHeight - offset;
+
+      popup.style.top = `${top}px`;
+      popup.style.left = `${left}px`;
+    }
+    // Handle regular popups (anchored to trigger button)
+    else if (activePopupTrigger) {
+      positionPopupRelativeToTrigger(popup, activePopupTrigger, activePopupId);
+    }
+  }
+
   // ============================================
   // Event Listeners - Popup Triggers
   // ============================================
@@ -137,10 +228,15 @@ function initChatBarCore() {
     }
   });
   
-  // Close popups on window resize
+  // Reposition popups on window resize
   window.addEventListener('resize', function () {
-    closeAllPopups();
+    repositionActivePopup();
   });
+
+  // Reposition popups on scroll (use capture to catch all scroll events)
+  window.addEventListener('scroll', function () {
+    repositionActivePopup();
+  }, true);
 
   // Close popup when clicking outside
   document.addEventListener('click', function (e) {
@@ -440,24 +536,43 @@ function initChatBarCore() {
     // Close other popups
     closeAllPopups();
 
-    // Try to get cursor position near the "/" character
+    // Get cursor position using a marker for reliability
     const selection = window.getSelection();
-    let cursorRect = null;
+    let cursorLeft = null;
+    let cursorTop = null;
 
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
-      cursorRect = range.getBoundingClientRect();
+
+      // Insert a temporary marker at cursor position
+      const marker = document.createElement('span');
+      marker.style.cssText = 'position: relative; display: inline;';
+      range.insertNode(marker);
+
+      const markerRect = marker.getBoundingClientRect();
+      if (markerRect.left > 0) {
+        cursorLeft = markerRect.left;
+        cursorTop = markerRect.top;
+      }
+
+      // Remove marker and restore selection
+      marker.remove();
+      selection.removeAllRanges();
+      selection.addRange(range);
     }
 
-    // Fallback to input area if cursor rect isn't useful
+    // Fallback to input area if cursor position isn't available
     const inputRect = inputArea.getBoundingClientRect();
     const offset = 8;
 
     // Use cursor position if available, otherwise use input left edge
-    const left = (cursorRect && cursorRect.left > 0) ? cursorRect.left : inputRect.left;
+    const left = cursorLeft || inputRect.left;
+    const baseTop = cursorTop || inputRect.top;
 
-    // Position popup above the cursor/input
-    const baseTop = (cursorRect && cursorRect.top > 0) ? cursorRect.top : inputRect.top;
+    // Store anchor position for scroll repositioning (store offset from input for stability)
+    activePopupId = 'slash-command-popup';
+    activePopupTrigger = null;
+    activePopupAnchor = { offsetFromInputLeft: left - inputRect.left };
 
     // Make popup visible first to measure its height
     popup.style.visibility = 'hidden';
@@ -480,6 +595,9 @@ function initChatBarCore() {
     slashCommandActive = true;
     selectedCommandIndex = 0;
 
+    // Start continuous position tracking
+    startPopupTracking();
+
     // Highlight first item
     updateSlashCommandSelection();
   }
@@ -490,6 +608,16 @@ function initChatBarCore() {
   function hideSlashCommandPopup() {
     const popup = getSlashCommandPopup();
     if (!popup) return;
+
+    // Stop position tracking
+    stopPopupTracking();
+
+    // Clear active popup tracking if this is the active popup
+    if (activePopupId === 'slash-command-popup') {
+      activePopupId = null;
+      activePopupTrigger = null;
+      activePopupAnchor = null;
+    }
 
     popup.classList.remove('active');
     // Restore Tailwind hidden classes

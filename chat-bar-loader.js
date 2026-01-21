@@ -51,10 +51,11 @@
 
     // Preload background images from local imgs folder
     // Images are bundled with the package for faster loading
+    // Order matches workflow order: Snacking, Running, Baby, Hydration, Weather
     const backgroundImages = [
+        'imgs/snacking.webp',
         'imgs/running.webp',
         'imgs/baby.webp',
-        'imgs/snacking.webp',
         'imgs/water.webp',
         'imgs/weather.webp'
     ];

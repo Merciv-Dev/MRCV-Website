@@ -11,9 +11,19 @@
 #chat-bar {
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   width: 100%;
-  max-width: 520px;
+  max-width: calc(520px + 40px); /* 520px content + 20px padding each side */
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+/* Chat container inside #chat-bar */
+#chat-bar .chat-container {
+  width: 100%;
+  min-width: 280px; /* Minimum usable width for chat bar content */
+  max-width: 520px;
+  margin: 0 auto; /* Center when max-width is reached */
 }
 
 /* All elements inherit font and have proper box-sizing */

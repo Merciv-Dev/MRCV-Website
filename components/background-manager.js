@@ -19,10 +19,11 @@ const BackgroundManager = (function() {
   let isTransitioning = false;
 
   // Default images from local imgs folder (bundled with package for faster loading)
+  // Order matches workflow order: Snacking, Running, Baby, Hydration, Weather
   const defaultImages = [
+    'imgs/snacking.webp',
     'imgs/running.webp',
     'imgs/baby.webp',
-    'imgs/snacking.webp',
     'imgs/water.webp',
     'imgs/weather.webp'
   ];

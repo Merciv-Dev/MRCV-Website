@@ -38,29 +38,29 @@ const VisualizationLibrary = (function() {
 
     runningTrends: {
       title: 'Running Shoe Trends Q2 2026',
-      type: 'line',
+      type: 'bar',
       labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
       datasets: [{
         label: 'Trail Running',
         data: [42, 48, 55, 62, 68, 75],
         borderColor: colors.orange.solid,
-        backgroundColor: colors.orange.fill,
-        tension: 0.4,
-        fill: true
+        backgroundColor: colors.orange.bar,
+        borderWidth: 1,
+        borderRadius: 4
       }, {
         label: 'Road Running',
         data: [65, 68, 72, 70, 74, 78],
         borderColor: colors.blue.solid,
-        backgroundColor: colors.blue.fill,
-        tension: 0.4,
-        fill: true
+        backgroundColor: colors.blue.bar,
+        borderWidth: 1,
+        borderRadius: 4
       }, {
         label: 'Minimalist',
         data: [25, 28, 32, 38, 45, 52],
         borderColor: colors.green.solid,
-        backgroundColor: colors.green.fill,
-        tension: 0.4,
-        fill: true
+        backgroundColor: colors.green.bar,
+        borderWidth: 1,
+        borderRadius: 4
       }],
       dataPoints: 1247
     },
